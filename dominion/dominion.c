@@ -746,7 +746,8 @@ int executeMinionCard(int choice1, int choice2, struct gameState *state, int han
 	state->numActions++;
 
 	//discard card from hand
-	discardCard(handPos, currentPlayer, state, handPos, 0); //***This is an original bug in the program - the second handPos arg should be deleted
+	//discardCard(handPos, currentPlayer, state, handPos, 0); //***This is an original bug in the program - the second handPos arg should be deleted
+	discardCard(handPos, currentPlayer, state, 0); 
 
 	if (choice1)		//+2 coins
 	{
