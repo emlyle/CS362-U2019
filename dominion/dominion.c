@@ -644,7 +644,7 @@ int getCost(int cardNumber)
 }
 
 //TODO: May want to add a function definition here
-int executeMineCard(int choice1, int choice2, struct gameState *state, int handPos, int currentPlayer, int j) 
+int executeMineCard(int choice1, int choice2, struct gameState *state, int handPos, int currentPlayer, int j, int i) 
 { 
 	j = state->hand[currentPlayer][choice1];  //store card we will trash
 
@@ -807,7 +807,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 			
     case mine:
 		//Refactoring for Assignment 2: Moving mind card logic into separate function called executeMineCard
-		return executeMineCard(choice1, choice2, state, handPos, currentPlayer, j); 
+		return executeMineCard(choice1, choice2, state, handPos, currentPlayer, j, i); 
 
  //     j = state->hand[currentPlayer][choice1];  //store card we will trash
 
