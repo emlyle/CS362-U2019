@@ -746,7 +746,7 @@ int executeMinionCard(int choice1, int choice2, struct gameState *state, int han
 	state->numActions++;
 
 	//discard card from hand
-	discardCard(handPos, currentPlayer, state, handPos, 0);
+	discardCard(handPos, currentPlayer, state, handPos, 0); //***This is an original bug in the program - the second handPos arg should be deleted
 
 	if (choice1)		//+2 coins
 	{
@@ -988,7 +988,6 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
     case minion:
 		//Refactoring for Assignment 2: Implement minion card logic in separate function called executeMinionCard
 		return executeMinionCard(choice1, choice2, state, handPos, currentPlayer);
-
 		
     case steward:
       if (choice1 == 1)
