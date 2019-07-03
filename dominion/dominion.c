@@ -686,7 +686,7 @@ int executeMineCard(int choice1, int choice2, struct gameState *state, int handP
 
 
 //TODO: Add function definition 
-function executeBaronCard(int choice1, struct gameState *state, int handPos, int currentPlayer)
+int executeBaronCard(int choice1, struct gameState *state, int handPos, int currentPlayer)
 {
 	state->numBuys++;//Increase buys by 1!
 	if (choice1 > 0) {//Boolean true or going to discard an estate
