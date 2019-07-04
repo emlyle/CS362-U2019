@@ -797,6 +797,7 @@ int executeMinionCard(int choice1, int choice2, struct gameState *state, int han
 int executeTributeCard(struct gameState *state, int currentPlayer)
 {
 	int nextPlayer = currentPlayer + 1; 
+	int tributeRevealedCards[2] = { -1, -1 };
 	int i;
 
 	if ((state->discardCount[nextPlayer] + state->deckCount[nextPlayer]) <= 1) {
@@ -870,7 +871,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
   int currentPlayer = whoseTurn(state);
   int nextPlayer = currentPlayer + 1;
 
-  int tributeRevealedCards[2] = {-1, -1};
+  //int tributeRevealedCards[2] = {-1, -1}; //***Refactor: This variable is now used within the executeTributeCard function and is no longer used in cardEffect
   int temphand[MAX_HAND];// moved above the if statement
   int drawntreasure=0;
   int cardDrawn;
