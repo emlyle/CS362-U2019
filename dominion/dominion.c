@@ -726,6 +726,16 @@ int executeBaronCard(int choice1, struct gameState *state, int handPos, int curr
 }
 
 
+//Helper function
+void drawMultipleCards(int totalCards, int player, struct gameState *state) {
+	int j;
+	for (j = 0; j < totalCards; j++)
+	{
+		drawCard(player, state);
+	}
+}
+
+
 //TODO: Add function definition 
 int executeMinionCard(int choice1, int choice2, struct gameState *state, int handPos, int currentPlayer)
 {
@@ -770,15 +780,6 @@ int executeMinionCard(int choice1, int choice2, struct gameState *state, int han
 	}
 	return 0;
 }
-
-void drawMultipleCards(int totalCards, int player, struct gameState *state) {
-	int j;
-	for (j = 0; j < totalCards; j++)
-	{
-		drawCard(player, state);
-	}
-}
-
 
 //TODO: Add function definition
 int executeTributeCard(struct gameState *state, int currentPlayer)
