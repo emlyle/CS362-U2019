@@ -649,18 +649,10 @@ int getCost(int cardNumber)
 int executeMineCard(int choice1, int choice2, struct gameState *state, int handPos, int currentPlayer) 
 { 
 	int j = state->hand[currentPlayer][choice1];  //store card we will trash
+	int i;
 
-	if (state->hand[currentPlayer][choice1] < copper || state->hand[currentPlayer][choice1] > gold)
-	{
-		return -1;
-	}
-
-	if (choice2 > treasure_map || choice2 < curse)
-	{
-		return -1;
-	}
-
-	if ((getCost(state->hand[currentPlayer][choice1]) + 3) > getCost(choice2))
+	//***Refactor: Combine if statements with OR operator
+	if (state->hand[currentPlayer][choice1] < copper || state->hand[currentPlayer][choice1] > gold || choice2 > treasure_map || choice2 < curse || (getCost(state->hand[currentPlayer][choice1]) + 3) > getCost(choice2))
 	{
 		return -1;
 	}
@@ -671,7 +663,6 @@ int executeMineCard(int choice1, int choice2, struct gameState *state, int handP
 	discardCard(handPos, currentPlayer, state, 0);
 
 	//discard trashed card
-	int i; 
 	for (i = 0; i < state->handCount[currentPlayer]; i++)
 	{
 		if (state->hand[currentPlayer][i] == j)
@@ -718,20 +709,16 @@ int executeBaronCard(int choice1, struct gameState *state, int handPos, int curr
 				}
 				card_not_discarded = 0;//Exit the loop
 			}
-
 			else {
 				p++;//Next card
 			}
 		}
 	}
-
-	else {
-		if (supplyCount(estate, state) > 0) {
-			gainCard(estate, state, 0, currentPlayer);//Gain an estate
-			state->supplyCount[estate]--;//Decrement Estates
-			if (supplyCount(estate, state) == 0) {
-				isGameOver(state);
-			}
+	else if (supplyCount(estate, state) > 0) { //***Refactor: Combine else and if statement to create an else if statement
+		gainCard(estate, state, 0, currentPlayer);//Gain an estate
+		state->supplyCount[estate]--;//Decrement Estates
+		if (supplyCount(estate, state) == 0) {
+			isGameOver(state);
 		}
 	}
 
@@ -753,7 +740,6 @@ int executeMinionCard(int choice1, int choice2, struct gameState *state, int han
 	{
 		state->coins = state->coins + 2;
 	}
-
 	else if (choice2)		//discard hand, redraw 4, other players with 5+ cards discard hand and draw 4
 	{
 		//discard hand
@@ -762,14 +748,11 @@ int executeMinionCard(int choice1, int choice2, struct gameState *state, int han
 			discardCard(handPos, currentPlayer, state, 0);
 		}
 
-		//draw 4
-		int i; 
-		for (i = 0; i < 4; i++)
-		{
-			drawCard(currentPlayer, state);
-		}
+		//draw 4 cards
+		drawMultipleCards(4, currentPlayer, state); //***Refactor by separating out this duplicate functionality into a new function
 
 		//other players discard hand and redraw if hand size > 4
+		int i;
 		for (i = 0; i < state->numPlayers; i++)
 		{
 			if (i != currentPlayer && state->handCount[i] > 4) //***Refactor: Combine nested if statements with AND operator
@@ -780,16 +763,20 @@ int executeMinionCard(int choice1, int choice2, struct gameState *state, int han
 					discardCard(handPos, i, state, 0);
 				}
 
-				//draw 4
-				int j; 
-				for (j = 0; j < 4; j++)
-				{
-					drawCard(i, state);
-				}
+				//draw 4 cards
+				drawMultipleCards(4, i, state); //***Refactor by separating out this duplicate functionality into a new function
 			}
 		}
 	}
 	return 0;
+}
+
+void drawMultipleCards(int totalCards, int player, struct gameState *state) {
+	int j;
+	for (j = 0; j < totalCards; j++)
+	{
+		drawCard(player, state);
+	}
 }
 
 
