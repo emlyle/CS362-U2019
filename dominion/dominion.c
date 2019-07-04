@@ -804,19 +804,18 @@ int executeTributeCard(struct gameState *state, int currentPlayer)
 			}
 		}
 	}
-	//***Refactor: Change nested if to an else if statement
-	else if (state->deckCount[nextPlayer] == 0) 
-	{
-			
-		for (i = 0; i < state->discardCount[nextPlayer]; i++) {
-			state->deck[nextPlayer][i] = state->discard[nextPlayer][i];//Move to deck
-			state->deckCount[nextPlayer]++;
-			state->discard[nextPlayer][i] = -1;
-			state->discardCount[nextPlayer]--;
+	else {
+		if (state->deckCount[nextPlayer] == 0) 
+		{
+			for (i = 0; i < state->discardCount[nextPlayer]; i++) {
+				state->deck[nextPlayer][i] = state->discard[nextPlayer][i];//Move to deck
+				state->deckCount[nextPlayer]++;
+				state->discard[nextPlayer][i] = -1;
+				state->discardCount[nextPlayer]--;
+			}
+
+			shuffle(nextPlayer, state);//Shuffle the deck
 		}
-
-		shuffle(nextPlayer, state);//Shuffle the deck
-
 		tributeRevealedCards[0] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
 		state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
 		state->deckCount[nextPlayer]--;
@@ -854,7 +853,7 @@ int executeAmbassadorCard(int choice1, int choice2, struct gameState *state, int
 	int i; 
 	int j = 0;		//used to check if player has enough cards to discard
 
-	if ((choice2 > 2 || choice2 < 0) || choice1 == handPos) 	//***Refactor: Combine separate if statements into one using OR operator
+	if (choice2 > 2 || choice2 < 0 || choice1 == handPos) 	//***Refactor: Combine separate if statements into one using OR operator
 	{
 		return -1;
 	}
