@@ -644,12 +644,30 @@ int getCost(int cardNumber)
 }
 
 
+/*
+ * Function: discardTrashedCard
+ * Parameters: struct gameState *state, int currentPlayer, int j
+ * Description: This function iterates through the current player's hand and when the card to be trashed
+ *		which is stored in the local variable j, is located, the card is trashed by calling discardCard 
+ * Returns: nothing is returned
+ */
+void discardTrashedCard(struct gameState *state, int currentPlayer, int j) {
+	int i;
+	for (i = 0; i < state->handCount[currentPlayer]; i++)
+	{
+		if (state->hand[currentPlayer][i] == j)
+		{
+			discardCard(i, currentPlayer, state, 0);
+			break;
+		}
+	}
+}
+
 
 //TODO: Add function definition
 int executeMineCard(int choice1, int choice2, struct gameState *state, int handPos, int currentPlayer) 
 { 
 	int j = state->hand[currentPlayer][choice1];  //store card we will trash
-	int i;
 
 	//***Refactor: Combine if statements with OR operator
 	if (state->hand[currentPlayer][choice1] < copper || state->hand[currentPlayer][choice1] > gold || choice2 > treasure_map || choice2 < curse || (getCost(state->hand[currentPlayer][choice1]) + 3) > getCost(choice2))
@@ -663,14 +681,7 @@ int executeMineCard(int choice1, int choice2, struct gameState *state, int handP
 	discardCard(handPos, currentPlayer, state, 0);
 
 	//discard trashed card
-	for (i = 0; i < state->handCount[currentPlayer]; i++)
-	{
-		if (state->hand[currentPlayer][i] == j)
-		{
-			discardCard(i, currentPlayer, state, 0);
-			break;
-		}
-	}
+	discardTrashedCard(state, currentPlayer, j);
 
 	return 0;
 }
@@ -726,7 +737,13 @@ int executeBaronCard(int choice1, struct gameState *state, int handPos, int curr
 }
 
 
-//Helper function
+/*
+* Function: drawMultipleCards
+* Parameters: int totalCards, int player, struct gameState *state
+* Description: This function draws the specified number of cards (passed in as totalCards)
+*		by calling drawCard for the specified player within a for loop.
+* Returns: nothing is returned
+*/
 void drawMultipleCards(int totalCards, int player, struct gameState *state) {
 	int j;
 	for (j = 0; j < totalCards; j++)
