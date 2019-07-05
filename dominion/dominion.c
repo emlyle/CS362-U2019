@@ -875,9 +875,7 @@ int executeTributeCard(struct gameState *state, int currentPlayer)
 	if ((state->discardCount[nextPlayer] + state->deckCount[nextPlayer]) <= 1) { //next player has 0-1 cards total between their discard pile and deck
 		if (state->deckCount[nextPlayer] > 0) { //next player has 1 card in their deck
 			addTributeCardFromDeck(&tributeRevealedCards[0], state, nextPlayer); //***Refactor to reduce duplicate code 
-			//tributeRevealedCards[0] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1]; //Add the card to the tributeRevealedCards pile 
-			//***Existing Bug Found - the tribute card was never removed from the next player's deck - it is now fixed and handled in addTributeCardFromDeck
-			//state->deckCount[nextPlayer]--; //Remove the card from their deck
+			//***Existing Bug Found: the tribute card was never removed from the next player's deck - it is now fixed and handled in addTributeCardFromDeck
 		}
 		else if (state->discardCount[nextPlayer] > 0) { //next player has 1 card in their discard pile
 			tributeRevealedCards[0] = state->discard[nextPlayer][state->discardCount[nextPlayer] - 1]; //Add the card to the tributeRevealedCards pile
@@ -905,13 +903,7 @@ int executeTributeCard(struct gameState *state, int currentPlayer)
 		}
 		//Add the last two cards from the next player's deck to the tributeRevealedCards pile and remove them from next player's deck
 		addTributeCardFromDeck(&tributeRevealedCards[0], state, nextPlayer); //***Refactor to reduce duplicate code
-		//tributeRevealedCards[0] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
-		//state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
-		//state->deckCount[nextPlayer]--;
 		addTributeCardFromDeck(&tributeRevealedCards[1], state, nextPlayer); //***Refactor to reduce duplicate code 
-		//tributeRevealedCards[1] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
-		//state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
-		//state->deckCount[nextPlayer]--;
 	}
 
 	if (tributeRevealedCards[0] == tributeRevealedCards[1]) { //If we have a duplicate card, just drop one 
