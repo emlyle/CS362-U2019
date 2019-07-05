@@ -646,7 +646,7 @@ int getCost(int cardNumber)
 
 /*
  * Function: discardTrashedCard
- * Parameters: struct gameState *state, int currentPlayer, int j
+ * Parameters: struct gameState *state, int currentPlayer, int cardToTrash, int trashFlag
  * Description: This function iterates through the current player's hand and when the card to be trashed
  *		is located, the card is trashed by calling discardCard with the trashFlag that was passed in 
  * Returns: nothing is returned
@@ -665,13 +665,20 @@ void discardTrashedCard(struct gameState *state, int currentPlayer, int cardToTr
 
 
 
-//TODO: Add function definition
-int executeMineCard(int choice1, int choice2, struct gameState *state, int handPos, int currentPlayer) 
+/*
+* Function: executeMineCard
+* Parameters: int choice1, int choice2, struct gameState *state, int handPos, int currentPlayer
+* Description: This function discards a treasure card (passed in as choice1) from the current player's hand 
+*		and adds a more valuable treasure card from supply (passed in as choice2) to the current player's hand.  
+* Returns: int (value of 0 or -1)
+*/
+int executeMineCard(int choice1, int choice2, struct gameState *state, int handPos, int currentPlayer)
 { 
 	int j = state->hand[currentPlayer][choice1];  //store card we will trash
 
 	//***Refactor: Combine if statements with OR operator
-	if (state->hand[currentPlayer][choice1] < copper || state->hand[currentPlayer][choice1] > gold || choice2 > treasure_map || choice2 < curse || (getCost(state->hand[currentPlayer][choice1]) + 3) > getCost(choice2))
+	if (state->hand[currentPlayer][choice1] < copper || state->hand[currentPlayer][choice1] > gold 
+		|| choice2 > treasure_map || choice2 < curse || (getCost(state->hand[currentPlayer][choice1]) + 3) > getCost(choice2))
 	{
 		return -1;
 	}
@@ -728,7 +735,13 @@ void gainEstateCard(struct gameState *state, int currentPlayer) {
 }
 
 
-//TODO: Add function definition 
+/*
+* Function: executeBaronCard
+* Parameters: int choice1, struct gameState *state, int handPos, int currentPlayer
+* Description: This function either discards an Estate card from the current player's hand and gains 4 coins, 
+*	or if the current player has no Estate card or has opted not to discard one, adds an Estate card to their hand from Supply.
+* Returns: int (value of 0)
+*/
 int executeBaronCard(int choice1, struct gameState *state, int handPos, int currentPlayer)
 {
 	state->numBuys++;//Increase buys by 1!
@@ -778,7 +791,15 @@ void drawMultipleCards(int totalCards, int player, struct gameState *state) {
 }
 
 
-//TODO: Add function definition 
+/*
+* Function: executeMinionCard
+* Parameters: int choice1, int choice2, struct gameState *state, int handPos, int currentPlayer
+* Description: This function either adds 2 coins (if choice1 passed in is not 0) 
+*		or discards the current player's hand and draws four cards and discards the 
+*		hands of players with at least five cards in their hands and draws four cards for each
+*		(if choice2 was not 0). If both choice1 and choice2 are 0, the function simply returns 0.
+* Returns: int (value of 0)
+*/
 int executeMinionCard(int choice1, int choice2, struct gameState *state, int handPos, int currentPlayer)
 {
 	//+1 action
@@ -824,33 +845,56 @@ int executeMinionCard(int choice1, int choice2, struct gameState *state, int han
 }
 
 
-//TODO: Add function definition
+/*
+* Function: addTributeCardFromDeck
+* Parameters: int* tributeCard, struct gameState *state, int nextPlayer
+* Description: This function stores the last card from the next player's deck in the tributeRevealedCards array (accessed by pointer).
+*		The card is removed from the next player's deck and their deck count decremented.
+* Returns: nothing
+*/
+void addTributeCardFromDeck(int *tributeCard, struct gameState *state, int nextPlayer) {
+	*tributeCard = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1]; //Store card in tributeRevealedCards pile (accessed by pointer)
+	state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1; //Remove the card from the next player's deck
+	state->deckCount[nextPlayer]--; //Decrement next player's deck count
+}
+
+
+/*
+* Function: executeTributeCard
+* Parameters: struct gameState *state, int currentPlayer
+* Description: This function gives the holder a bonus based on the last two cards in the deck of the opponent sitting to their left. 
+*		The bonus is based on the type of cards revealed: Action cards result in +2 actions, Treasure cards result in +2 coins, 
+*		and Victory cards result in +2 cards.
+* Returns: int (value of 0)
+*/
 int executeTributeCard(struct gameState *state, int currentPlayer)
 {
 	int nextPlayer = currentPlayer + 1; 
 	int tributeRevealedCards[2] = { -1, -1 };
 	int i;
-
-	if ((state->discardCount[nextPlayer] + state->deckCount[nextPlayer]) <= 1) {
-		if (state->deckCount[nextPlayer] > 0) {
-			tributeRevealedCards[0] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
-			state->deckCount[nextPlayer]--;
+	if ((state->discardCount[nextPlayer] + state->deckCount[nextPlayer]) <= 1) { //next player has 0-1 cards total between their discard pile and deck
+		if (state->deckCount[nextPlayer] > 0) { //next player has 1 card in their deck
+			addTributeCardFromDeck(&tributeRevealedCards[0], state, nextPlayer); //***Refactor to reduce duplicate code 
+			//tributeRevealedCards[0] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1]; //Add the card to the tributeRevealedCards pile 
+			//***Existing Bug Found - the tribute card was never removed from the next player's deck - it is now fixed and handled in addTributeCardFromDeck
+			//state->deckCount[nextPlayer]--; //Remove the card from their deck
 		}
-		else if (state->discardCount[nextPlayer] > 0) {
-			tributeRevealedCards[0] = state->discard[nextPlayer][state->discardCount[nextPlayer] - 1];
-			state->discardCount[nextPlayer]--;
+		else if (state->discardCount[nextPlayer] > 0) { //next player has 1 card in their discard pile
+			tributeRevealedCards[0] = state->discard[nextPlayer][state->discardCount[nextPlayer] - 1]; //Add the card to the tributeRevealedCards pile
+			state->discardCount[nextPlayer]--; //Decrement their discard pile count
+			//***Existing Bug Found: the card is never removed from the next player's discard pile
 		}
-		else {
+		else { //next player has no cards left
 			//No Card to Reveal
 			if (DEBUG) {
 				printf("No cards to reveal\n");
 			}
 		}
 	}
-	else {
-		if (state->deckCount[nextPlayer] == 0) 
+	else { //Next player has at least 2 cards
+		if (state->deckCount[nextPlayer] == 0) //Next player has no cards in their deck
 		{
-			for (i = 0; i < state->discardCount[nextPlayer]; i++) {
+			for (i = 0; i < state->discardCount[nextPlayer]; i++) { //Move all discard cards to their deck
 				state->deck[nextPlayer][i] = state->discard[nextPlayer][i];//Move to deck
 				state->deckCount[nextPlayer]++;
 				state->discard[nextPlayer][i] = -1;
@@ -859,12 +903,15 @@ int executeTributeCard(struct gameState *state, int currentPlayer)
 
 			shuffle(nextPlayer, state);//Shuffle the deck
 		}
-		tributeRevealedCards[0] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
-		state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
-		state->deckCount[nextPlayer]--;
-		tributeRevealedCards[1] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
-		state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
-		state->deckCount[nextPlayer]--;
+		//Add the last two cards from the next player's deck to the tributeRevealedCards pile and remove them from next player's deck
+		addTributeCardFromDeck(&tributeRevealedCards[0], state, nextPlayer); //***Refactor to reduce duplicate code
+		//tributeRevealedCards[0] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
+		//state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
+		//state->deckCount[nextPlayer]--;
+		addTributeCardFromDeck(&tributeRevealedCards[1], state, nextPlayer); //***Refactor to reduce duplicate code 
+		//tributeRevealedCards[1] = state->deck[nextPlayer][state->deckCount[nextPlayer] - 1];
+		//state->deck[nextPlayer][state->deckCount[nextPlayer]--] = -1;
+		//state->deckCount[nextPlayer]--;
 	}
 
 	if (tributeRevealedCards[0] == tributeRevealedCards[1]) { //If we have a duplicate card, just drop one 
@@ -873,15 +920,17 @@ int executeTributeCard(struct gameState *state, int currentPlayer)
 		tributeRevealedCards[1] = -1;
 	}
 
+	//Allow the current player to take an appropriate action based on the type of tribute revealed card(s)
 	for (i = 0; i <= 2; i++) {
-		if (tributeRevealedCards[i] == copper || tributeRevealedCards[i] == silver || tributeRevealedCards[i] == gold) {//Treasure cards
+		if (tributeRevealedCards[i] == copper || tributeRevealedCards[i] == silver || tributeRevealedCards[i] == gold) {//Treasure card found
 			state->coins += 2;
 		}
-		else if (tributeRevealedCards[i] == estate || tributeRevealedCards[i] == duchy || tributeRevealedCards[i] == province || tributeRevealedCards[i] == gardens || tributeRevealedCards[i] == great_hall) {//Victory Card Found
+		else if (tributeRevealedCards[i] == estate || tributeRevealedCards[i] == duchy || tributeRevealedCards[i] == province 
+			|| tributeRevealedCards[i] == gardens || tributeRevealedCards[i] == great_hall) { //Victory Card Found
 			drawCard(currentPlayer, state);
 			drawCard(currentPlayer, state);
 		}
-		else { //Action Card
+		else { //Action Card found
 			state->numActions = state->numActions + 2;
 		}
 	}
@@ -890,7 +939,13 @@ int executeTributeCard(struct gameState *state, int currentPlayer)
 }
 
 
-//TODO: Add function definition
+/*
+* Function: executeAmbassadorCard
+* Parameters: int choice1, int choice2, struct gameState *state, int handPos, int currentPlayer
+* Description: This function discards 0 to 2 copies (passed in as choice2) of a card (passed in as choice1) 
+*		in the current player's hand to the Supply. It also adds a copy of the discarded card to all other players' hands. 
+* Returns: int (value of 0 or -1)
+*/
 int executeAmbassadorCard(int choice1, int choice2, struct gameState *state, int handPos, int currentPlayer)
 {
 	int i; 
@@ -916,7 +971,7 @@ int executeAmbassadorCard(int choice1, int choice2, struct gameState *state, int
 	if (DEBUG)
 		printf("Player %d reveals card number: %d\n", currentPlayer, state->hand[currentPlayer][choice1]);
 
-	//increase supply count for choosen card by amount being discarded
+	//increase supply count for chosen card by amount being discarded
 	state->supplyCount[state->hand[currentPlayer][choice1]] += choice2;
 
 	//each other player gains a copy of revealed card
