@@ -934,7 +934,7 @@ int executeAmbassadorCard(int choice1, int choice2, struct gameState *state, int
 	//trash copies of cards returned to supply
 	for (j = 0; j < choice2; j++)
 	{
-		discardTrashedCard(state, currentPlayer, state->hand[currentPlayer][choice1], 1) //***Refactor: Remove duplicate code and call new helper function instead
+		discardTrashedCard(state, currentPlayer, state->hand[currentPlayer][choice1], 1); //***Refactor: Remove duplicate code and call new helper function instead
 	}
 
 	return 0;
