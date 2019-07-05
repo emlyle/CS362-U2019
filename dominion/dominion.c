@@ -648,20 +648,21 @@ int getCost(int cardNumber)
  * Function: discardTrashedCard
  * Parameters: struct gameState *state, int currentPlayer, int j
  * Description: This function iterates through the current player's hand and when the card to be trashed
- *		which is stored in the local variable j, is located, the card is trashed by calling discardCard 
+ *		is located, the card is trashed by calling discardCard with the trashFlag that was passed in 
  * Returns: nothing is returned
  */
-void discardTrashedCard(struct gameState *state, int currentPlayer, int j) {
+void discardTrashedCard(struct gameState *state, int currentPlayer, int cardToTrash, int trashFlag) {
 	int i;
 	for (i = 0; i < state->handCount[currentPlayer]; i++)
 	{
-		if (state->hand[currentPlayer][i] == j)
+		if (state->hand[currentPlayer][i] == cardToTrash)
 		{
-			discardCard(i, currentPlayer, state, 0);
+			discardCard(i, currentPlayer, state, trashFlag);
 			break;
 		}
 	}
 }
+
 
 
 //TODO: Add function definition
@@ -681,7 +682,7 @@ int executeMineCard(int choice1, int choice2, struct gameState *state, int handP
 	discardCard(handPos, currentPlayer, state, 0);
 
 	//discard trashed card
-	discardTrashedCard(state, currentPlayer, j);
+	discardTrashedCard(state, currentPlayer, j, 0);
 
 	return 0;
 }
@@ -822,6 +823,7 @@ int executeMinionCard(int choice1, int choice2, struct gameState *state, int han
 	return 0;
 }
 
+
 //TODO: Add function definition
 int executeTributeCard(struct gameState *state, int currentPlayer)
 {
@@ -932,14 +934,7 @@ int executeAmbassadorCard(int choice1, int choice2, struct gameState *state, int
 	//trash copies of cards returned to supply
 	for (j = 0; j < choice2; j++)
 	{
-		for (i = 0; i < state->handCount[currentPlayer]; i++)
-		{
-			if (state->hand[currentPlayer][i] == state->hand[currentPlayer][choice1])
-			{
-				discardCard(i, currentPlayer, state, 1);
-				break;
-			}
-		}
+		discardTrashedCard(state, currentPlayer, state->hand[currentPlayer][choice1], 1) //***Refactor: Remove duplicate code and call new helper function instead
 	}
 
 	return 0;
