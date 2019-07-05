@@ -687,6 +687,46 @@ int executeMineCard(int choice1, int choice2, struct gameState *state, int handP
 }
 
 
+/*
+* Function: discardEstateCard
+* Parameters: struct gameState *state, int currentPlayer, int p
+* Description: This function adds 4 coins to the total coins, adds the estate card (stored in p) to the 
+*		current player's discard pile, increased their discard total, adjusts their hand to remove the 
+*		specified estate card, and decrements their total hand count.
+* Returns: nothing is returned
+*/
+void discardEstateCard(struct gameState *state, int currentPlayer, int p) {
+	state->coins += 4;//Add 4 coins to the amount of coins
+	state->discard[currentPlayer][state->discardCount[currentPlayer]] = state->hand[currentPlayer][p];
+	state->discardCount[currentPlayer]++;
+	for (; p < state->handCount[currentPlayer]; p++) {
+		state->hand[currentPlayer][p] = state->hand[currentPlayer][p + 1];
+	}
+	state->hand[currentPlayer][state->handCount[currentPlayer]] = -1;
+	state->handCount[currentPlayer]--;
+}
+
+
+/*
+* Function: gainEstateCard
+* Parameters: struct gameState *state, int currentPlayer
+* Description: This function checks for an estate card in the supply and if one is found,
+*		adds it to the current player's hand and decrements the estate card count in supply.
+*		This function also checks if supply is out of estate cards, and if so, checks if the 
+*		game is over.
+* Returns: nothing is returned
+*/
+void gainEstateCard(struct gameState *state, int currentPlayer) {
+	if (supplyCount(estate, state) > 0) {
+		gainCard(estate, state, 0, currentPlayer); //Add an estate card to the current player's hand
+		state->supplyCount[estate]--;//Decrement estates from supply
+	}
+	if (supplyCount(estate, state) == 0) { //Check if supply is out of estate cards and if the game is over
+		isGameOver(state);
+	}
+}
+
+
 //TODO: Add function definition 
 int executeBaronCard(int choice1, struct gameState *state, int handPos, int currentPlayer)
 {
@@ -694,43 +734,27 @@ int executeBaronCard(int choice1, struct gameState *state, int handPos, int curr
 	if (choice1 > 0) {//Boolean true or going to discard an estate
 		int p = 0;//Iterator for hand!
 		int card_not_discarded = 1;//Flag for discard set!
+		//Look for an estate card in the current player's hand to discard
 		while (card_not_discarded) {
-			if (state->hand[currentPlayer][p] == estate) {//Found an estate card!
-				state->coins += 4;//Add 4 coins to the amount of coins
-				state->discard[currentPlayer][state->discardCount[currentPlayer]] = state->hand[currentPlayer][p];
-				state->discardCount[currentPlayer]++;
-				for (; p < state->handCount[currentPlayer]; p++) {
-					state->hand[currentPlayer][p] = state->hand[currentPlayer][p + 1];
-				}
-				state->hand[currentPlayer][state->handCount[currentPlayer]] = -1;
-				state->handCount[currentPlayer]--;
+			if (state->hand[currentPlayer][p] == estate) {//Found an estate card to discard and earn 4 coins!
+				discardEstateCard(state, currentPlayer, p); //***Refactor: Implemented logic to discard estate card in new helper function to make code more readable
 				card_not_discarded = 0;//Exit the loop
 			}
-			else if (p > state->handCount[currentPlayer]) {
+			else if (p > state->handCount[currentPlayer]) { //End of player's hand reached, no estate card found - player must buy an estate card
 				if (DEBUG) {
 					printf("No estate cards in your hand, invalid choice\n");
 					printf("Must gain an estate if there are any\n");
 				}
-				if (supplyCount(estate, state) > 0) {
-					gainCard(estate, state, 0, currentPlayer);
-					state->supplyCount[estate]--;//Decrement estates
-					if (supplyCount(estate, state) == 0) {
-						isGameOver(state);
-					}
-				}
+				gainEstateCard(state, currentPlayer); //***Refactor: Implemented logic to gain estate card in new helper function 
 				card_not_discarded = 0;//Exit the loop
 			}
-			else {
+			else { //Current card in player's hand is not an estate card, keep searching the hand
 				p++;//Next card
 			}
 		}
 	}
-	else if (supplyCount(estate, state) > 0) { //***Refactor: Combine else and if statement to create an else if statement
-		gainCard(estate, state, 0, currentPlayer);//Gain an estate
-		state->supplyCount[estate]--;//Decrement Estates
-		if (supplyCount(estate, state) == 0) {
-			isGameOver(state);
-		}
+	else { //Player chose to gain an estate
+		gainEstateCard(state, currentPlayer); //***Refactor: Code was duplicated from above - now calling gainEstateCard helper function to simplify code
 	}
 
 	return 0;
