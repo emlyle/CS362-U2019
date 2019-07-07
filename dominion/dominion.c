@@ -674,7 +674,7 @@ void discardTrashedCard(struct gameState *state, int currentPlayer, int cardToTr
 */
 int executeMineCard(int choice1, int choice2, struct gameState *state, int handPos, int currentPlayer)
 { 
-	int j = state->hand[currentPlayer][choice1];  //store card we will trash
+	int j; //***NEW BUG ADDED - ORIGINAL CODE: j = state->hand[currentPlayer][choice1];  //store card we will trash
 
 	//***Refactor: Combine if statements with OR operator
 	if (state->hand[currentPlayer][choice1] < copper || state->hand[currentPlayer][choice1] > gold 
@@ -686,7 +686,7 @@ int executeMineCard(int choice1, int choice2, struct gameState *state, int handP
 	gainCard(choice2, state, 2, currentPlayer);
 
 	//discard card from hand
-	discardCard(handPos, currentPlayer, state, 0);
+	//discardCard(handPos, currentPlayer, state, 0); //***NEW BUG ADDED (by commenting out this line)
 
 	//discard trashed card
 	discardTrashedCard(state, currentPlayer, j, 0);
@@ -912,13 +912,12 @@ int executeTributeCard(struct gameState *state, int currentPlayer)
 	if (tributeRevealedCards[0] == tributeRevealedCards[1]) { //If we have a duplicate card, just drop one 
 		state->playedCards[state->playedCardCount] = tributeRevealedCards[1];
 		state->playedCardCount++;
-		tributeRevealedCards[1] = -1;
+		//tributeRevealedCards[1] = -1; //***NEW BUG ADDED (by commenting out this line)
 	}
 
 	//Allow the current player to take an appropriate action based on the type of tribute revealed card(s)
 	for (i = 0; i <= 2; i++) {
-		if (tributeRevealedCards[i] == copper || tributeRevealedCards[i] == silver 
-			|| tributeRevealedCards[i] = gold) {	//***NEW BUG ADDED - ORIGINAL CODE: || tributeRevealedCards[i] == gold) {//Treasure card found
+		if (tributeRevealedCards[i] == copper || tributeRevealedCards[i] == silver || tributeRevealedCards[i] == gold) {//Treasure card found
 			state->coins += 2;
 		}
 		else if (tributeRevealedCards[i] == estate || tributeRevealedCards[i] == duchy || tributeRevealedCards[i] == province 
