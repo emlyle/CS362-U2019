@@ -826,12 +826,12 @@ int executeMinionCard(int choice1, int choice2, struct gameState *state, int han
 
 		//other players discard hand and redraw if hand size > 4
 		int i;
-		for (i = 0; i < state->numPlayers; i++)
+		for (i = 0; i <= state->numPlayers; i++)	//***NEW BUG ADDED - ORIGINAL CODE: for (i = 0; i < state->numPlayers; i++)
 		{
 			if (i != currentPlayer && state->handCount[i] > 4) //***Refactor: Combine nested if statements with AND operator
 			{
 				//discard hand
-				while (state->handCount[i] > 0)
+				while (state->handCount[i] >= 0) //***NEW BUG ADDED - ORIGINAL CODE: while (state->handCount[i] > 0)
 				{
 					discardCard(handPos, i, state, 0);
 				}
