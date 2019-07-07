@@ -750,6 +750,7 @@ int executeBaronCard(int choice1, struct gameState *state, int handPos, int curr
 		int card_not_discarded = 1;//Flag for discard set!
 		//Look for an estate card in the current player's hand to discard
 		while (card_not_discarded) {
+			p++; //***NEW BUG ADDED - By incrementing p here instead of at the end of this function, the first card in the player's hand is not checked and if an estate card, may be skipped
 			if (state->hand[currentPlayer][p] == estate) {//Found an estate card to discard and earn 4 coins!
 				discardEstateCard(state, currentPlayer, p); //***Refactor: Implemented logic to discard estate card in new helper function to make code more readable
 				card_not_discarded = 0;//Exit the loop
@@ -760,11 +761,12 @@ int executeBaronCard(int choice1, struct gameState *state, int handPos, int curr
 					printf("Must gain an estate if there are any\n");
 				}
 				gainEstateCard(state, currentPlayer); //***Refactor: Implemented logic to gain estate card in new helper function 
-				card_not_discarded = 0;//Exit the loop
+				//card_not_discarded = 0;//Exit the loop	//***NEW BUG ADDED (by commenting out this line) - create inifinite loop 
 			}
-			else { //Current card in player's hand is not an estate card, keep searching the hand
-				p++;//Next card
-			}
+			//***NEW BUG ADDED - (see comment above at start of while loop)
+			//else { //Current card in player's hand is not an estate card, keep searching the hand
+			//	p++;//Next card
+			//}
 		}
 	}
 	else { //Player chose to gain an estate
