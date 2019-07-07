@@ -889,18 +889,21 @@ int executeTributeCard(struct gameState *state, int currentPlayer)
 			}
 		}
 	}
-	else { //Next player has at least 2 cards
-		if (state->deckCount[nextPlayer] == 0) //Next player has no cards in their deck
-		{
-			for (i = 0; i < state->discardCount[nextPlayer]; i++) { //Move all discard cards to their deck
-				state->deck[nextPlayer][i] = state->discard[nextPlayer][i];//Move to deck
-				state->deckCount[nextPlayer]++;
-				state->discard[nextPlayer][i] = -1;
-				state->discardCount[nextPlayer]--;
-			}
-
-			shuffle(nextPlayer, state);//Shuffle the deck
+	//***NEW BUG ADDED - else { if () { ... }  ... } turned into else if () { ... ... } - ORIGINAL CODE IS COMMENTED OUT BELOW: 
+	//else {  //Next player has at least 2 cards
+	else if (state->deckCount[nextPlayer] == 0) {
+		//***ORIGINAL INNER IF STATEMENT: 
+		//	if (state->deckCount[nextPlayer] == 0) { //Next player has no cards in their deck
+		for (i = 0; i < state->discardCount[nextPlayer]; i++) { //Move all discard cards to their deck
+			state->deck[nextPlayer][i] = state->discard[nextPlayer][i];//Move to deck
+			state->deckCount[nextPlayer]++;
+			state->discard[nextPlayer][i] = -1;
+			state->discardCount[nextPlayer]--;
 		}
+
+		shuffle(nextPlayer, state);//Shuffle the deck
+		//}  //***END OF ORIGINAL INNER IF STATEMENT
+
 		//Add the last two cards from the next player's deck to the tributeRevealedCards pile and remove them from next player's deck
 		addTributeCardFromDeck(&tributeRevealedCards[0], state, nextPlayer); //***Refactor to reduce duplicate code
 		addTributeCardFromDeck(&tributeRevealedCards[1], state, nextPlayer); //***Refactor to reduce duplicate code 
@@ -914,7 +917,8 @@ int executeTributeCard(struct gameState *state, int currentPlayer)
 
 	//Allow the current player to take an appropriate action based on the type of tribute revealed card(s)
 	for (i = 0; i <= 2; i++) {
-		if (tributeRevealedCards[i] == copper || tributeRevealedCards[i] == silver || tributeRevealedCards[i] == gold) {//Treasure card found
+		if (tributeRevealedCards[i] == copper || tributeRevealedCards[i] == silver 
+			|| tributeRevealedCards[i] = gold) {	//***NEW BUG ADDED - ORIGINAL CODE: || tributeRevealedCards[i] == gold) {//Treasure card found
 			state->coins += 2;
 		}
 		else if (tributeRevealedCards[i] == estate || tributeRevealedCards[i] == duchy || tributeRevealedCards[i] == province 
@@ -948,7 +952,8 @@ int executeAmbassadorCard(int choice1, int choice2, struct gameState *state, int
 		return -1;
 	}
 
-	for (i = 0; i < state->handCount[currentPlayer]; i++)
+	//***NEW BUG ADDED - ORIGINAL CODE: 
+	/*for (i = 0; i < state->handCount[currentPlayer]; i++)
 	{
 		if (i != handPos && i == state->hand[currentPlayer][choice1] && i != choice1)
 		{
@@ -958,7 +963,7 @@ int executeAmbassadorCard(int choice1, int choice2, struct gameState *state, int
 	if (j < choice2)
 	{
 		return -1;
-	}
+	}*/
 
 	if (DEBUG)
 		printf("Player %d reveals card number: %d\n", currentPlayer, state->hand[currentPlayer][choice1]);
@@ -969,10 +974,10 @@ int executeAmbassadorCard(int choice1, int choice2, struct gameState *state, int
 	//each other player gains a copy of revealed card
 	for (i = 0; i < state->numPlayers; i++)
 	{
-		if (i != currentPlayer)
-		{
+		//if (i != currentPlayer) //***NEW BUG ADDED - ORIGINAL CODE INCLUDED THIS IF STATEMENT
+		//{
 			gainCard(state->hand[currentPlayer][choice1], state, 0, i);
-		}
+		//}
 	}
 
 	//discard played card from hand
