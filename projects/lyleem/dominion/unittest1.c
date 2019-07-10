@@ -73,9 +73,10 @@ int main() {
 
 	//Just for my own curiosity: What is player 0's hand count and what cards are in their hand????
 	printf("Current Player (0): Hand\n"); 
+	printf("Current Player (0): %d cards in hand\n", G.handCount[thisPlayer]); 
 	int x = 0; 
-	for (x = 0; x < G.handCount[thisPlayer]) {
-		printf("Card #%d: %s\n", (x + 1), G.hand[thisPlayer]);
+	for (x = 0; x < G.handCount[thisPlayer]; x++) {
+		printf("Card #%d: %d\n", (x + 1), G.hand[thisPlayer][x]);
 	}
 
 	//G.hand[currentPlayer][0] = estate //This would catch my bug if NO other cards are estates
@@ -195,7 +196,7 @@ int main() {
 	//		assert(testG.deckCount[thisPlayer] == G.deckCount[thisPlayer] - newCards + shuffledCards);
 	//	}
 
-	}
+	//}
 
 	printf("\n >>>>> SUCCESS: Testing complete %s <<<<<\n\n", TESTCARD);
 

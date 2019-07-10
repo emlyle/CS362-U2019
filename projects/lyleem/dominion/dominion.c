@@ -167,9 +167,9 @@ int initializeGame(int numPlayers, int kingdomCards[10], int randomSeed,
       state->discardCount[i] = 0;
       //draw 5 cards
       // for (j = 0; j < 5; j++)
-      //	{
-      //	  drawCard(i, state);
-      //	}
+      	//{
+      	  //drawCard(i, state);
+      	//}
     }
   
   //set embargo tokens to 0 for all supply piles
