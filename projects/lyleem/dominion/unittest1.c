@@ -90,7 +90,46 @@ int main() {
 	cardEffect(baron, choice1, choice1, choice2, &testG, handpos, &bonus);
 
 	//Things to verify: 
+	bool testPass = true; 
+	//For every test: 
 	//testG.numBuys should be 1 greater than G.numBuys (state->numBuys++)
+	if (testG.numBuys != (G.numBuys + 1)) {
+		printf("Error - numBuys is incorrect");
+		testPass = false;
+	}
+	//testG.coins should be 4 greater than G.coins (state->coins += 4) if an estate is discarded 
+	if (testG.coins != (G.coins + 4)) {
+		printf("Error - coin count is incorrect");
+		testPass = false;
+	}
+	//Verify estate card is in current player's discard pile 
+	if (testG.discard[currentPlayer][testG.discardCount[currentPlayer]] == testG.hand[currentPlayer][2]) { //TODO: SET p to whereever estate was?
+		printf("Error - estate card was not discarded properly");
+		testPass = false;
+	}
+	//Verify discard count was updated: testG.discardCount[currentPlayer] should be 1 greater than G.discardCount[currentPlayer];
+	if (testG.discardCount[currentPlayer] != (G.discardCount[currentPlayer] + 1)) {
+		printf("Error - discard count is incorrect");
+		testPass = false;
+	}
+	//Verify current player's last card is now -1 (since they should have one card less) 
+	if (testG.hand[currentPlayer][testG.handCount[currentPlayer]] != -1) {
+		printf("Error - estate card was not correctly removed from current player's hand");
+		testPass = false;
+	}
+	//testG.handCount[currentPlayer] should be 1 less than G.handCount[currentPlayer];
+	if (testG.handCount[currentPlayer] != (G.handCount[currentPlayer] - 1)) {
+		printf("Error - hand count is incorrect");
+		testPass = false;
+	}
+
+	if (testPass) {
+		printf("TEST CASE 1 passed."); 
+	}
+	else {
+		printf("TEST CASE 1 failed. See reason(s) listed above.");
+	}
+
 	//If an estate is discarded (choice1 == 0)
 		//testG.coins should be 4 greater than G.coins (state->coins += 4) if an estate is discarded 
 		//testG.discard[currentPlayer][testG.discardCount[currentPlayer]] == testG.hand[currentPlayer][p]; //SET p to whereever estate was?
@@ -114,8 +153,6 @@ int main() {
 	//assert(testG.coins == G.coins + xtraCoins);
 	
 	printf("END TEST CASE 1\n"); 
-
-
 
 
 
