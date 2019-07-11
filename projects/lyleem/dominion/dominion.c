@@ -710,8 +710,9 @@ void discardEstateCard(struct gameState *state, int currentPlayer, int p) {
 	for (; p < state->handCount[currentPlayer]; p++) {
 		state->hand[currentPlayer][p] = state->hand[currentPlayer][p + 1];
 	}
+	state->handCount[currentPlayer]--; //EDIT to avoid an existing bug
 	state->hand[currentPlayer][state->handCount[currentPlayer]] = -1;
-	state->handCount[currentPlayer]--;
+	//state->handCount[currentPlayer]--; //EDIT to avoid an existing bug
 }
 
 
