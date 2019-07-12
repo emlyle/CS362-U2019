@@ -727,8 +727,9 @@ void discardEstateCard(struct gameState *state, int currentPlayer, int p) {
 */
 void gainEstateCard(struct gameState *state, int currentPlayer) {
 	if (supplyCount(estate, state) > 0) {
-		gainCard(estate, state, 0, currentPlayer); //Add an estate card to the current player's hand
-		state->supplyCount[estate]--;//Decrement estates from supply
+		//gainCard(estate, state, 0, currentPlayer); //***Found existing BUG: this adds an estate card to the discard pile 
+		gainCard(estate, state, 2, currentPlayer); //Add estate card to current player's hand (this function decrements supply count of estate cards too)
+		//state->supplyCount[estate]--;//Decrement estates from supply
 	}
 	if (supplyCount(estate, state) == 0) { //Check if supply is out of estate cards and if the game is over
 		isGameOver(state);

@@ -43,17 +43,17 @@
 
 
 int main() {
-    int newCards = 0;
-    int discarded = 1;
-    int xtraCoins = 0;
-    int shuffledCards = 0;
+    	int newCards = 0;
+    	int discarded = 1;
+    	int xtraCoins = 0;
+    	int shuffledCards = 0;
 
-    int i, j, m, x;
-    int handpos = 0, choice1 = 0, choice2 = 0, choice3 = 0, bonus = 0;
-    int remove1, remove2;
-    int seed = 1000;
-    int numPlayers = 2;
-    int currentPlayer = 0;
+    	int i, j, m, x;
+    	int handpos = 0, choice1 = 0, choice2 = 0, choice3 = 0, bonus = 0;
+    	int remove1, remove2;
+    	int seed = 1000;
+    	int numPlayers = 2;
+    	int currentPlayer = 0;
 	int testPass = 1; 
 	struct gameState G, testG;
 	int k[10] = {baron, embargo, village, minion, mine, cutpurse,
@@ -66,16 +66,15 @@ int main() {
 
 	printf("----------------- UNIT TEST 1: Testing %s card ----------------\n", TESTCARD);
 
-
+	
 	// ----------- TEST CASE 1: choice1 = 0 (discard an estate card) --------------
 	printf("TEST CASE 1: choice1 = 1 (Discard an estate card, current player has an estate card in their hand)\n");
 
 	//Make sure the hand of this player contains an estate card:  
 	//printf("Current Player (0): %d cards in hand\n", G.handCount[currentPlayer]); 
-	estateCardPosition = -1; 
 	for (x = 0; x < G.handCount[currentPlayer]; x++) {
 		//printf("Card #%d: %d\n", (x + 1), G.hand[currentPlayer][x]);
-		if (G.hand[currentPlayer][x] == estate {
+		if (G.hand[currentPlayer][x] == estate) {
 			estateCardPosition = x; 
 		}
 	}
@@ -96,7 +95,7 @@ int main() {
 	testPass = 1; 
 	//For every test: 
 	//testG.numBuys should be 1 greater than G.numBuys (state->numBuys++)
-	printf("numBuys = %d, expected = %d --> ", testG.numBuys, G.numBuys + 1); 
+	printf("\tnumBuys = %d, expected = %d --> ", testG.numBuys, G.numBuys + 1); 
 	if (testG.numBuys != (G.numBuys + 1)) {
 		printf("FAIL\n");
 		testPass = 0;
@@ -105,7 +104,7 @@ int main() {
 
 	//For discarding an estate card: 
 	//testG.coins should be 4 greater than G.coins (state->coins += 4) if an estate is discarded 
-	printf("coins = %d, expected = %d --> ", testG.coins, G.coins + 4);
+	printf("\tcoins = %d, expected = %d --> ", testG.coins, G.coins + 4);
 	if (testG.coins != (G.coins + 4)) {
 		printf("FAIL\n");
 		testPass = 0;
@@ -113,7 +112,7 @@ int main() {
 	else printf("PASS\n");
 
 	//Verify estate card is in current player's discard pile 
-	printf("top of discard pile = %d, expected = 1 --> ", testG.discard[currentPlayer][testG.discardCount[currentPlayer]]); 
+	printf("\ttop of discard pile = %d, expected = 1 --> ", testG.discard[currentPlayer][testG.discardCount[currentPlayer]]); 
 	if (testG.discard[currentPlayer][testG.discardCount[currentPlayer]] == estate) { 
 		printf("FAIL\n");
 		testPass = 0;
@@ -121,7 +120,7 @@ int main() {
 	else printf("PASS\n");
 
 	//Verify discard count was updated: testG.discardCount[currentPlayer] should be 1 greater than G.discardCount[currentPlayer];
-	printf("discardCount = %d, expected = %d --> ", testG.discardCount[currentPlayer], G.discardCount[currentPlayer] + 1); 
+	printf("\tdiscardCount = %d, expected = %d --> ", testG.discardCount[currentPlayer], G.discardCount[currentPlayer] + 1); 
 	if (testG.discardCount[currentPlayer] != (G.discardCount[currentPlayer] + 1)) {
 		printf("FAIL\n");
 		testPass = 0;
@@ -129,7 +128,7 @@ int main() {
 	else printf("PASS\n");
 
 	//Verify current player's last card is now -1 (since they should have one card less) 
-	printf("previous last card in hand = %d, expected = -1 --> ", testG.hand[currentPlayer][testG.handCount[currentPlayer]]); 
+	printf("\tprevious last card in hand = %d, expected = -1 --> ", testG.hand[currentPlayer][testG.handCount[currentPlayer]]); 
 	if (testG.hand[currentPlayer][testG.handCount[currentPlayer]] != -1) {
 		printf("FAIL\n");
 		testPass = 0;
@@ -137,18 +136,21 @@ int main() {
 	else printf("PASS\n");
 
 	//Verify estate card was removed and next card in hand was moved up into that position
-	printf("hand position of estate card = %d, expected = %d --> ", testG.hand[currentPlayer][estateCardPosition]);
+	printf("\thand position of estate card = %d, expected = %d --> ", testG.hand[currentPlayer][estateCardPosition]);
 	if (testG.hand[currentPlayer][estateCardPosition] != G.hand[currentPlayer][estateCardPosition + 1]) {
 		printf("FAIL\n");
 		testPass = 0;
 	}
 	else printf("PASS\n");
 
-	//testG.handCount[currentPlayer] should be 1 less than G.handCount[currentPlayer];
+	//Verify that hand count was decremented 
+	printf("\thandCount = %d, expected = %d --> ", testG.handCount[currentPlayer], G.handCount[currentPlayer] + 1); 
 	if (testG.handCount[currentPlayer] != (G.handCount[currentPlayer] - 1)) {
-		printf("Error - hand count is incorrect\n");
+		printf("FAIL\n");
 		testPass = 0;
 	}
+	else printf("PASS\n"); 
+
 
 	if (testPass) {
 		printf("TEST CASE 1 PASSED!\n"); 
@@ -157,7 +159,7 @@ int main() {
 		printf("TEST CASE 1 FAILED. See failure criteria listed above.\n");
 	}
 	
-	printf("END TEST CASE 1\n"); 
+	printf("END TEST CASE 1\n\n"); 
 
 
 
@@ -167,12 +169,13 @@ int main() {
 	currentPlayer = 0; 
 
 	//TEMP for me: 
-	for (x = 0; x < G.handCount[currentPlayer]; x++) {
-		printf("Card #%d: %d\n", (x + 1), G.hand[currentPlayer][x]);
+	//for (x = 0; x < G.handCount[currentPlayer]; x++) {
+	//	printf("Card #%d: %d\n", (x + 1), G.hand[currentPlayer][x]);
 		//if (G.hand[currentPlayer][x] == 1) {
 		//	G.hand[currentPlayer][x] = 2; //replace estate card (1) with another type of card (2 - duchy)
 		//}
-	}
+	//}
+	
 
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
@@ -181,25 +184,27 @@ int main() {
 	//printf("Test Game coins: %d\n", testG.coins); 	
 
 	//State of hand after test - TEMP FOR ME
-	printf("Current Player (0): %d cards in hand\n", testG.handCount[currentPlayer]);
-	for (x = 0; x < testG.handCount[currentPlayer]; x++) {
-		printf("Card #%d: %d\n", (x + 1), testG.hand[currentPlayer][x]);
-	}
-	printf("Game coins: %d\n", testG.coins);
+	//printf("Current Player (0): %d cards in hand\n", testG.handCount[currentPlayer]);
+	//for (x = 0; x < testG.handCount[currentPlayer]; x++) {
+	//	printf("Card #%d: %d\n", (x + 1), testG.hand[currentPlayer][x]);
+	//}
+	//printf("Game coins: %d\n", testG.coins);
 
 
 	//Things to verify: 
 	testPass = 1;
 	//For every test: 
 	//testG.numBuys should be 1 greater than G.numBuys (state->numBuys++)
+	printf("\tnumBuys = %d, expected = %d --> ", testG.numBuys, G.numBuys + 1); 
 	if (testG.numBuys != (G.numBuys + 1)) {
-		printf("Error - numBuys is incorrect\n");
+		printf("FAIL\n");
 		testPass = 0;
 	}
+	else printf("PASS\n"); 
 	
 	//For gaining an estate card: 
 	//Verify player's hand contains an extra card
-	printf("handCount = %d, expected = %d --> ", testG.handCount[currentPlayer], G.handCount[currentPlayer] + 1); 
+	printf("\thandCount = %d, expected = %d --> ", testG.handCount[currentPlayer], G.handCount[currentPlayer] + 1); 
 	if (testG.handCount[currentPlayer] != G.handCount[currentPlayer] + 1) {
 		printf("FAIL\n");
 		testPass = 0;
@@ -207,7 +212,7 @@ int main() {
 	else printf("PASS\n");
 
 	//Verify that player's hand contains the new estate card 
-	printf("Top of hand = %d, expected = 1 --> ", testG.hand[currentPlayer][G.handCount[currentPlayer]]); 
+	printf("\tTop of hand = %d, expected = 1 --> ", testG.hand[currentPlayer][G.handCount[currentPlayer]]); 
 	if (testG.hand[currentPlayer][G.handCount[currentPlayer]] != estate) {
 		printf("FAIL\n");
 		testPass = 0;
@@ -215,7 +220,7 @@ int main() {
 	else printf("PASS\n");
 
 	//Verify supply count is one less now
-	printf("supplyCount = %d, expected = %d --> ", testG.supplyCount[estate], G.supplyCount[estate] - 1); 
+	printf("\tsupplyCount = %d, expected = %d --> ", testG.supplyCount[estate], G.supplyCount[estate] - 1); 
 	if (testG.supplyCount[estate] != G.supplyCount[estate] - 1) {
 		printf("FAIL\n");
 		testPass = 0;
@@ -235,7 +240,7 @@ int main() {
 		printf("TEST CASE 2 FAILED. See failure criteria listed above.\n");
 	}
 	
-	printf("END TEST CASE 2\n");
+	printf("END TEST CASE 2\n\n");
 
 
 
@@ -244,7 +249,7 @@ int main() {
 	printf("TEST CASE 3: choice1 = 0 (Discard an estate card with two estate cards in hand)\n");
 	//NOTE: This test case will trigger one of my bugs - the estate card in position 0 should be discarded but the second one will instead 
 
-	int currentPlayer = 0;
+	currentPlayer = 0;
 
 	G.hand[currentPlayer][0] = estate; //This is the estate card that should be discarded but won't due to a bug I added for Assignment 2
 	G.hand[currentPlayer][1] = copper; //This is to help the test criteria ensure that a non-estate card was moved up into position 0 
@@ -271,17 +276,19 @@ int main() {
 	//printf("Test Game coins: %d\n", testG.coins);
 
 	//Things to verify:
-	int testPass = 1;
+	testPass = 1;
 	//For every test:
 	//testG.numBuys should be 1 greater than G.numBuys (state->numBuys++)
+	printf("\tnumBuys = %d, expected = %d --> ", testG.numBuys, G.numBuys + 1); 
 	if (testG.numBuys != (G.numBuys + 1)) {
-		printf("Error - numBuys is incorrect\n");
+		printf("FAIL\n");
 		testPass = 0;
-	}
+	} 
+	else printf("PASS\n"); 
 
 	//For discarding an estate card: 
 	//testG.coins should be 4 greater than G.coins (state->coins += 4) if an estate is discarded 
-	printf("coins = %d, expected = %d --> ", testG.coins, G.coins + 4);
+	printf("\tcoins = %d, expected = %d --> ", testG.coins, G.coins + 4);
 	if (testG.coins != (G.coins + 4)) {
 		printf("FAIL\n");
 		testPass = 0;
@@ -289,7 +296,7 @@ int main() {
 	else printf("PASS\n");
 
 	//Verify estate card is in current player's discard pile 
-	printf("top of discard pile = %d, expected = 1 --> ", testG.discard[currentPlayer][testG.discardCount[currentPlayer]]);
+	printf("\ttop of discard pile = %d, expected = 1 --> ", testG.discard[currentPlayer][testG.discardCount[currentPlayer]]);
 	if (testG.discard[currentPlayer][testG.discardCount[currentPlayer]] == estate) {
 		printf("FAIL\n");
 		testPass = 0;
@@ -297,7 +304,7 @@ int main() {
 	else printf("PASS\n");
 
 	//Verify discard count was updated: testG.discardCount[currentPlayer] should be 1 greater than G.discardCount[currentPlayer];
-	printf("discardCount = %d, expected = %d --> ", testG.discardCount[currentPlayer], G.discardCount[currentPlayer] + 1);
+	printf("\tdiscardCount = %d, expected = %d --> ", testG.discardCount[currentPlayer], G.discardCount[currentPlayer] + 1);
 	if (testG.discardCount[currentPlayer] != (G.discardCount[currentPlayer] + 1)) {
 		printf("FAIL\n");
 		testPass = 0;
@@ -305,7 +312,7 @@ int main() {
 	else printf("PASS\n");
 
 	//Verify current player's last card is now -1 (since they should have one card less) 
-	printf("previous last card in hand = %d, expected = -1 --> ", testG.hand[currentPlayer][testG.handCount[currentPlayer]]);
+	printf("\tprevious last card in hand = %d, expected = -1 --> ", testG.hand[currentPlayer][testG.handCount[currentPlayer]]);
 	if (testG.hand[currentPlayer][testG.handCount[currentPlayer]] != -1) {
 		printf("FAIL\n");
 		testPass = 0;
@@ -313,19 +320,20 @@ int main() {
 	else printf("PASS\n");
 
 	//Verify estate card was removed and next card in hand was moved up into that position
-	printf("hand position of estate card = %d, expected = %d --> ", testG.hand[currentPlayer][estateCardPosition]);
+	printf("\thand position of estate card = %d, expected = %d --> ", testG.hand[currentPlayer][estateCardPosition]);
 	if (testG.hand[currentPlayer][estateCardPosition] != G.hand[currentPlayer][estateCardPosition + 1]) {
 		printf("FAIL\n");
 		testPass = 0;
 	}
 	else printf("PASS\n");
 
-	//testG.handCount[currentPlayer] should be 1 less than G.handCount[currentPlayer];
+	//Verify that hand count was decremented 
+	printf("\thandCount = %d, expected = %d --> ", testG.handCount[currentPlayer], G.handCount[currentPlayer] + 1); 
 	if (testG.handCount[currentPlayer] != (G.handCount[currentPlayer] - 1)) {
-		printf("Error - hand count is incorrect\n");
+		printf("FAIL\n");
 		testPass = 0;
 	}
-
+	else printf("PASS\n"); 
 
 
 	if (testPass) {
@@ -336,7 +344,7 @@ int main() {
 	}
 
 
-	printf("END TEST CASE 3\n");
+	printf("END TEST CASE 3\n\n");
 
 
 	
@@ -430,8 +438,8 @@ int main() {
 
 	*/
 
-	printf("\n >>>>> Unit Test 1 (%s card) Complete <<<<<\n\n", TESTCARD);
 
+	printf(">>>>> UNIT TEST 1 (%s card) Complete <<<<<\n\n", TESTCARD);
 
 	return 0;
 
