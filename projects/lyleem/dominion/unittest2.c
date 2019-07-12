@@ -180,7 +180,7 @@ int main() {
 	else printf("PASS\n");
 
 	//Verify hand count is now 4
-	printf("\thandCount = %d, expected = 4 --> ");
+	printf("\thandCount = %d, expected = 4 --> ", testG.handCount[currentPlayer]);
 	if (testG.handCount[currentPlayer] != 4) {
 		printf("FAIL\n");
 		testPass = 0;
@@ -204,7 +204,7 @@ int main() {
 
 	//Criteria for next player having 4 cards 
 	//Verify hand count of next player has not changed
-	printf("\thandCount = %d, expected = %d --> ");
+	printf("\thandCount = %d, expected = %d --> ", testG.handCount[currentPlayer + 1], G.handCount[currentPlayer + 1]);
 	if (testG.handCount[currentPlayer + 1] != G.handCount[currentPlayer + 1]) {
 		printf("FAIL\n");
 		testPass = 0;
@@ -270,7 +270,7 @@ int main() {
 	else printf("PASS\n");
 
 	//Verify hand count is now 4
-	printf("\thandCount = %d, expected = 4 --> ");
+	printf("\thandCount = %d, expected = 4 --> ", testG.handCount[currentPlayer]);
 	if (testG.handCount[currentPlayer] != 4) {
 		printf("FAIL\n");
 		testPass = 0;
@@ -294,7 +294,7 @@ int main() {
 
 	//Criteria for next player having 5 cards 
 	//Verify hand count of next player was unchanged
-	printf("\thandCount = %d, expected = %d --> ");
+	printf("\thandCount = %d, expected = %d --> ", testG.handCount[currentPlayer + 1], G.handCount[currentPlayer + 1]);
 	if (testG.handCount[currentPlayer + 1] != G.handCount[currentPlayer + 1]) {
 		printf("FAIL\n");
 		testPass = 0;
@@ -350,27 +350,27 @@ int main() {
 	}
 	else printf("PASS\n");
 
-	//Verify hand count was unchanged
-	printf("\thandCount = %d, expected = %d --> ");
-	if (testG.handCount[currentPlayer] != G.handCount[currentPlayer]) {
+	//Verify hand count decreased by 1 for discarded card
+	printf("\thandCount = %d, expected = %d --> ", testG.handCount[currentPlayer], G.handCount[currentPlayer] - 1);
+	if (testG.handCount[currentPlayer] != G.handCount[currentPlayer] - 1) {
 		printf("FAIL\n");
 		testPass = 0;
 	}
 	else printf("PASS\n");
 
-	//Verify hand was unchanged
+	//Verify hand was unchanged except for 1 card discarded
 	printf("\thand: \n");
-		for (i = 0; i < G.handCount[currentPlayer]; i++) {
-			printf("\t\tcard %d = %d, expected = %d --> ", i + 1, testG.hand[currentPlayer][i], G.hand[currentPlayer][i]);
-			if (testG.hand[currentPlayer][i] != G.hand[currentPlayer][i]) {
-				printf("FAIL\n");
-				testPass = 0;
-			}
-			else printf("PASS\n");
+	for (i = 0; i < G.handCount[currentPlayer] - 1; i++) {
+		printf("\t\tcard %d = %d, expected = %d --> ", i + 1, testG.hand[currentPlayer][i], G.hand[currentPlayer][i]);
+		if (testG.hand[currentPlayer][i] != G.hand[currentPlayer][i]) {
+			printf("FAIL\n");
+			testPass = 0;
 		}
+		else printf("PASS\n");
+	}
 
 	//Verify hand count of next player was unchanged
-	printf("\thandCount = %d, expected = %d --> ");
+	printf("\thandCount = %d, expected = %d --> ", testG.handCount[currentPlayer + 1], G.handCount[currentPlayer + 1]);
 	if (testG.handCount[currentPlayer + 1] != G.handCount[currentPlayer + 1]) {
 		printf("FAIL\n");
 		testPass = 0;
