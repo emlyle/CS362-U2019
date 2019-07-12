@@ -321,13 +321,13 @@ int main() {
 
 
 	// --------------------------------------------- TEST CASE 4 ------------------------------------------------
-	printf("TEST CASE 4: choice1 = 0, choice2 = 0 (Do nothing\n");
+	printf("TEST CASE 4: choice1 = 0, choice2 = 0 (Do nothing)\n");
 
 	currentPlayer = 0; 
 
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
-	choice1 = 1; //gain 4 coins
+	choice1 = 0;
 	choice2 = 0;
 	result = executeMinionCard(choice1, choice2, &testG, handPos, currentPlayer);
 
@@ -391,7 +391,7 @@ int main() {
 	//testPass = testForEveryEstateCard(&testG, &G, testPass);
 	//testPass = testDiscardEstateCard(&testG, &G, currentPlayer, estateCardPosition, testPass); 
 
-	concludeTestCase(testPass, 1);
+	concludeTestCase(testPass, 4);
 
 
 
