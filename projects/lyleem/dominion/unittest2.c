@@ -80,7 +80,7 @@ int main() {
 
 	//Verify actions increased by 1
 	printf("\tnumActions = %d, expected = %d --> ", testG.numActions, G.numActions + 1); 
-	if (testG.numBuys != G.numActions + 1) {
+	if (testG.numActions != G.numActions + 1) {
 		printf("FAIL\n");
 		testPass = 0;
 	}
