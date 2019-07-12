@@ -202,6 +202,8 @@ int testForEveryEstateCard(struct gameState *testG, struct gameState *G, int tes
 		testPass = 0;
 	}
 	else printf("PASS\n");
+
+	return testPass; 
 }
 
 
@@ -240,7 +242,7 @@ int testDiscardEstateCard(struct gameState *testG, struct gameState *G, int curr
 	else printf("PASS\n");
 
 	//Verify estate card was removed and next card in hand was moved up into that position
-	printf("\thand position of estate card = %d, expected = %d --> ", testG->hand[currentPlayer][estateCardPosition]);
+	printf("\thand position of estate card = %d, expected = %d --> ", testG->hand[currentPlayer][estateCardPosition], G->hand[currentPlayer][estateCardPosition + 1]);
 	if (testG->hand[currentPlayer][estateCardPosition] != G->hand[currentPlayer][estateCardPosition + 1]) {
 		printf("FAIL\n");
 		testPass = 0;
