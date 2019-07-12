@@ -57,7 +57,7 @@ int main() {
 
 	testPass = 1; 
 	testPass = testCriteriaForAllMinionCards(result, &testG, &G, testPass);
-	testPass = testCriteriaForNotChoice2(&testG, &G, currentPlayer, testPass)
+	testPass = testCriteriaForNotChoice2(&testG, &G, currentPlayer, testPass);
 
 	//Criteria for choice1 = 1 (gain 2 coins)
 	//Verify 2 coins were gained
@@ -187,7 +187,7 @@ int main() {
 	}
 	else printf("PASS\n");
 
-	testPass = testCriteriaForNotChoice2(&testG, &G, currentPlayer, testPass)
+	testPass = testCriteriaForNotChoice2(&testG, &G, currentPlayer, testPass);
 
 	concludeTestCase(testPass, 4);
 
@@ -224,6 +224,8 @@ int testCriteriaForAllMinionCards(int result, struct gameState* testG, struct ga
 
 
 int testCriteriaForNotChoice2(struct gameState* testG, struct gameState* G, int currentPlayer, int testPass) {
+	int i; 
+
 	//Verify hand count decreased by 1 for discarded card
 	printf("\thandCount = %d, expected = %d --> ", testG->handCount[currentPlayer], G->handCount[currentPlayer] - 1);
 	if (testG->handCount[currentPlayer] != G->handCount[currentPlayer] - 1) {
@@ -249,6 +251,8 @@ int testCriteriaForNotChoice2(struct gameState* testG, struct gameState* G, int 
 }
 
 int verifyNoChangeToNextPlayer(struct gameState* testG, struct gameState* G, int currentPlayer, int testPass) {
+	int i; 
+
 	//Verify hand count of next player was unchanged
 	printf("\tnext player's handCount = %d, expected = %d --> ", testG->handCount[currentPlayer + 1], G->handCount[currentPlayer + 1]);
 	if (testG->handCount[currentPlayer + 1] != G->handCount[currentPlayer + 1]) {
@@ -273,6 +277,9 @@ int verifyNoChangeToNextPlayer(struct gameState* testG, struct gameState* G, int
 }
 
 int testCriteriaForChoice2(struct gameState* testG, struct gameState* G, int currentPlayer, int testPass) {
+	int i; 
+	int diffFound = 0; 
+
 	//Verify no coins were gained
 	printf("\tcoins = %d, expected = %d --> ", testG->coins, G->coins);
 	if (testG->coins != G->coins) {
@@ -290,7 +297,6 @@ int testCriteriaForChoice2(struct gameState* testG, struct gameState* G, int cur
 	else printf("PASS\n");
 
 	//Verify hand has changed
-	diffFound = 0;
 	printf("\thand: \n");
 	for (i = 0; i < testG->handCount[currentPlayer]; i++) {
 		printf("\t\tcard %d = %d, was %d\n", i + 1, testG->hand[currentPlayer][i], G->hand[currentPlayer][i]);
