@@ -40,12 +40,14 @@ void concludeTestCase(int testPass, int testCaseNumber);
 
 int main() {
 	int i;
-	int handpos = 0, choice1 = 0, choice2 = 0;
+	int handPos = 0, choice1 = 0, choice2 = 0;
 	int seed = 1000;
 	int numPlayers = 2;
 	int currentPlayer = 0;
 	int testPass = 1; 
 	int estateCardPosition = -1;
+	int result = -1; 
+	int diffFound = 0; 
 	struct gameState G, testG;
 	int k[10] = {baron, embargo, village, minion, mine, cutpurse,
 			sea_hag, tribute, smithy, council_room};
@@ -64,7 +66,7 @@ int main() {
 	memcpy(&testG, &G, sizeof(struct gameState));
 	choice1 = 1; //gain 4 coins
 	choice2 = 0;  
-	int result = executeMinionCard(choice1, choice2, &testG, handPos, currentPlayer);
+	result = executeMinionCard(choice1, choice2, &testG, handPos, currentPlayer);
 
 	testPass = 1; 
 	//Criteria for all tests: 
@@ -94,7 +96,7 @@ int main() {
 	else printf("PASS\n");
 
 	//Verify hand was unchanged
-	printf("\thand: ")
+	printf("\thand: \n");
 	for (i = 0; i < G.handCount[currentPlayer]; i++) {
 		printf("\t\tcard %d = %d, expected = %d --> ", i + 1, testG.hand[currentPlayer][i], G.hand[currentPlayer][i]); 
 		if (testG.hand[currentPlayer][i] != G.hand[currentPlayer][i]) {
@@ -113,7 +115,7 @@ int main() {
 	else printf("PASS\n");
 
 	//Verify hand of next player was unchanged
-	printf("\thand: ")
+	printf("\thand: \n");
 		for (i = 0; i < G.handCount[currentPlayer + 1]; i++) {
 			printf("\t\tcard %d = %d, expected = %d --> ", i + 1, testG.hand[currentPlayer + 1][i], G.hand[currentPlayer + 1][i]);
 			if (testG.hand[currentPlayer + 1][i] != G.hand[currentPlayer + 1][i]) {
@@ -148,7 +150,7 @@ int main() {
 	memcpy(&testG, &G, sizeof(struct gameState));
 	choice1 = 0; 
 	choice2 = 1; //discard cards, gain 4 new cards
-	int result = executeMinionCard(choice1, choice2, &testG, handPos, currentPlayer);
+	result = executeMinionCard(choice1, choice2, &testG, handPos, currentPlayer);
 
 	testPass = 1;
 	//Criteria for all tests: 
@@ -178,8 +180,8 @@ int main() {
 	else printf("PASS\n");
 
 	//Verify hand has changed
-	int diffFound = 0; 
-	printf("\thand: ")
+	diffFound = 0; 
+	printf("\thand: \n");
 	for (i = 0; i < testG.handCount[currentPlayer]; i++) {
 		printf("\t\tcard %d = %d, was %d\n", i + 1, testG.hand[currentPlayer][i], G.hand[currentPlayer][i]);
 		if (testG.hand[currentPlayer][i] != G.hand[currentPlayer][i]) {
@@ -202,7 +204,7 @@ int main() {
 	else printf("PASS\n");
 
 	//Verify hand of next player has not changed 
-	printf("\thand: ")
+	printf("\thand: \n");
 		for (i = 0; i < G.handCount[currentPlayer + 1]; i++) {
 			printf("\t\tcard %d = %d, expected = %d --> ", i + 1, testG.hand[currentPlayer + 1][i], G.hand[currentPlayer + 1][i]);
 			if (testG.hand[currentPlayer + 1][i] != G.hand[currentPlayer + 1][i]) {
@@ -238,7 +240,7 @@ int main() {
 	memcpy(&testG, &G, sizeof(struct gameState));
 	choice1 = 0;
 	choice2 = 1; //discard cards, gain 4 new cards
-	int result = executeMinionCard(choice1, choice2, &testG, handPos, currentPlayer);
+	result = executeMinionCard(choice1, choice2, &testG, handPos, currentPlayer);
 
 	testPass = 1;
 	//Criteria for all tests: 
@@ -268,8 +270,8 @@ int main() {
 	else printf("PASS\n");
 
 	//Verify hand has changed
-	int diffFound = 0;
-	printf("\thand: ")
+	diffFound = 0;
+	printf("\thand: \n");
 		for (i = 0; i < testG.handCount[currentPlayer]; i++) {
 			printf("\t\tcard %d = %d, was %d\n", i + 1, testG.hand[currentPlayer][i], G.hand[currentPlayer][i]);
 			if (testG.hand[currentPlayer][i] != G.hand[currentPlayer][i]) {
@@ -292,7 +294,7 @@ int main() {
 	else printf("PASS\n");
 
 	//Verify hand of next player was unchanged
-	printf("\thand: ")
+	printf("\thand: \n"); 
 		for (i = 0; i < G.handCount[currentPlayer + 1]; i++) {
 			printf("\t\tcard %d = %d, expected = %d --> ", i + 1, testG.hand[currentPlayer + 1][i], G.hand[currentPlayer + 1][i]);
 			if (testG.hand[currentPlayer + 1][i] != G.hand[currentPlayer + 1][i]) {
@@ -319,7 +321,7 @@ int main() {
 	memcpy(&testG, &G, sizeof(struct gameState));
 	choice1 = 1; //gain 4 coins
 	choice2 = 0;
-	int result = executeMinionCard(choice1, choice2, &testG, handPos, currentPlayer);
+	result = executeMinionCard(choice1, choice2, &testG, handPos, currentPlayer);
 
 	testPass = 1;
 	//Criteria for all tests: 
@@ -349,7 +351,7 @@ int main() {
 	else printf("PASS\n");
 
 	//Verify hand was unchanged
-	printf("\thand: ")
+	printf("\thand: \n");
 		for (i = 0; i < G.handCount[currentPlayer]; i++) {
 			printf("\t\tcard %d = %d, expected = %d --> ", i + 1, testG.hand[currentPlayer][i], G.hand[currentPlayer][i]);
 			if (testG.hand[currentPlayer][i] != G.hand[currentPlayer][i]) {
@@ -368,7 +370,7 @@ int main() {
 	else printf("PASS\n");
 
 	//Verify hand of next player was unchanged
-	printf("\thand: ")
+	printf("\thand: \n");
 		for (i = 0; i < G.handCount[currentPlayer + 1]; i++) {
 			printf("\t\tcard %d = %d, expected = %d --> ", i + 1, testG.hand[currentPlayer + 1][i], G.hand[currentPlayer + 1][i]);
 			if (testG.hand[currentPlayer + 1][i] != G.hand[currentPlayer + 1][i]) {
@@ -385,7 +387,7 @@ int main() {
 
 
 
-	printf(">>>>> UNIT TEST 1 (%s card) COMPLETE <<<<<\n\n", TESTCARD);
+	printf(">>>>> UNIT TEST 2 (%s card) COMPLETE <<<<<\n\n", TESTCARD);
 
 	return 0;
 
