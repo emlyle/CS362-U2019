@@ -774,7 +774,7 @@ int executeBaronCard(int choice1, struct gameState *state, int handPos, int curr
 	else { //Player chose to gain an estate
 		gainEstateCard(state, currentPlayer); //***Refactor: Code was duplicated from above - now calling gainEstateCard helper function to simplify code
 	}
-
+	
 	return 0;
 }
 

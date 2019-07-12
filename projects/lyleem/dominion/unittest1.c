@@ -87,34 +87,7 @@ int main() {
 
 	testPass = 1;
 	testPass = testForEveryEstateCard(&testG, &G, testPass);
-
-	int testPass2 = testGainEstateCard(&testG, &G, currentPlayer, estateCardPosition, testPass);
-	printf("testPass2 = %d\n", testPass2); 
-
-
-	//Verify player's hand contains an extra card
-	printf("\thandCount = %d, expected = %d --> ", testG.handCount[currentPlayer], G.handCount[currentPlayer] + 1); 
-	if (testG.handCount[currentPlayer] != G.handCount[currentPlayer] + 1) {
-		printf("FAIL\n");
-		testPass = 0;
-	}
-	else printf("PASS\n");
-
-	//Verify that player's hand contains the new estate card 
-	printf("\tTop of hand = %d, expected = 1 --> ", testG.hand[currentPlayer][G.handCount[currentPlayer]]); 
-	if (testG.hand[currentPlayer][G.handCount[currentPlayer]] != estate) {
-		printf("FAIL\n");
-		testPass = 0;
-	}
-	else printf("PASS\n");
-
-	//Verify supply count is one less now
-	printf("\tsupplyCount = %d, expected = %d --> ", testG.supplyCount[estate], G.supplyCount[estate] - 1); 
-	if (testG.supplyCount[estate] != G.supplyCount[estate] - 1) {
-		printf("FAIL\n");
-		testPass = 0;
-	}
-	else printf("PASS\n");
+	testPass = testGainEstateCard(&testG, &G, currentPlayer, estateCardPosition, testPass);
 
 	concludeTestCase(testPass, 2);
 
@@ -158,7 +131,7 @@ int main() {
 
 
 
-	/* //This test case will trigger a bug I added to the code for Assignment 2 that will cause an infinite loop - it is commented out to prevent my entire test suite from crashing
+	//This test case will trigger a bug I added to the code for Assignment 2   
 	// ------------------------- TEST CASE 4: choice1 = 0 (discard an estate card with no estate cards in hand) ------------------------
 	printf("TEST CASE 4: choice1 = 0 (Discard an estate card but current player does not have an estate card in their hand)\n");
 
@@ -166,7 +139,6 @@ int main() {
 
 	//Remove any estate cards from current player's hand 
 	for (i = 0; i < G.handCount[currentPlayer]; i++) {
-		printf("Card #%d: %d\n", (i + 1), G.hand[currentPlayer][i]);
 		if (G.hand[currentPlayer][i] == estate) {
 			G.hand[currentPlayer][i] = duchy; //replace estate card with duchy
 		}
@@ -183,7 +155,7 @@ int main() {
 
 	concludeTestCase(testPass, 4);
 
-	*/
+	
 
 
 	printf(">>>>> UNIT TEST 1 (%s card) COMPLETE <<<<<\n\n", TESTCARD);
