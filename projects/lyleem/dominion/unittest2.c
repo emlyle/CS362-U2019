@@ -49,7 +49,7 @@ int main() {
 	int result = -1; 
 	int diffFound = 0; 
 	struct gameState G, testG;
-	int k[10] = {baron, embargo, village, minion, mine, cutpurse,
+	int k[10] = {minion, embargo, village, baron, mine, cutpurse,
 			sea_hag, tribute, smithy, council_room};
 
 	// initialize a game state and player cards
@@ -78,6 +78,14 @@ int main() {
 	}
 	else printf("PASS\n");
 
+	//Verify actions increased by 1
+	printf("\tnumActions = %d, expected = %d --> ", testG.numActions, G.numActions + 1); 
+	if (testG.numBuys != G.numActions + 1) {
+		printf("FAIL\n");
+		testPass = 0;
+	}
+	else printf("PASS\n");
+
 	//Criteria for choice1 = 1 (gain 2 coins)
 	//Verify 2 coins were gained
 	printf("\tcoins = %d, expected = %d --> ", testG.coins, G.coins + 2); 
@@ -87,17 +95,17 @@ int main() {
 	}
 	else printf("PASS\n");
 	
-	//Verify hand count was unchanged
-	printf("\thandCount = %d, expected = %d --> "); 
-	if (testG.handCount[currentPlayer] != G.handCount[currentPlayer]) {
+	//Verify hand count decreased by 1 for discarded card
+	printf("\thandCount = %d, expected = %d --> ", testG.handCount[currentPlayer], G.handCount[currentPlayer] - 1);
+	if (testG.handCount[currentPlayer] != G.handCount[currentPlayer] - 1) {
 		printf("FAIL\n");
 		testPass = 0;
 	}
 	else printf("PASS\n");
 
-	//Verify hand was unchanged
+	//Verify hand was unchanged except for 1 card discarded
 	printf("\thand: \n");
-	for (i = 0; i < G.handCount[currentPlayer]; i++) {
+	for (i = 0; i < G.handCount[currentPlayer] - 1; i++) {
 		printf("\t\tcard %d = %d, expected = %d --> ", i + 1, testG.hand[currentPlayer][i], G.hand[currentPlayer][i]); 
 		if (testG.hand[currentPlayer][i] != G.hand[currentPlayer][i]) {
 			printf("FAIL\n");
@@ -107,7 +115,7 @@ int main() {
 	}
 
 	//Verify hand count of next player was unchanged
-	printf("\thandCount = %d, expected = %d --> ");
+	printf("\thandCount = %d, expected = %d --> ", testG.handCount[currentPlayer + 1], G.handCount[currentPlayer + 1]);
 	if (testG.handCount[currentPlayer + 1] != G.handCount[currentPlayer + 1]) {
 		printf("FAIL\n");
 		testPass = 0;
