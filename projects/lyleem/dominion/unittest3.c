@@ -195,7 +195,7 @@ int testCriteriaForValidAmbassadorInput(struct gameState *testG, struct gameStat
 
 	//Verify supply count has increased by the number specified in choice2
 	printf("\tsupplyCount = %d, expected = %d --> ", testG->supplyCount[testG->hand[currentPlayer][choice1]], G->supplyCount[G->hand[currentPlayer][choice1]] - choice2);
-	if (testG->supplyCount[testG->hand[currentPlayer][choice1]] != G->supplyCount[G->hand[currentPlayer][choice1]] - choice2) testPass = printFail();
+	if (testG->supplyCount[choice1] != G->supplyCount[choice1] - choice2) testPass = printFail(); //(***this will fail due to a bug I added in executeAmbassadorCard for Assignment 2)
 	else printPass();
 
 
