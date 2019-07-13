@@ -68,7 +68,6 @@ int main() {
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
 	choice1 = 1; //discard estate card
-	//cardEffect(baron, choice1, choice1, choice2, &testG, handpos, &bonus);
 	result = executeBaronCard(choice1, &testG, handpos, currentPlayer); 
 
 	testPass = 1; 
@@ -87,7 +86,6 @@ int main() {
 	// Copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
 	choice1 = 0; //gain estate card
-	//cardEffect(baron, choice1, choice1, choice2, &testG, handpos, &bonus);
 	result = executeBaronCard(choice1, &testG, handpos, currentPlayer);
 
 	testPass = 1;
@@ -125,7 +123,6 @@ int main() {
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
 	choice1 = 1; //discard estate card
-	//cardEffect(baron, choice1, choice1, choice2, &testG, handpos, &bonus);
 	result = executeBaronCard(choice1, &testG, handpos, currentPlayer);
 
 	testPass = 1;
@@ -153,7 +150,6 @@ int main() {
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
 	choice1 = 1; //discard estate card
-	//cardEffect(baron, choice1, choice1, choice2, &testG, handpos, &bonus);
 	result = executeBaronCard(choice1, &testG, handpos, currentPlayer);
 
 	testPass = 1;
@@ -180,11 +176,6 @@ int testForEveryBaronCard(struct gameState *testG, struct gameState *G, int retu
 	//Verify numBuys was incremented
 	printf("\tnumBuys = %d, expected = %d --> ", testG->numBuys, G->numBuys + 1);
 	testPass = myAssert(testG->numBuys, G->numBuys + 1, testPass);
-	//if (testG->numBuys != (G->numBuys + 1)) {
-	//	printf("FAIL\n");
-	//	testPass = 0;
-	//}
-	//else printf("PASS\n");
 
 	return testPass; 
 }
@@ -195,11 +186,6 @@ int testDiscardEstateCard(struct gameState *testG, struct gameState *G, int curr
 	//Verify 4 coins have been gained 
 	printf("\tcoins = %d, expected = %d --> ", testG->coins, G->coins + 4);
 	testPass = myAssert(testG->coins, G->coins + 4, testPass);
-	//if (testG->coins != (G->coins + 4)) {
-	//	printf("FAIL\n");
-	//	testPass = 0;
-	//}
-	//else printf("PASS\n");
 
 	//Verify estate card is in current player's discard pile 
 	printf("\ttop of discard pile = %d, expected = 1 --> ", testG->discard[currentPlayer][testG->discardCount[currentPlayer]]);
@@ -220,29 +206,14 @@ int testDiscardEstateCard(struct gameState *testG, struct gameState *G, int curr
 	//Verify current player's last card is now -1 (since they should have one card less) 
 	printf("\tprevious last card in hand = %d, expected = -1 --> ", testG->hand[currentPlayer][testG->handCount[currentPlayer]]);
 	testPass = myAssert(testG->hand[currentPlayer][testG->handCount[currentPlayer]], -1, testPass);
-	//if (testG->hand[currentPlayer][testG->handCount[currentPlayer]] != -1) {
-	//	printf("FAIL\n");
-	//	testPass = 0;
-	//}
-	//else printf("PASS\n");
 
 	//Verify estate card was removed and next card in hand was moved up into that position
 	printf("\thand position of estate card = %d, expected = %d --> ", testG->hand[currentPlayer][estateCardPosition], G->hand[currentPlayer][estateCardPosition + 1]);
 	testPass = myAssert(testG->hand[currentPlayer][estateCardPosition], G->hand[currentPlayer][estateCardPosition + 1], testPass);
-	//if (testG->hand[currentPlayer][estateCardPosition] != G->hand[currentPlayer][estateCardPosition + 1]) {
-	//	printf("FAIL\n");
-	//	testPass = 0;
-	//}
-	//else printf("PASS\n");
 
 	//Verify that hand count was decremented 
 	printf("\thandCount = %d, expected = %d --> ", testG->handCount[currentPlayer], G->handCount[currentPlayer] + 1);
 	testPass = myAssert(testG->hand[currentPlayer][estateCardPosition], G->hand[currentPlayer][estateCardPosition + 1], testPass); 
-	/*if (testG->handCount[currentPlayer] != (G->handCount[currentPlayer] - 1)) {
-		printf("FAIL\n");
-		testPass = 0;
-	}
-	else printf("PASS\n");*/
 
 	return testPass;
 }
@@ -253,29 +224,14 @@ int testGainEstateCard(struct gameState *testG, struct gameState *G, int current
 	//Verify player's hand contains an extra card
 	printf("\thandCount = %d, expected = %d --> ", testG->handCount[currentPlayer], G->handCount[currentPlayer] + 1);
 	testPass = myAssert(testG->handCount[currentPlayer], G->handCount[currentPlayer] + 1, testPass); 
-	//if (testG->handCount[currentPlayer] != G->handCount[currentPlayer] + 1) {
-	//	printf("FAIL\n");
-	//	testPass = 0;
-	//}
-	//else printf("PASS\n");
 
 	//Verify that player's hand contains the new estate card 
 	printf("\tTop of hand = %d, expected = 1 --> ", testG->hand[currentPlayer][G->handCount[currentPlayer]]);
 	testPass = myAssert(testG->hand[currentPlayer][G->handCount[currentPlayer]], estate, testPass); 
-	//if (testG->hand[currentPlayer][G->handCount[currentPlayer]] != estate) {
-	//	printf("FAIL\n");
-	//	testPass = 0;
-	//}
-	//else printf("PASS\n");
 
 	//Verify supply count is one less now
 	printf("\tsupplyCount = %d, expected = %d --> ", testG->supplyCount[estate], G->supplyCount[estate] - 1);
 	testPass = myAssert(testG->supplyCount[estate], G->supplyCount[estate] - 1, testPass);
-	//if (testG->supplyCount[estate] != G->supplyCount[estate] - 1) {
-	//	printf("FAIL\n");
-	//	testPass = 0;
-	//}
-	//else printf("PASS\n");
 
 	return testPass; 
 }
