@@ -21,7 +21,7 @@
 #define TESTCARD "baron"
 
 
-int testForEveryEstateCard(struct gameState *testG, struct gameState *G, int testPass);
+int testForEveryBaronCard(struct gameState *testG, struct gameState *G, int testPass);
 int testDiscardEstateCard(struct gameState *testG, struct gameState *G, int currentPlayer, int estateCardPosition, int testPass);
 int testGainEstateCard(struct gameState *testG, struct gameState *G, int currentPlayer, int estateCardPosition, int testPass);
 void concludeTestCase(int testPass, int testCaseNumber);
@@ -34,6 +34,7 @@ int main() {
 	int numPlayers = 2;
 	int currentPlayer = 0;
 	int testPass = 1; 
+	int result; 
 	int estateCardPosition = -1;
 	struct gameState G, testG;
 	int k[10] = {baron, embargo, village, minion, mine, cutpurse,
@@ -64,10 +65,11 @@ int main() {
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
 	choice1 = 1; //discard estate card
-	cardEffect(baron, choice1, choice1, choice2, &testG, handpos, &bonus);
+	//cardEffect(baron, choice1, choice1, choice2, &testG, handpos, &bonus);
+	result = executeBaronCard(choice1, &testG, handpos, currentPlayer); 
 
 	testPass = 1; 
-	testPass = testForEveryEstateCard(&testG, &G, testPass);
+	testPass = testForEveryBaronCard(&testG, &G, testPass);
 	testPass = testDiscardEstateCard(&testG, &G, currentPlayer, estateCardPosition, testPass); 
 
 	concludeTestCase(testPass, 1);
@@ -82,11 +84,11 @@ int main() {
 	// Copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
 	choice1 = 0; //gain estate card
-	cardEffect(baron, choice1, choice1, choice2, &testG, handpos, &bonus);
-	//printf("Test Game coins: %d\n", testG.coins); 	
+	//cardEffect(baron, choice1, choice1, choice2, &testG, handpos, &bonus);
+	result = executeBaronCard(choice1, &testG, handpos, currentPlayer);
 
 	testPass = 1;
-	testPass = testForEveryEstateCard(&testG, &G, testPass);
+	testPass = testForEveryBaronCard(&testG, &G, testPass);
 	testPass = testGainEstateCard(&testG, &G, currentPlayer, estateCardPosition, testPass);
 
 	concludeTestCase(testPass, 2);
@@ -120,10 +122,11 @@ int main() {
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
 	choice1 = 1; //discard estate card
-	cardEffect(baron, choice1, choice1, choice2, &testG, handpos, &bonus);
+	//cardEffect(baron, choice1, choice1, choice2, &testG, handpos, &bonus);
+	result = executeBaronCard(choice1, &testG, handpos, currentPlayer);
 
 	testPass = 1;
-	testPass = testForEveryEstateCard(&testG, &G, testPass);
+	testPass = testForEveryBaronCard(&testG, &G, testPass);
 	testPass = testDiscardEstateCard(&testG, &G, currentPlayer, estateCardPosition, testPass);
 
 	concludeTestCase(testPass, 3); 
@@ -147,16 +150,16 @@ int main() {
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
 	choice1 = 1; //discard estate card
-	cardEffect(baron, choice1, choice1, choice2, &testG, handpos, &bonus);
+	//cardEffect(baron, choice1, choice1, choice2, &testG, handpos, &bonus);
+	result = executeBaronCard(choice1, &testG, handpos, currentPlayer);
 
 	testPass = 1;
-	testPass = testForEveryEstateCard(&testG, &G, testPass);
+	testPass = testForEveryBaronCard(&testG, &G, testPass);
 	testPass = testGainEstateCard(&testG, &G, currentPlayer, estateCardPosition, testPass);
 
 	concludeTestCase(testPass, 4);
 
 	
-
 
 	printf(">>>>> UNIT TEST 1 (%s card) COMPLETE <<<<<\n\n", TESTCARD);
 
@@ -166,7 +169,7 @@ int main() {
 
 
 
-int testForEveryEstateCard(struct gameState *testG, struct gameState *G, int testPass) {
+int testForEveryBaronCard(struct gameState *testG, struct gameState *G, int testPass) {
 	//Verify numBuys was incremented
 	printf("\tnumBuys = %d, expected = %d --> ", testG->numBuys, G->numBuys + 1);
 	if (testG->numBuys != (G->numBuys + 1)) {
