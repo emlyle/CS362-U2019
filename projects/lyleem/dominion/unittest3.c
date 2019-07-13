@@ -46,13 +46,13 @@ int main() {
 
 	 
 
-	printf("----------------- UNIT TEST 2: Testing %s card ----------------\n", TESTCARD);
+	printf("----------------- UNIT TEST 3: Testing %s card ----------------\n", TESTCARD);
 
 	// ---------------------------------------- TEST CASE 1 -------------------------------------------
 	printf("TEST CASE 1: choice2 = 1 (discard 1 copy of choice1 card)\n");
 
 	//Make sure the card in position 1 does not match the card in handPos (position 0)
-	if (G.hand[currentPlayer][1] == g.hand[currentPlayer][0]) {
+	if (G.hand[currentPlayer][1] == G.hand[currentPlayer][0]) {
 		if (G.hand[currentPlayer][1] > 0) G.hand[currentPlayer][1]--; 
 		else G.hand[currentPlayer][1]++; 
 	}
@@ -79,12 +79,12 @@ int main() {
 	handPos = 0; 
 
 	//Make sure the card in position 1 does not match the card in handPos (position 0)
-	if (G.hand[currentPlayer][1] == g.hand[currentPlayer][0]) {
+	if (G.hand[currentPlayer][1] == G.hand[currentPlayer][0]) {
 		if (G.hand[currentPlayer][1] > 0) G.hand[currentPlayer][1]--;
 		else G.hand[currentPlayer][1]++;
 	}
 	//Make card in position 2 match card in position 1 to ensure two copies exist
-	G.hand[currentPlayer][2] = g.hand[currentPlayer][1]; 
+	G.hand[currentPlayer][2] = G.hand[currentPlayer][1]; 
 
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
@@ -138,7 +138,7 @@ int main() {
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
 
-	choice1 = G.hand[currentPlayer][handPos]; //card to discard 
+	choice1 = handPos; //card to discard 
 	choice2 = 1;  //number of choice1 card to discard
 	result = executeAmbassadorCard(choice1, choice2, &testG, handPos, currentPlayer);
 
@@ -150,7 +150,7 @@ int main() {
 
 
 
-	printf(">>>>> UNIT TEST 2 (%s card) COMPLETE <<<<<\n\n", TESTCARD);
+	printf(">>>>> UNIT TEST 3 (%s card) COMPLETE <<<<<\n\n", TESTCARD);
 
 	return 0;
 
@@ -220,8 +220,8 @@ int testCriteriaForValidAmbassadorInput(struct gameState *testG, struct gameStat
 			choice1CardsInG++;
 		}
 	}
-	printf("\tchoice1 cards in hand = %d, expected = %d --> ", choice1CardsInTestG, choice1CardsInG - 1);
-	if (choice1CardsInTestG != choice1CardsInG - 1) testPass = printFail();
+	printf("\tchoice1 cards in hand = %d, expected = %d --> ", choice1CardsInTestG, choice1CardsInG + 1);
+	if (choice1CardsInTestG != choice1CardsInG + 1) testPass = printFail();
 	else printPass();
 
 	return testPass; 
@@ -256,14 +256,14 @@ int testCriteriaForInvalidAmbassadorInput(struct gameState *testG, struct gameSt
 
 	//Verify next player's hand count is unchanged - may fail due to my Assignment 2 bug in executeAmbassadorCard
 	printf("\thandCount = %d, expected %d --> ", testG->handCount[currentPlayer + 1], G->handCount[currentPlayer + 1]);
-	if (testG->handCount[currentPlayer + 1] != G->handCount[currentPlayer + 1]) testPass = printFail();
+	if (testG->handCount[currentPlayer + 1] != G->handCount[currentPlayer + 1]) testPass = printFail(); //will fail due to existing bug in dominion.c
 	else printPass();
 
 	//Verify next player's hand is unchanged - may fail due to my Assignment 2 bug in executeAmbassadorCard
 	printf("\thand: \n");
 	for (i = 0; i < G->handCount[currentPlayer + 1]; i++) {
 		printf("\t\tcard %d = %d, expected = %d --> ", i + 1, testG->hand[currentPlayer + 1][i], G->hand[currentPlayer + 1][i]);
-		if (testG->hand[currentPlayer + 1][i] != G->hand[currentPlayer + 1][i]) testPass = printFail();
+		if (testG->hand[currentPlayer + 1][i] != G->hand[currentPlayer + 1][i]) testPass = printFail(); //will fail due to existing bug in dominion.c
 		else printPass();
 	}
 	

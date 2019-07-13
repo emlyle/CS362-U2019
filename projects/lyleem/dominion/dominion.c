@@ -979,7 +979,7 @@ int executeAmbassadorCard(int choice1, int choice2, struct gameState *state, int
 	{
 		//if (i != currentPlayer) //***NEW BUG ADDED - ORIGINAL CODE INCLUDED THIS IF STATEMENT
 		//{
-			gainCard(state->hand[currentPlayer][choice1], state, 2, i); //***Found existing bug: 2 was set to 0 which does not add the card to a hand
+			gainCard(state->hand[currentPlayer][choice1], state, 0, i); //***Found existing bug: arg 0 does not add the card to a hand
 		//}
 	}
 

@@ -43,7 +43,7 @@ runtests: testDrawCard
 player: player.c interface.o
 	gcc -o player player.c -g  dominion.o rngs.o interface.o $(CFLAGS)
 
-all: playdom player unittest1 unittest2 runtests 
+all: playdom player unittest1 unittest2 unittest3 runtests 
 
 clean:
-	rm -f *.o playdom.exe playdom player player.exe unittest1 unittest2 *.gcov *.gcda *.gcno *.so *.out testDrawCard testDrawCard.exe
+	rm -f *.o playdom.exe playdom player player.exe unittest1 unittest2 unittest3 *.gcov *.gcda *.gcno *.so *.out testDrawCard testDrawCard.exe
