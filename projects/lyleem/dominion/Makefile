@@ -13,16 +13,16 @@ playdom: dominion.o playdom.c
 unittest1: unittest1.c dominion.o rngs.o
 	gcc -o unittest1 -g  unittest1.c dominion.o rngs.o $(CFLAGS)
  
-	
 unittest2: unittest2.c dominion.o rngs.o
 	gcc -o unittest2 -g  unittest2.c dominion.o rngs.o $(CFLAGS)
 
 unittest3: unittest3.c dominion.o rngs.o
 	gcc -o unittest3 -g  unittest3.c dominion.o rngs.o $(CFLAGS)
 
-unittestresults: unittest1 unittest2
+unittestresults: unittest1 unittest2 unittest3
 	./unittest1 &> unittestresults.out
 	./unittest2 >> unittestresults.out
+	./unittest3 >> unittestresults.out
 	gcov dominion.c >> unittestresults.out
 	cat dominion.c.gcov >> unittestresults.out	
 
