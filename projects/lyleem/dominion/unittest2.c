@@ -24,7 +24,7 @@ int testCriteriaForAllMinionCards(int result, struct gameState *testG, struct ga
 int testCriteriaForNotChoice2(struct gameState* testG, struct gameState* G, int currentPlayer, int testPass);
 int verifyNoChangeToNextPlayer(struct gameState* testG, struct gameState* G, int currentPlayer, int testPass); 
 int testCriteriaForChoice2(struct gameState* testG, struct gameState* G, int currentPlayer, int testPass);
-
+void concludeTestCase(int testPass, int testCaseNumber);
 
 int main() {
 	int i;
