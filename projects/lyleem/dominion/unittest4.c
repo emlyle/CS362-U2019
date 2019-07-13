@@ -44,6 +44,11 @@ TC4: Other player has only one card (a treasure card)
 
 TC5: Other player has no cards???
 	unless the other player's deck count = 0, the code to add to cards will be missed and will fail
+
+Treasure: 4, 5, 6 
+Victory: 1, 2, 3, 10, 16
+Action: 11, 12, 13, 14
+
 */
 
 
@@ -76,15 +81,16 @@ int main() {
 
 	// ---------------------------------------- TEST CASE 1 -------------------------------------------
 	printf("TEST CASE 1: Tribute cards = treasure card + action card\n");
-	//TC1: Last two cards = treasure + action card, deck as is(probably not empty but double check)
-	//	Add two coins
-	//	Add two actions
+	//NOTE: This test will fail due to 3 existing bugs in the code: 
+		//one will fail to set the tribute cards 
+		//another bug will still default empty tribute cards to action cards 
+		//another bug will iterature through the tribute card array an extra time, accessing an invalid address for a final card
 
-	////Make sure the card in position 1 does not match the card in handPos (position 0)
-	//if (G.hand[currentPlayer][1] == G.hand[currentPlayer][0]) {
-	//	if (G.hand[currentPlayer][1] > 0) G.hand[currentPlayer][1]--;
-	//	else G.hand[currentPlayer][1]++;
-	//}
+	//Make sure last two cards in other player's deck  are 4 and 11 (treasure and action)
+	if (G.deckCount[currentPlayer + 1] < 2) G.deckCount[currentPlayer + 1] = 2; 
+	G.deck[currentPlayer + 1][G.deckCount[currentPlayer + 1] - 1] = 4; //Treasure card
+	G.deck[currentPlayer + 1][G.deckCount[currentPlayer + 1] - 2] = 11;//Action card
+	
 
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
@@ -93,20 +99,26 @@ int main() {
 	//For me: What is the state of the other player's deck - length and cards?
 	printf("Deck count of other player = %d\nOther Player's Deck:\n", G.deckCount[currentPlayer + 1]);
 	for (i = 0; i < G.deckCount[currentPlayer + 1]; i++) {
-		printf("\tCard #%d: %d\n", (i + 1), G.deck[nextPlayer][i]);
+		printf("\tCard #%d: %d\n", (i + 1), G.deck[currentPlayer + 1][i]);
 	}
 
-	printf("]nAFTER TEST:\nDeck count of other player = %d\nOther Player's Deck:\n", testG.deckCount[currentPlayer + 1]);
+	printf("\nAFTER TEST:\nDeck count of other player = %d\nOther Player's Deck:\n", testG.deckCount[currentPlayer + 1]);
 	for (i = 0; i < testG.deckCount[currentPlayer + 1]; i++) {
-		printf("\tCard #%d: %d\n", (i + 1), testG.deck[nextPlayer][i]);
+		printf("\tCard #%d: %d\n", (i + 1), testG.deck[currentPlayer + 1][i]);
 	}
 
 	testPass = 1;
-	//Verify two coins added 
+	//Verify return value = 0
+	printf("\treturn value = %d, expected = 0 -->", result); 
+	testPass = myAssert(result, 0, testPass); 
 
-	//Verify two actions added 
+	//Verify two coins added - for the treasure card
+	printf("\tcoins = %d, expected = %d --> ", testG.coins,G.coins + 2); 
+ 	testPass = myAssert(testG.coins, G.coins + 2, testPass); 
 
-	//OLD: testPass = testCriteriaForValidAmbassadorInput(&testG, &G, handPos, currentPlayer, choice1, choice2, result, testPass);
+	//Verify two actions added - for the action card 
+	printf("\tactions = %d, expected = %d --> ", testG.numActions, G.numActions + 2); 
+	testPass = myAssert(testG.numActions, G.numActions + 2, testPass); 
 
 	concludeTestCase(testPass, 1);
 
@@ -191,7 +203,7 @@ int main() {
 
 
 
-	printf(">>>>> UNIT TEST 3 (%s card) COMPLETE <<<<<\n\n", TESTCARD);
+	printf(">>>>> UNIT TEST 4 (%s card) COMPLETE <<<<<\n\n", TESTCARD);
 
 	return 0;
 
