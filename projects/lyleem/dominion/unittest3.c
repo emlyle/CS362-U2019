@@ -37,7 +37,6 @@ int main() {
 	int currentPlayer = 0;
 	int testPass = 1; 
 	int result = -1; 
-	int diffFound = 0; 
 	struct gameState G, testG;
 	int k[10] = {minion, embargo, village, baron, mine, cutpurse,
 			sea_hag, tribute, smithy, council_room};
@@ -200,7 +199,7 @@ int testCriteriaForValidAmbassadorInput(struct gameState *testG, struct gameStat
 
 	//Verify next player's hand count has increased by one
 	printf("\tnext player's handCount = %d, expected = %d --> ", testG->handCount[currentPlayer + 1], G->handCount[currentPlayer + 1] + 1);
-	testPass = myAssert(testG->handCount[currentPlayer + 1], G->handCount[currentPlayer + 1] + 1); 
+	testPass = myAssert(testG->handCount[currentPlayer + 1], G->handCount[currentPlayer + 1] + 1, testPass); 
 
 
 	//Verify next player's hand includes an extra copy of the choice1 card 
