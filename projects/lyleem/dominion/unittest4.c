@@ -1,13 +1,13 @@
 /*
- * unittest3.c - This tests executeAmbassadorCard function
+ * unittest4.c - This tests executeTributeCard function
  *
  */
 
 /*
  * Include the following lines in your makefile:
  *
- * unittest3: unittest3.c dominion.o rngs.o
- *      gcc -o unittest3 -g  unittest3.c dominion.o rngs.o $(CFLAGS)
+ * unittest4: unittest4.c dominion.o rngs.o
+ *      gcc -o unittest4 -g  unittest4.c dominion.o rngs.o $(CFLAGS)
  */
  
 #include "dominion.h"
@@ -18,7 +18,7 @@
 #include "rngs.h"
 #include <stdlib.h>
 
-#define TESTCARD "ambassador"
+#define TESTCARD "tribute"
 
 
 int testCriteriaForValidAmbassadorInput(struct gameState *testG, struct gameState *G, int handPos, int currentPlayer, int choice1, int choice2, int returnValue, int testPass);
@@ -46,7 +46,7 @@ int main() {
 
 	 
 
-	printf("----------------- UNIT TEST 3: Testing %s card ----------------\n", TESTCARD);
+	printf("----------------- UNIT TEST 4: Testing %s card ----------------\n", TESTCARD);
 
 	// ---------------------------------------- TEST CASE 1 -------------------------------------------
 	printf("TEST CASE 1: choice2 = 1 (discard 1 copy of choice1 card)\n");
@@ -163,16 +163,17 @@ int testCriteriaForValidAmbassadorInput(struct gameState *testG, struct gameStat
 
 	//Verify return value equals 0
 	printf("\treturn value = %d, expected 0 --> ", returnValue); 
-	testPass = myAssert(retunValue, 0, testPass); 
+	if (returnValue != 0) testPass = printFail();
+	else printPass();
+
 
 	//Verify handCount has decreased by the number to discard specified in choice2 
-	//***This condition will fail due to a bug I added in executeAmbassadorCard for Assignment 2
 	printf("\thandCount = %d, expected = %d --> ", testG->handCount[currentPlayer], G->handCount[currentPlayer] - choice2); 
-	testPass = myAssert(testG->handCount[currentPlayer], G->handCount[currentPlayer] - choice2, testPass); 
+	if (testG->handCount[currentPlayer] != G->handCount[currentPlayer] - choice2) testPass = printFail(); //(***this will fail due to a bug I added in executeAmbassadorCard for Assignment 2)
+	else printPass(); 
 
 
 	//Verify the number of choice1 cards in the hand has decreased by the number specified to discard in choice2 
-	//***This condition will fail due to a bug I added in executeAmbassadorCard for Assignment 2
 	//Get count of choice1 cards in testG hand
 	int choice1CardsInTestG = 0; 
 	for (i = 0; i < testG->handCount[currentPlayer]; i++) {
@@ -188,18 +189,20 @@ int testCriteriaForValidAmbassadorInput(struct gameState *testG, struct gameStat
 		}
 	}
 	printf("\tchoice1 cards in hand = %d, expected = %d --> ", choice1CardsInTestG, choice1CardsInG - choice2); 
-	testPass = myAssert(choice1CardsInTestG, choice1CardsInG - choice2, testPass); 
+	if (choice1CardsInTestG != choice1CardsInG - choice2) testPass = printFail(); //(***this will fail due to a bug I added in executeAmbassadorCard for Assignment 2)
+	else printPass();
 
 
 	//Verify supply count has increased by the number specified in choice2
-	//***This condition will fail due to a bug I added in executeAmbassadorCard for Assignment 2
-	printf("\tsupplyCount = %d, expected = %d --> ", testG->supplyCount[choice1], G->supplyCount[choice1] - choice2);
-	testPass = myAssert(testG->supplyCount[choice1], G->supplyCount[choice1] - choice2, testPass); 
+	printf("\tsupplyCount = %d, expected = %d --> ", testG->supplyCount[testG->hand[currentPlayer][choice1]], G->supplyCount[G->hand[currentPlayer][choice1]] - choice2);
+	if (testG->supplyCount[choice1] != G->supplyCount[choice1] - choice2) testPass = printFail(); //(***this will fail due to a bug I added in executeAmbassadorCard for Assignment 2)
+	else printPass();
 
 
 	//Verify next player's hand count has increased by one
 	printf("\tnext player's handCount = %d, expected = %d --> ", testG->handCount[currentPlayer + 1], G->handCount[currentPlayer + 1] + 1);
-	testPass = myAssert(testG->handCount[currentPlayer + 1], G->handCount[currentPlayer + 1] + 1); 
+	if (testG->handCount[currentPlayer + 1] != G->handCount[currentPlayer + 1] + 1) testPass = printFail();
+	else printPass();
 
 
 	//Verify next player's hand includes an extra copy of the choice1 card 
@@ -218,7 +221,8 @@ int testCriteriaForValidAmbassadorInput(struct gameState *testG, struct gameStat
 		}
 	}
 	printf("\tchoice1 cards in hand = %d, expected = %d --> ", choice1CardsInTestG, choice1CardsInG + 1);
-	testPass = myAssert(choice1CardsInTestG, choice1CardsInG + 1, testPass); 
+	if (choice1CardsInTestG != choice1CardsInG + 1) testPass = printFail();
+	else printPass();
 
 	return testPass; 
 }
@@ -229,41 +233,38 @@ int testCriteriaForInvalidAmbassadorInput(struct gameState *testG, struct gameSt
 
 	//Verify return value is -1 (for invalid input)
 	printf("\treturn value = %d, expected = -1 --> ", returnValue);
-	testPass = myAssert(returnValue, -1, testPass); 
+	if (returnValue != -1) testPass = printFail();
+	else printPass();
 
-
-	//Verify hand count is unchanged 
-	//***If player does not have enough choice1 cards, this condition will fail due to a bug I added for Assignment 2 in executeAmbassadorCard
+	//Verify hand count is unchanged - may fail due to my Assignment 2 bug in executeAmbassadorCard
 	printf("\thandCount = %d, expected %d --> ", testG->handCount[currentPlayer], G->handCount[currentPlayer]); 
-	testPass = myAssert(testG->handCount[currentPlayer], G->handCount[currentPlayer]), testPass); 
+	if (testG->handCount[currentPlayer] != G->handCount[currentPlayer]) testPass = printFail(); 
+	else printPass(); 
 
-
-	//Verify hand is unchanged 
-	//***If player does not have enough choice1 cards, this condition will fail due to a bug I added for Assignment 2 in executeAmbassadorCard
+	//Verify hand is unchanged - may fail due to my Assignment 2 bug in executeAmbassadorCard
 	printf("\thand: \n");
 	for (i = 0; i < G->handCount[currentPlayer]; i++) {
 		printf("\t\tcard %d = %d, expected = %d --> ", i + 1, testG->hand[currentPlayer][i], G->hand[currentPlayer][i]);
-		testPass = myAssert(testG->hand[currentPlayer][i], G->hand[currentPlayer][i], testPass); 
+		if (testG->hand[currentPlayer][i] != G->hand[currentPlayer][i]) testPass = printFail(); 
+		else printPass();
 	}
 
+	//Verify supply count is unchanged - may fail due to my Assignment 2 bug in executeAmbassadorCard
+	printf("\tsupplyCount = %d, expected = %d, --> ", testG->supplyCount[testG->hand[currentPlayer][choice1]], G->supplyCount[G->hand[currentPlayer][choice1]]);
+	if (testG->supplyCount[testG->hand[currentPlayer][choice1]] != G->supplyCount[G->hand[currentPlayer][choice1]]) testPass = printFail();
+	else printPass();
 
-	//Verify supply count is unchanged 
-	//***If player does not have enough choice1 cards, this condition will fail due to a bug I added for Assignment 2 in executeAmbassadorCard
-	printf("\tsupplyCount = %d, expected = %d, --> ", testG->supplyCount[choice1], G->supplyCount[choice1]);
-	testPass = myAssert(testG->supplyCount[choice1], G->supplyCount[choice1], testPass); 
-
-
-	//Verify next player's hand count is unchanged 
-	//***If player does not have enough choice1 cards, this condition will fail due to a bug I added for Assignment 2 in executeAmbassadorCard
+	//Verify next player's hand count is unchanged - may fail due to my Assignment 2 bug in executeAmbassadorCard
 	printf("\thandCount = %d, expected %d --> ", testG->handCount[currentPlayer + 1], G->handCount[currentPlayer + 1]);
-	testPass = myAssert(testG->handCount[currentPlayer + 1], G->handCount[currentPlayer + 1], testPass); 
+	if (testG->handCount[currentPlayer + 1] != G->handCount[currentPlayer + 1]) testPass = printFail(); //will fail due to existing bug in dominion.c
+	else printPass();
 
-	//Verify next player's hand is unchanged 
-	//***If player does not have enough cards, this condition will fail due to a bug I added for Assignment 2 in executeAmbassadorCard
+	//Verify next player's hand is unchanged - may fail due to my Assignment 2 bug in executeAmbassadorCard
 	printf("\thand: \n");
 	for (i = 0; i < G->handCount[currentPlayer + 1]; i++) {
 		printf("\t\tcard %d = %d, expected = %d --> ", i + 1, testG->hand[currentPlayer + 1][i], G->hand[currentPlayer + 1][i]);
-		testPass = myAssert(testG->hand[currentPlayer + 1][i], G->hand[currentPlayer + 1][i], testPass); 
+		if (testG->hand[currentPlayer + 1][i] != G->hand[currentPlayer + 1][i]) testPass = printFail(); //will fail due to existing bug in dominion.c
+		else printPass();
 	}
 	
 	return testPass; 
@@ -289,18 +290,4 @@ int printFail() {
 
 void printPass() {
 	printf("PASS\n"); 
-}
-
-
-int myAssert(int arg1, int arg2, int testPass) {
-	if (arg1 == arg2) {
-		//PASS
-		printPass(); 
-	}
-	else {
-		//FAIL
-		testPass = printFail(); 
-	}
-
-	return testPass; 
 }
