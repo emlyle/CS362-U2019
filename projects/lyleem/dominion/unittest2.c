@@ -25,6 +25,10 @@ int testCriteriaForNotChoice2(struct gameState* testG, struct gameState* G, int 
 int verifyNoChangeToNextPlayer(struct gameState* testG, struct gameState* G, int currentPlayer, int testPass); 
 int testCriteriaForChoice2(struct gameState* testG, struct gameState* G, int currentPlayer, int testPass);
 void concludeTestCase(int testPass, int testCaseNumber);
+int myAssert(int arg1, int arg2, int testPass);
+int printFail();
+void printPass();
+
 
 int main() {
 	int i;
@@ -62,11 +66,12 @@ int main() {
 	//Criteria for choice1 = 1 (gain 2 coins)
 	//Verify 2 coins were gained
 	printf("\tcoins = %d, expected = %d --> ", testG.coins, G.coins + 2); 
-	if (testG.coins != G.coins + 2) {
-		printf("FAIL\n");
-		testPass = 0;
-	}
-	else printf("PASS\n");
+	testPass = myAssert(testG.coins, G.coins + 2, testPass); 
+	//if (testG.coins != G.coins + 2) {
+	//	printf("FAIL\n");
+	//	testPass = 0;
+	//}
+	//else printf("PASS\n");
 
 
 	concludeTestCase(testPass, 1);
@@ -135,11 +140,12 @@ int main() {
 	//Criteria for next player having 5 cards 
 	//Verify hand count of next player is now 4
 	printf("\tnext player's handCount = %d, expected = 4 --> ", testG.handCount[currentPlayer + 1]);
-	if (testG.handCount[currentPlayer + 1] != 4) {
-		printf("FAIL\n");
-		testPass = 0;
-	}
-	else printf("PASS\n");
+	testPass = myAssert(testG.handCount[currentPlayer + 1], 4, testPass); 
+	//if (testG.handCount[currentPlayer + 1] != 4) {
+	//	printf("FAIL\n");
+	//	testPass = 0;
+	//}
+	//else printf("PASS\n");
 
 	//Verify next player's hand has changed
 	diffFound = 0;
@@ -181,11 +187,12 @@ int main() {
 
 	//Criteria for not choice 1: Verify no coins were gained
 	printf("\tcoins = %d, expected = %d --> ", testG.coins, G.coins);
-	if (testG.coins != G.coins) {
-		printf("FAIL\n");
-		testPass = 0;
-	}
-	else printf("PASS\n");
+	testPass = myAssert(testG.coins, G.coins, testPass);
+	//if (testG.coins != G.coins) {
+	//	printf("FAIL\n");
+	//	testPass = 0;
+	//}
+	//else printf("PASS\n");
 
 	testPass = testCriteriaForNotChoice2(&testG, &G, currentPlayer, testPass);
 
@@ -205,19 +212,21 @@ int main() {
 int testCriteriaForAllMinionCards(int result, struct gameState* testG, struct gameState* G, int testPass) {
 	//Verify return value is successful (0)
 	printf("\treturn value = %d, expected = 0 --> ", result);
-	if (result != 0) {
-		printf("FAIL\n");
-		testPass = 0;
-	}
-	else printf("PASS\n");
+	testPass = myAssert(result, 0, testPass); 
+	//if (result != 0) {
+	//	printf("FAIL\n");
+	//	testPass = 0;
+	//}
+	//else printf("PASS\n");
 
 	//Verify actions increased by 1
 	printf("\tnumActions = %d, expected = %d --> ", testG->numActions, G->numActions + 1);
-	if (testG->numActions != G->numActions + 1) {
-		printf("FAIL\n");
-		testPass = 0;
-	}
-	else printf("PASS\n");
+	testPass = myAssert(testG->numActions, G->numActions + 1, testPass); 
+	//if (testG->numActions != G->numActions + 1) {
+	//	printf("FAIL\n");
+	//	testPass = 0;
+	//}
+	//else printf("PASS\n");
 
 	return testPass; 
 }
@@ -228,21 +237,23 @@ int testCriteriaForNotChoice2(struct gameState* testG, struct gameState* G, int 
 
 	//Verify hand count decreased by 1 for discarded card
 	printf("\thandCount = %d, expected = %d --> ", testG->handCount[currentPlayer], G->handCount[currentPlayer] - 1);
-	if (testG->handCount[currentPlayer] != G->handCount[currentPlayer] - 1) {
-		printf("FAIL\n");
-		testPass = 0;
-	}
-	else printf("PASS\n");
+	testPass = myAssert(testG->handCount[currentPlayer], G->handCount[currentPlayer] - 1, testPass); 
+	//if (testG->handCount[currentPlayer] != G->handCount[currentPlayer] - 1) {
+	//	printf("FAIL\n");
+	//	testPass = 0;
+	//}
+	//else printf("PASS\n");
 
 	//Verify hand was unchanged except for 1 card discarded
 	printf("\thand: \n");
 	for (i = 0; i < G->handCount[currentPlayer] - 1; i++) {
 		printf("\t\tcard %d = %d, expected = %d --> ", i + 1, testG->hand[currentPlayer][i], G->hand[currentPlayer][i]);
-		if (testG->hand[currentPlayer][i] != G->hand[currentPlayer][i]) {
-			printf("FAIL\n");
-			testPass = 0;
-		}
-		else printf("PASS\n");
+		testPass = myAssert(testG->hand[currentPlayer][i], G->hand[currentPlayer][i], testPass); 
+		//if (testG->hand[currentPlayer][i] != G->hand[currentPlayer][i]) {
+		//	printf("FAIL\n");
+		//	testPass = 0;
+		//}
+		//else printf("PASS\n");
 	}
 	
 	testPass = verifyNoChangeToNextPlayer(testG, G, currentPlayer, testPass);
@@ -255,21 +266,23 @@ int verifyNoChangeToNextPlayer(struct gameState* testG, struct gameState* G, int
 
 	//Verify hand count of next player was unchanged
 	printf("\tnext player's handCount = %d, expected = %d --> ", testG->handCount[currentPlayer + 1], G->handCount[currentPlayer + 1]);
-	if (testG->handCount[currentPlayer + 1] != G->handCount[currentPlayer + 1]) {
-		printf("FAIL\n");
-		testPass = 0;
-	}
-	else printf("PASS\n");
+	testPass = myAssert(testG->handCount[currentPlayer + 1], G->handCount[currentPlayer + 1], testPass);
+	//if (testG->handCount[currentPlayer + 1] != G->handCount[currentPlayer + 1]) {
+	//	printf("FAIL\n");
+	//	testPass = 0;
+	//}
+	//else printf("PASS\n");
 
 	//Verify hand of next player was unchanged
 	printf("\tnext player's hand: \n");
 	for (i = 0; i < G->handCount[currentPlayer + 1]; i++) {
 		printf("\t\tcard %d = %d, expected = %d --> ", i + 1, testG->hand[currentPlayer + 1][i], G->hand[currentPlayer + 1][i]);
-		if (testG->hand[currentPlayer + 1][i] != G->hand[currentPlayer + 1][i]) {
-			printf("FAIL\n");
-			testPass = 0;
-		}
-		else printf("PASS\n");
+		testPass = myAssert(testG->hand[currentPlayer + 1][i], G->hand[currentPlayer + 1][i], testPass); 
+		//if (testG->hand[currentPlayer + 1][i] != G->hand[currentPlayer + 1][i]) {
+		//	printf("FAIL\n");
+		//	testPass = 0;
+		//}
+		//else printf("PASS\n");
 	}
 
 	return testPass; 
@@ -282,19 +295,21 @@ int testCriteriaForChoice2(struct gameState* testG, struct gameState* G, int cur
 
 	//Verify no coins were gained
 	printf("\tcoins = %d, expected = %d --> ", testG->coins, G->coins);
-	if (testG->coins != G->coins) {
-		printf("FAIL\n");
-		testPass = 0;
-	}
-	else printf("PASS\n");
+	testPass = myAssert(testG->coins, G->coins, testPass);
+	//if (testG->coins != G->coins) {
+	//	printf("FAIL\n");
+	//	testPass = 0;
+	//}
+	//else printf("PASS\n");
 
 	//Verify hand count is now 4
 	printf("\thandCount = %d, expected = 4 --> ", testG->handCount[currentPlayer]);
-	if (testG->handCount[currentPlayer] != 4) {
-		printf("FAIL\n");
-		testPass = 0;
-	}
-	else printf("PASS\n");
+	testPass = myAssert(testG->handCount[currentPlayer], 4, testPass); 
+	//if (testG->handCount[currentPlayer] != 4) {
+	//	printf("FAIL\n");
+	//	testPass = 0;
+	//}
+	//else printf("PASS\n");
 
 	//Verify hand has changed
 	printf("\thand: \n");
@@ -322,4 +337,29 @@ void concludeTestCase(int testPass, int testCaseNumber) {
 		printf("TEST CASE %d FAILED. See failure criteria listed above.\n", testCaseNumber);
 	}
 	printf("END TEST CASE %d\n\n", testCaseNumber);
+}
+
+
+int printFail() {
+	printf("FAIL\n");
+	return 0;
+}
+
+
+void printPass() {
+	printf("PASS\n");
+}
+
+
+int myAssert(int arg1, int arg2, int testPass) {
+	if (arg1 == arg2) {
+		//PASS
+		printPass();
+	}
+	else {
+		//FAIL
+		testPass = printFail();
+	}
+
+	return testPass;
 }

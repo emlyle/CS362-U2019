@@ -26,6 +26,7 @@ int testCriteriaForInvalidAmbassadorInput(struct gameState *testG, struct gameSt
 void concludeTestCase(int testPass, int testCaseNumber);
 int printFail(); 
 void printPass(); 
+int myAssert(int arg1, int arg2, int testPass); 
 
 
 int main() {
