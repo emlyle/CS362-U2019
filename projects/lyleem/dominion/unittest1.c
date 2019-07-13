@@ -179,7 +179,7 @@ int testForEveryBaronCard(struct gameState *testG, struct gameState *G, int retu
 
 	//Verify numBuys was incremented
 	printf("\tnumBuys = %d, expected = %d --> ", testG->numBuys, G->numBuys + 1);
-	testpass = myAssert(testG->numBuys, G->numBuys + 1, testPass);
+	testPass = myAssert(testG->numBuys, G->numBuys + 1, testPass);
 	//if (testG->numBuys != (G->numBuys + 1)) {
 	//	printf("FAIL\n");
 	//	testPass = 0;
