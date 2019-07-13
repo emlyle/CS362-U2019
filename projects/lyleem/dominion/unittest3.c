@@ -163,7 +163,7 @@ int testCriteriaForValidAmbassadorInput(struct gameState *testG, struct gameStat
 
 	//Verify return value equals 0
 	printf("\treturn value = %d, expected 0 --> ", returnValue); 
-	testPass = myAssert(retunValue, 0, testPass); 
+	testPass = myAssert(returnValue, 0, testPass); 
 
 	//Verify handCount has decreased by the number to discard specified in choice2 
 	//***This condition will fail due to a bug I added in executeAmbassadorCard for Assignment 2
@@ -235,7 +235,7 @@ int testCriteriaForInvalidAmbassadorInput(struct gameState *testG, struct gameSt
 	//Verify hand count is unchanged 
 	//***If player does not have enough choice1 cards, this condition will fail due to a bug I added for Assignment 2 in executeAmbassadorCard
 	printf("\thandCount = %d, expected %d --> ", testG->handCount[currentPlayer], G->handCount[currentPlayer]); 
-	testPass = myAssert(testG->handCount[currentPlayer], G->handCount[currentPlayer]), testPass); 
+	testPass = myAssert(testG->handCount[currentPlayer], G->handCount[currentPlayer], testPass); 
 
 
 	//Verify hand is unchanged 
