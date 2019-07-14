@@ -26,6 +26,7 @@ int main() {
 	int numPlayers = 2; 	//For this entire CARD TEST 3 unit test, assume always only two players!
 	int testPass = 1; 
 	int result = -2; 
+	int currentPlayer; 
 	struct gameState G, testG;
 	int k[10] = { minion, embargo, village, baron, mine, cutpurse,
 		sea_hag, tribute, smithy, council_room };
@@ -96,7 +97,7 @@ int verifyTestCriteriaToEndTurn(struct gameState *G, struct gameState *testG, in
 
 
 	//Verify return value of 0
-	printf("\treturn value = %d, expected 0 --> ", result);
+	printf("\treturn value = %d, expected 0 --> ", returnValue);
 	testPass = myAssert(returnValue, 0, testPass);
 
 	//Verify whose turn is the current player 
@@ -135,8 +136,8 @@ int verifyTestCriteriaToEndTurn(struct gameState *G, struct gameState *testG, in
 	printf("\t\tnumBuys = %d, expected = 1 --> ");
 	testPass = myAssert(testG->numBuys, 1, testPass);
 
-	printf("\t\tplayedCount = %d, expected = 0 --> ");
-	testPass = myAssert(testG->playedCount, 0, testPass);
+	printf("\t\tplayedCardCount = %d, expected = 0 --> ");
+	testPass = myAssert(testG->playedCardCount, 0, testPass);
 
 
 	//Verify current player has 5 cards in hand
