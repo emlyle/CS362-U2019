@@ -99,7 +99,6 @@ int verifyTestCriteriaToEndTurn(struct gameState *G, struct gameState *testG, in
 		currentPlayer = 0; 
 	}
 
-
 	//Verify return value of 0
 	printf("\treturn value = %d, expected 0 --> ", returnValue);
 	testPass = myAssert(returnValue, 0, testPass);
@@ -111,7 +110,6 @@ int verifyTestCriteriaToEndTurn(struct gameState *G, struct gameState *testG, in
 	//Verify previous player's hand count is zero
 	printf("\tprevious player's hand count = %d, expected = 0 --> ", testG->handCount[previousPlayer]); 
 	testPass = myAssert(testG->handCount[previousPlayer], 0, testPass); 
-
 
 	//Verify state values have been reset
 	printf("\tVerify game state values have been reset:\n"); 

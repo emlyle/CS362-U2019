@@ -1,0 +1,242 @@
+/*
+ * cardtest5.c - This tests the shuffle function
+ *
+ */
+
+/*
+ * Include the following lines in your makefile:
+ *
+ * cardtest5: cardtest5.c dominion.o rngs.o
+ *      gcc -o cardtest5 -g  cardtest5.c dominion.o rngs.o $(CFLAGS)
+ */
+ 
+#include "dominion.h"
+#include "dominion_helpers.h"
+#include <string.h>
+#include <stdio.h>
+#include <assert.h>
+#include "rngs.h"
+#include <stdlib.h>
+
+#define TESTFUNCTION "drawCard"
+
+
+void concludeTestCase(int testPass, int testCaseNumber);
+int printFail(); 
+void printPass(); 
+int myAssert(int arg1, int arg2, int testPass); 
+
+/*
+int drawCard(int player, struct gameState *state)
+
+
+TC: deck for currentPlayer is not empty
+hand count ++
+deck count --
+prev last card in deck is now last card in hand
+return 0
+
+TC: deck and discard are empty
+return -1
+
+*/
+
+int main() {
+	int i; 
+	int seed = 1000;
+	int numPlayers = 2;
+	int currentPlayer = 0; 
+	int testPass = 1; 
+	int result = -2; 
+	struct gameState G, testG;
+	int k[10] = {minion, embargo, village, baron, mine, cutpurse,
+			sea_hag, tribute, smithy, council_room};
+	initializeGame(numPlayers, k, seed, &G);
+
+	printf("----------------- CARD TEST 2: Testing %s Function ----------------\n", TESTFUNCTION);
+
+	// ---------------------------------------- TEST CASE 1 -------------------------------------------
+	printf("TEST CASE 1: deck count = 0 \n");
+
+	//Empty current player's deck
+	for (i = 0; i < G.deckCount[currentPlayer]; i++) {
+		G.deck[currentPlayer][i] = -1; 
+	}
+	G.deckCount[currentPlayer] = 0; 
+
+	//For me: 
+	printf("Discard Pile:\n"); 
+	for (i = 0; i < G.discardCount[currentPlayer]; i++) {
+		printf("\t%d\n", G.discard[currentPlayer][i]);
+	}
+	//if empty - add values 
+
+
+	// copy the game state (G) to a test case (testG)
+	memcpy(&testG, &G, sizeof(struct gameState));
+
+	// call test function to initialize a game state and player cards
+	result = drawCard(currentPlayer, &testG);
+
+	testPass = 1; 
+	//Verify return value of 0
+	printf("\treturn value = %d, expected 0 --> ", result);
+	testPass = myAssert(result, 0, testPass);
+
+	//	Verify discard count is 0
+	//	Verify discard cards are in the deck
+	//	Verify deck count is prev discard count - 1 (for the card added to the hand)
+	//	hand count up by one
+	//	card in last position of hand is in[0, 26]
+
+	concludeTestCase(testPass, 1);
+
+
+
+
+	// ------------------------------------------------ TEST CASE 2 ---------------------------------------------------------
+	printf("TEST CASE 2: deck count = 1 \n");
+
+	currentPlayer = 0; 
+
+	//Empty current player's deck except for one card
+	for (i = 1; i < G.deckCount[currentPlayer]; i++) {
+		G.deck[currentPlayer][i] = -1;
+	}
+	G.deck[currentPlayer][0] = copper; 
+	G.deckCount[currentPlayer] = 1;
+
+	// copy the game state (G) to a test case (testG)
+	memcpy(&testG, &G, sizeof(struct gameState));
+
+	// call test function to initialize a game state and player cards
+	result = shuffle(currentPlayer, &testG);
+
+	testPass = 1;
+	//Verify return value of 0
+	printf("\treturn value = %d, expected = 0 --> ", result);
+	testPass = myAssert(result, 0, testPass);
+
+	//Verify deck still contains one card 
+	printf("\tdeck count = %d, expected = 1 --> ", testG.deckCount[currentPlayer]); 
+	testPass = myAssert(testG.deckCount[currentPlayer], 1, testPass); 
+
+	//Verify deck contains the same card 
+	printf("\tcard = %d, expected = %d --> ", testG.deck[currentPlayer][0], G.deck[currentPlayer][0]); 
+	testPass = myAssert(testG.deck[currentPlayer][0], G.deck[currentPlayer][0], testPass); 
+	
+	concludeTestCase(testPass, 2);
+
+
+
+	// ------------------------------------------------ TEST CASE 3 ---------------------------------------------------------
+	printf("TEST CASE 3: deck count = 10 \n");
+
+	currentPlayer = 0;
+	int card = 0; 
+
+	//Set any remaining cards in deck to empty
+	for (i = 10; i < G.deckCount[currentPlayer]; i++) {
+		G.deck[currentPlayer][i] = -1;
+	}
+	G.deckCount[currentPlayer] = 10;
+
+	//Make all cards in current player's deck unique (to make verification easier)
+	for (i = 0; i < G.deckCount[currentPlayer]; i++) {
+		G.deck[currentPlayer][i] = card++;
+	}
+
+	// copy the game state (G) to a test case (testG)
+	memcpy(&testG, &G, sizeof(struct gameState));
+
+	// call test function to initialize a game state and player cards
+	result = shuffle(currentPlayer, &testG);
+
+	testPass = 1;
+	//Verify return value of 0
+	printf("\treturn value = %d, expected 0 --> ", result);
+	testPass = myAssert(result, 0, testPass);
+
+	//Verify deck still contains 10 cards 
+	printf("\tdeck count = %d, expected = 10 --> ", testG.deckCount[currentPlayer]);
+	testPass = myAssert(testG.deckCount[currentPlayer], 10, testPass);
+
+	//Verify deck contains the same cards  
+	int cards[10] = { -1, -1, -1, -1, -1, -1, -1, -1. -1. -1 }; //Set all cards to empty
+	int newCardFound = 0; 
+	for (i = 0; i < 10; i++) {
+		//printf("\toriginal card = %d, new card = %d\n", G.deck[currentPlayer][i], testG.deck[currentPlayer][i]);
+		if (testG.deck[currentPlayer][i] >= 0 && testG.deck[currentPlayer][i] <= 9) {
+			cards[testG.deck[currentPlayer][i]] = i; //set card to position in deck where it was found
+		}
+		else newCardFound = 1; 
+	}
+	if (newCardFound) {
+		printf("\tdeck contains different cards --> "); 
+	} 
+	else printf("\tdeck contains the same cards --> "); 
+	testPass = myAssert(newCardFound, 0, testPass); 
+
+	//Verify that cards are in a new order 
+	int inOrder = 0; 
+	if (cards[0] == 0) inOrder++; 
+	for (i = 1; i < 10; i++) {
+		if (cards[i] == cards[i - 1] + 1) {
+			inOrder++; 
+		}
+	}
+	if (inOrder == 10) {
+		printf("\tcards are in the same order --> "); 
+		testPass = myAssert(1, 0, testPass); 
+	} 
+	else {
+		printf("\tcards are in a new order --> ");
+		testPass = myAssert(1, 1, testPass);
+	}
+
+	concludeTestCase(testPass, 3);
+
+
+
+	printf(">>>>> CARD TEST 2 (%s function) COMPLETE <<<<<\n\n", TESTFUNCTION);
+
+	return 0;
+
+}
+
+
+
+void concludeTestCase(int testPass, int testCaseNumber) {
+	if (testPass) {
+		printf("TEST CASE %d PASSED!\n", testCaseNumber);
+	}
+	else {
+		printf("TEST CASE %d FAILED. See failure criteria listed above.\n", testCaseNumber);
+	}
+	printf("END TEST CASE %d\n\n", testCaseNumber);
+}
+
+
+int printFail() {
+	printf("FAIL\n"); 
+	return 0;
+}
+
+
+void printPass() {
+	printf("PASS\n"); 
+}
+
+
+int myAssert(int arg1, int arg2, int testPass) {
+	if (arg1 == arg2) {
+		//PASS
+		printPass(); 
+	}
+	else {
+		//FAIL
+		testPass = printFail(); 
+	}
+
+	return testPass; 
+}
