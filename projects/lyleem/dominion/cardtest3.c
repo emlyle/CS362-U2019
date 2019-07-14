@@ -58,6 +58,7 @@ int main() {
 	printf("TEST CASE 2: current player is the last player in the player's array \n");
 
 	currentPlayer = 1;
+	G.whoseTurn = 1; 
 
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
@@ -85,18 +86,17 @@ int main() {
 
 
 int verifyTestCriteriaToEndTurn(struct gameState *G, struct gameState *testG, int currentPlayer, int returnValue, int testPass) {
-	int i; 
 	int previousPlayer; 
 
 	//For this entire CARD TEST 3 unit test, assume always only two players!
 	//Update your control variables to compare against the modified testG game state: 
 	if (currentPlayer == 0) {
-		previousPlayer = 1;
-		currentPlayer = 0; //this is a local variable that has to be updated - it doesn't "know" about endTurn modifying current player 
+		previousPlayer = 0;
+		currentPlayer = 1; //this is a local variable that has to be updated - it doesn't "know" about endTurn modifying current player 
 	}
 	else {
-		previousPlayer = 0;
-		currentPlayer = 1; 
+		previousPlayer = 1;
+		currentPlayer = 0; 
 	}
 
 
@@ -112,15 +112,6 @@ int verifyTestCriteriaToEndTurn(struct gameState *G, struct gameState *testG, in
 	printf("\tprevious player's hand count = %d, expected = 0 --> ", testG->handCount[previousPlayer]); 
 	testPass = myAssert(testG->handCount[previousPlayer], 0, testPass); 
 
-	//Verify previous player's hand is empty
-	int cardFoundInHand = 0; 
-	for (i = 0; i < G->handCount[previousPlayer]; i++) {
-		if (G->hand[previousPlayer][i] != -1) cardFoundInHand = 1; 
-	}
-	if (cardFoundInHand) printf("\tpreviou player's hand is not empty --> "); 
-	else printf("\tprevious player's hand is empty --> "); 
-	testPass = myAssert(cardFoundInHand, 0, testPass); 
-
 
 	//Verify state values have been reset
 	printf("\tVerify game state values have been reset:\n"); 
@@ -134,8 +125,9 @@ int verifyTestCriteriaToEndTurn(struct gameState *G, struct gameState *testG, in
 	printf("\t\tnumActions = %d, expected = 1 --> ", testG->numActions);
 	testPass = myAssert(testG->numActions, 1, testPass);
 
-	printf("\t\tcoins = %d, expected = 0 --> ", testG->coins);
-	testPass = myAssert(testG->coins, 0, testPass);
+	//Since this is each player's first turn, they only have 3 coppers in their deck which = 3 coins
+	printf("\t\tcoins = %d, expected = 3 --> ", testG->coins);
+	testPass = myAssert(testG->coins, 3, testPass);
 
 	printf("\t\tnumBuys = %d, expected = 1 --> ", testG->numBuys);
 	testPass = myAssert(testG->numBuys, 1, testPass);
