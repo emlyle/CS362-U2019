@@ -77,10 +77,28 @@ int main() {
 
 
 
+	// ------------------------------------------------ TEST CASE 3 ---------------------------------------------------------
+	printf("TEST CASE 3: initialize game with a unique set of kingdom cards and 4 players\n");
+
+	//use k array from above - no reset needed
+	numPlayers = 4;
+
+	// copy the game state (G) to a test case (testG)
+	memcpy(&testG, &G, sizeof(struct gameState));
+
+	// call test function to initialize a game state and player cards
+	result = initializeGame(numPlayers, k, seed, &testG);
+
+	testPass = 1;
+	testPass = validInputCriteria(&testG, numPlayers, result, testPass);
+
+	concludeTestCase(testPass, 3);
 
 
-	// ------------------------------------------------ TEST CASE 3 ---------------------------------------------
-	printf("TEST CASE 3: initialize game with a unique set of kingdom cards and 5 players\n");
+
+
+	// ------------------------------------------------ TEST CASE 4 ---------------------------------------------
+	printf("TEST CASE 4: initialize game with a unique set of kingdom cards and 5 players\n");
 
 	//use k array from above - no reset needed
 	numPlayers = MAX_PLAYERS + 1;
@@ -94,14 +112,14 @@ int main() {
 	testPass = 1;
 	testPass = invalidInputCriteria(result, testPass);
 
-	concludeTestCase(testPass, 3);
+	concludeTestCase(testPass, 4);
 	
 	
 
 
 
-	// ------------------------------------------------ TEST CASE 4 ---------------------------------------------
-	printf("TEST CASE 4: initialize game with a non-unique set of kingdom cards and 2 players\n");
+	// ------------------------------------------------ TEST CASE 5 ---------------------------------------------
+	printf("TEST CASE 5: initialize game with a non-unique set of kingdom cards and 2 players\n");
 
 	//Duplicate a card
 	k[3] = k[0]; 
@@ -116,7 +134,7 @@ int main() {
 	testPass = 1;
 	testPass = invalidInputCriteria(result, testPass);
 
-	concludeTestCase(testPass, 4);
+	concludeTestCase(testPass, 5);
 
 
 
@@ -203,7 +221,7 @@ int validInputCriteria(struct gameState *testG, int numPlayers, int returnValue,
 
 	
 	//Verify that only the first player has 5 cards in their hand 
-	printf("\tfirst player hand count = %d, expected = 5 --> "); 
+	printf("\tfirst player hand count = %d, expected = 5 --> ", testG->handCount[0]); 
 	testPass = myAssert(testG->handCount[0], 5, testPass); 
 	//Verify all other players have zero cards in their hands
 	nonZeroFound = 0; 
