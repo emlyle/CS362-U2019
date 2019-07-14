@@ -884,7 +884,6 @@ int executeTributeCard(struct gameState *state, int currentPlayer)
 		else if (state->discardCount[nextPlayer] > 0) { //next player has 1 card in their discard pile
 			tributeRevealedCards[0] = state->discard[nextPlayer][state->discardCount[nextPlayer] - 1]; //Add the card to the tributeRevealedCards pile
 			state->discardCount[nextPlayer]--; //Decrement their discard pile count
-			//***Existing Bug Found: the card is never removed from the next player's discard pile
 		}
 		else { //next player has no cards left
 			//No Card to Reveal
@@ -919,21 +918,17 @@ int executeTributeCard(struct gameState *state, int currentPlayer)
 		//tributeRevealedCards[1] = -1; //***NEW BUG ADDED (by commenting out this line)
 	}
 
-	printf("TEST: tribute cards: %d, %d, (invalid address) %d\n", tributeRevealedCards[0], tributeRevealedCards[1], tributeRevealedCards[2]); 
 	//Allow the current player to take an appropriate action based on the type of tribute revealed card(s)
 	for (i = 0; i <= 2; i++) {
 		if (tributeRevealedCards[i] == copper || tributeRevealedCards[i] == silver || tributeRevealedCards[i] == gold) {//Treasure card found
-			printf("Adding two coins!\n"); 
 			state->coins += 2;
 		}
 		else if (tributeRevealedCards[i] == estate || tributeRevealedCards[i] == duchy || tributeRevealedCards[i] == province 
 			|| tributeRevealedCards[i] == gardens || tributeRevealedCards[i] == great_hall) { //Victory Card Found
-			printf("Adding two cards!\n"); 
 			drawCard(currentPlayer, state);
 			drawCard(currentPlayer, state);
 		}
 		else { //Action Card found
-			printf("Adding two actions!\n"); 
 			state->numActions = state->numActions + 2;
 		}
 	}

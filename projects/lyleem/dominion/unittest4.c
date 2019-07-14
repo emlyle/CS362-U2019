@@ -20,37 +20,7 @@
 
 #define TESTCARD "tribute"
 
-/*
-* Function: executeTributeCard
-* Parameters: struct gameState *state, int currentPlayer
-* Description: This function gives the holder a bonus based on the last two cards in the deck of the opponent sitting to their left.
-*		The bonus is based on the type of cards revealed: Action cards result in +2 actions, Treasure cards result in +2 coins,
-*		and Victory cards result in +2 cards.
-* Returns: int (value of 0)
 
-Test Cases: 
-Bonus based on last two cards of currentPlayer + 1
-TC3: Last two cards = 2 treasure cards  (empty the player's deck to get the code to work)
-	Add two actions (will likely add 4 actions)
-TC4: Other player has one card (a victory card) in their deck
-	Add two cards to hand? handCount += 2? (from drawCard)
-	deckCounter = state->deckCount[player];
-	state->hand[player][count] = state->deck[player][deckCounter - 1];//Add card to hand
-	state->deckCount[player]--;
-	state->handCount[player]++;//Increment hand count
-
-TC5: Other player has no cards???
-	unless the other player's deck count = 0, the code to add to cards will be missed and will fail
-
-Treasure: 4, 5, 6 
-Victory: 1, 2, 3, 10, 16
-Action: 11, 12, 13, 14
-
-*/
-
-
-int testCriteriaForValidAmbassadorInput(struct gameState *testG, struct gameState *G, int handPos, int currentPlayer, int choice1, int choice2, int returnValue, int testPass);
-int testCriteriaForInvalidAmbassadorInput(struct gameState *testG, struct gameState *G, int handPos, int currentPlayer, int choice1, int choice2, int returnValue, int testPass);
 void concludeTestCase(int testPass, int testCaseNumber);
 int printFail();
 void printPass();
@@ -158,6 +128,7 @@ int main() {
 
 	// ------------------------------------------------ TEST CASE 3 ---------------------------------------------
 	printf("TEST CASE 3: Tribute card = 1 victory card, no other cards in other player's deck\n");
+	//Note: This test will fail due to bugs in the function
 
 	//Empty other player's deck except for one victory card (estate)
 	for (i = 1; i < G.deckCount[currentPlayer + 1]; i++) {
