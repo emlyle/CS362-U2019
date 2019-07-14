@@ -30,13 +30,10 @@ int myAssert(int arg1, int arg2, int testPass);
 
 
 int main() {
-	int i;
-	int handPos = 0, choice1 = 0, choice2 = 0;
 	int seed = 1000;
 	int numPlayers;
-	int currentPlayer = 0;
 	int testPass = 1; 
-	int result = -1; 
+	int result = -2; 
 	struct gameState G, testG;
 
 	printf("----------------- CARD TEST 1: Testing %s FUNCTION ----------------\n", TESTFUNCTION);
@@ -152,14 +149,25 @@ int validInputCriteria(struct gameState *testG, int numPlayers, int returnValue,
 
 	//Verify player decks
 	for (i = 0; i < numPlayers; i++) {
-		//Verify deck count = 10
-		printf("\tPlayer %d:\n\t\tdeck count = %d, expected = 10 --> ", (i + 1), testG->deckCount[i]); 
-		testPass = myAssert(testG->deckCount[i], 10, testPass); 
+		if (i == 0) {
+			//Verify deck count = 5 
+			printf("\tPlayer %d:\n\t\tdeck count = %d, expected = 5 --> ", (i + 1), testG->deckCount[i]);
+			testPass = myAssert(testG->deckCount[i], 5, testPass);
+		}
+		else {
+			//Verify deck count = 10 
+			printf("\tPlayer %d:\n\t\tdeck count = %d, expected = 10 --> ", (i + 1), testG->deckCount[i]);
+			testPass = myAssert(testG->deckCount[i], 10, testPass);
+		}
 		
 		//Check the state of each player's deck
-		printf("\t\tCards:\n"); 
+		estateCount = 0; 
+		copperCount = 0; 
+		otherCardCount = 0; 
+		estatesInARow = 0; 
+		//printf("\t\tCards:\n"); 
 		for (j = 0; j < 10; j++) {
-			printf("\t\t\tCard %d: %d\n", (j + 1), testG->deck[i][j]); 
+			//printf("\t\t\tCard %d: %d\n", (j + 1), testG->deck[i][j]); 
 			if (testG->deck[i][j] == estate) {
 				estateCount++; 
 				if (j < 3) estatesInARow++; 
