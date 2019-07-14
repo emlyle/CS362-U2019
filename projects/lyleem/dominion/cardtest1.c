@@ -20,7 +20,7 @@
 
 #define TESTFUNCTION "initializeGame"
 
-int invalidInputCriteria(struct gameState *testG, int returnValue, int testPass);
+int invalidInputCriteria(int returnValue, int testPass);
 int validInputCriteria(struct gameState *testG, int numPlayers, int returnValue, int testPass);
 void concludeTestCase(int testPass, int testCaseNumber);
 int printFail(); 
@@ -64,8 +64,7 @@ int main() {
 	// ------------------------------------------------ TEST CASE 2 ---------------------------------------------------------
 	printf("TEST CASE 2: initialize game with a unique set of kingdom cards and 3 players\n");
 
-	int k[10] = { mine, ambassador, salvager, baron, minion, cutpurse,
-		sea_hag, tribute, smithy, council_room };
+	//use k array from above - no reset needed
 	numPlayers = 3;
 
 	// copy the game state (G) to a test case (testG)
@@ -84,32 +83,9 @@ int main() {
 
 
 	// ------------------------------------------------ TEST CASE 3 ---------------------------------------------
-	printf("TEST CASE 3: initialize game with a non-unique set of kingdom cards and 2 players\n");
+	printf("TEST CASE 3: initialize game with a unique set of kingdom cards and 5 players\n");
 
-	//Duplicate minion cards
-	int k[10] = { minion, ambassador, salvager, baron, minion, cutpurse,
-		sea_hag, tribute, smithy, council_room };
-	numPlayers = 2;
-
-	// copy the game state (G) to a test case (testG)
-	memcpy(&testG, &G, sizeof(struct gameState));
-
-	// call test function to initialize a game state and player cards
-	result = initializeGame(numPlayers, k, seed, &testG);
-
-	testPass = 1;
-	testPass = invalidInputCriteria(&testG, numPlayers, result, testPass);
-
-	concludeTestCase(testPass, 3);
-
-
-
-
-	// ------------------------------------------------ TEST CASE 4 ---------------------------------------------
-	printf("TEST CASE 4: initialize game with a unique set of kingdom cards and 5 players\n");
-
-	int k[10] = { minion, ambassador, salvager, baron, mine, cutpurse,
-		sea_hag, tribute, smithy, council_room };
+	//use k array from above - no reset needed
 	numPlayers = MAX_PLAYERS + 1;
 
 	// copy the game state (G) to a test case (testG)
@@ -119,9 +95,34 @@ int main() {
 	result = initializeGame(numPlayers, k, seed, &testG);
 
 	testPass = 1;
-	testPass = invalidInputCriteria(&testG, numPlayers, result, testPass);
+	testPass = invalidInputCriteria(result, testPass);
 
 	concludeTestCase(testPass, 3);
+	
+	
+
+
+
+	// ------------------------------------------------ TEST CASE 4 ---------------------------------------------
+	printf("TEST CASE 4: initialize game with a non-unique set of kingdom cards and 2 players\n");
+
+	//Duplicate a card
+	k[3] = k[0]; 
+	numPlayers = 2;
+
+	// copy the game state (G) to a test case (testG)
+	memcpy(&testG, &G, sizeof(struct gameState));
+
+	// call test function to initialize a game state and player cards
+	result = initializeGame(numPlayers, k, seed, &testG);
+
+	testPass = 1;
+	testPass = invalidInputCriteria(result, testPass);
+
+	concludeTestCase(testPass, 4);
+
+
+
 
 
 	printf(">>>>> CARD TEST 1 (%s function) COMPLETE <<<<<\n\n", TESTFUNCTION);
@@ -134,7 +135,7 @@ int main() {
 
 
 int validInputCriteria(struct gameState *testG, int numPlayers, int returnValue, int testPass) {
-	int = i, j, nonZeroFound; 
+	int i, j, nonZeroFound; 
 	int estateCount = 0; 
 	int copperCount = 0; 
 	int otherCardCount = 0; 
@@ -211,7 +212,7 @@ int validInputCriteria(struct gameState *testG, int numPlayers, int returnValue,
 }
 
 
-int invalidInputCriteria(struct gameState *testG, int returnValue, int testPass) {
+int invalidInputCriteria(int returnValue, int testPass) {
 	//Verify return value of -1
 	printf("\treturn value = %d, expected -1 --> ", returnValue);
 	testPass = myAssert(returnValue, -1, testPass);
