@@ -20,8 +20,8 @@
 
 #define TESTCARD "mine"
 
-int validInputCriteria(struct gameState *G, struct gameState *testG, int choice1, int choice2, int testPass);
-int invalidInputCriteria(struct gameState *G, struct gameState *testG, int choice1, int choice2, int testPass);
+int validInputCriteria(struct gameState *G, struct gameState *testG, int choice1, int choice2, int currentPlayer, int returnValue, int testPass);
+int invalidInputCriteria(struct gameState *G, struct gameState *testG, int choice1, int choice2, int curretnPlayer, int returnValue, int testPass);
 void concludeTestCase(int testPass, int testCaseNumber);
 int printFail(); 
 void printPass(); 
@@ -83,7 +83,7 @@ int main() {
 	result = executeMineCard(choice1, choice2, &testG, handPos, currentPlayer);
 
 	testPass = 1; 
-	testPass = validInputCriteria(&G, &testG, choice1, choice2, testPass); 
+	testPass = validInputCriteria(&G, &testG, choice1, choice2, currentPlayer, result, testPass); 
 
 	concludeTestCase(testPass, 1);
 
@@ -110,7 +110,7 @@ int main() {
 	result = executeMineCard(choice1, choice2, &testG, handPos, currentPlayer);
 
 	testPass = 1;
-	testPass = invalidInputCriteria(&G, &testG, choice1, choice2, testPass);
+	testPass = invalidInputCriteria(&G, &testG, choice1, choice2, currentPlayer, result, testPass);
 
 	concludeTestCase(testPass, 2);
 
@@ -137,7 +137,7 @@ int main() {
 	result = executeMineCard(choice1, choice2, &testG, handPos, currentPlayer);
 
 	testPass = 1;
-	testPass = invalidInputCriteria(&G, &testG, choice1, choice2, testPass);
+	testPass = invalidInputCriteria(&G, &testG, choice1, choice2, currentPlayer, result, testPass);
 
 	concludeTestCase(testPass, 3);
 
@@ -151,7 +151,7 @@ int main() {
 
 
 
-int validInputCriteria(struct gameState *G, struct gameState *testG, int choice1, int choice2, int testPass) {
+int validInputCriteria(struct gameState *G, struct gameState *testG, int choice1, int choice2, int currentPlayer, int returnValue, int testPass) {
 	int i;
 
 	//Verify return value of 0
@@ -190,7 +190,7 @@ int validInputCriteria(struct gameState *G, struct gameState *testG, int choice1
 	return testPass;
 }
 
-int invalidInputCriteria(struct gameState *G, struct gameState *testG, int choice1, int choice2, int testPass) {
+int invalidInputCriteria(struct gameState *G, struct gameState *testG, int choice1, int choice2, int currentPlayer, int returnValue, int testPass) {
 	int i;
 
 	//Verify return value of -1
