@@ -55,7 +55,7 @@ int main() {
 	G.deckCount[currentPlayer] = 0; 
 
 	//Make sure current player's discard pile is empty
-	if (G.discardCount[currentPlayer] != 0) G.discardCount = 0; 
+	if (G.discardCount[currentPlayer] != 0) G.discardCount[currentPlayer] = 0; 
 
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
@@ -117,7 +117,7 @@ int main() {
 	int invalidCardsAdded = 0; 
 	for (i = 0; i < 4; i++) {
 		if (testG.deck[currentPlayer][i] < 0 || testG.deck[currentPlayer][i] > 4) {
-			int invalidCardsAdded = 1; 
+			invalidCardsAdded = 1; 
 		}
 	}
 	if (invalidCardsAdded) printf("\tInvalid cards added to deck --> "); 
@@ -145,16 +145,13 @@ int main() {
 	currentPlayer = 0;
 	card = 0; 
 
-	//For me: 
-	printf("Current player's deck:\n");
-	for (i = 0; i < G.deckCount[currentPlayer]; i++) {
-		printf("\t%d\n", G.deck[currentPlayer][i]);
+	//Make sure deck is not empty
+	if (G.deckCount[currentPlayer] == 0) {
+		for (i = 0; i < 5; i++) {
+			G.deck[currentPlayer][i] = card++;  
+		}
+		G.deckCount[currentPlayer] = 5; 
 	}
-
-	//Make all cards in current player's deck unique (to make verification easier)
-	/*for (i = 0; i < G.deckCount[currentPlayer]; i++) {
-		G.deck[currentPlayer][i] = card++;
-	}*/
 
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
@@ -176,8 +173,8 @@ int main() {
 	testPass = myAssert(testG.deckCount[currentPlayer], G.deckCount[currentPlayer] - 1, testPass);
 
 	//Verify previous last card in deck is now last card in hand
-	printf("\tdrawn card = %d, expected = %d --> ", testG.hand[currentPlayer][testG.handCount[currenPlayer] - 1], G.deck[currentPlayer[G.deckCount[currentPlayer] - 1]); 
-	testPass = myAssert(testG.hand[currentPlayer][testG.handCount[currenPlayer] - 1], G.deck[currentPlayer[G.deckCount[currentPlayer] - 1], testPass); 
+	printf("\tdrawn card = %d, expected = %d --> ", testG.hand[currentPlayer][testG.handCount[currentPlayer] - 1], G.deck[currentPlayer][G.deckCount[currentPlayer] - 1]); 
+	testPass = myAssert(testG.hand[currentPlayer][testG.handCount[currentPlayer] - 1], G.deck[currentPlayer][G.deckCount[currentPlayer] - 1], testPass); 
 
 	concludeTestCase(testPass, 3);
 
