@@ -27,24 +27,6 @@ int printFail();
 void printPass(); 
 int myAssert(int arg1, int arg2, int testPass); 
 
-/*
-* Function: executeMineCard
-* Parameters: int choice1, int choice2, struct gameState *state, int handPos, int currentPlayer
-* Description: This function discards a treasure card (passed in as choice1) from the current player's hand 
-*		and adds a more valuable treasure card from supply (passed in as choice2) to the current player's hand.  
-* Returns: int (value of 0 or -1)
-
-Test Cases: 
-choice1 is the position of the card to trash - card must be treasure card 4, 5, or 6 (nothing outside of that range)
-choice2 is the card to gain - must be in [0, 26] 
-return value is 0 (or -1 if out of the bounds above)
-player must gain the choice2 card
-player must discard the card from choice1 position  (BUG - this does not happen)
-hand count should not change (discard and gain --> no change)
-supply count for [choice2 card] should decrement
-
-*/
-
 
 
 int main() {
@@ -99,7 +81,7 @@ int main() {
 	//Make it easy to tell if adventurer is trashed and silver is gained by not having any duplicates of these in the player's hand
 	//choice1 = hand position 0
 	G.hand[currentPlayer][choice1] = adventurer; //card to trash
-											 //Set all other cards to estate 
+	//Set all other cards to estate 
 	for (i = 1; i < G.handCount[currentPlayer]; i++) {
 		G.hand[currentPlayer][i] = estate;
 	}
@@ -126,7 +108,7 @@ int main() {
 	//Make it easy to tell if adventurer is trashed and silver is gained by not having any duplicates of these in the player's hand
 	//choice1 = hand position 0
 	G.hand[currentPlayer][choice1] = copper; //card to trash
-												 //Set all other cards to estate 
+	//Set all other cards to estate 
 	for (i = 1; i < G.handCount[currentPlayer]; i++) {
 		G.hand[currentPlayer][i] = estate;
 	}

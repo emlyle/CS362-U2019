@@ -25,13 +25,17 @@ unittest4: unittest4.c dominion.o rngs.o
 unittest5: unittest5.c dominion.o rngs.o
 	gcc -o unittest5 -g  unittest5.c dominion.o rngs.o $(CFLAGS)
 
-unittestresults: unittest1 unittest2 unittest3 unittest4 unittest5
+unittest5: cardtest1.c dominion.o rngs.o
+	gcc -o cardtest1 -g  cardtest1.c dominion.o rngs.o $(CFLAGS)
+	
+unittestresults: unittest1 unittest2 unittest3 unittest4 unittest5 cardtest1
 	./unittest1 &> unittestresults.out
 	./unittest2 >> unittestresults.out
 	./unittest3 >> unittestresults.out
 	./unittest4 >> unittestresults.out
 	./unittest5 >> unittestresults.out
-	gcov -b dominion.c >> unittestresults.out
+	./cardtest1 >> unittestresults.out
+	gcov dominion.c -b -f >> unittestresults.out
 	cat dominion.c.gcov >> unittestresults.out	
 
 testDrawCard: testDrawCard.c dominion.o rngs.o
