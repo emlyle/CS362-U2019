@@ -68,6 +68,10 @@ int main() {
 	printf("\treturn value = %d, expected = -1 --> ", result);
 	testPass = myAssert(result, -1, testPass);
 
+	//Verify no change to player's hand
+	printf("\thand count = %d, expected = %d --> ", testG.handCount[currentPlayer], G.handCount[currentPlayer]); 
+	testPass = myAssert(testG.handCount[currentPlayer], G.handCount[currentPlayer], testPass); 
+
 
 	concludeTestCase(testPass, 1);
 
