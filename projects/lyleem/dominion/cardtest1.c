@@ -36,7 +36,7 @@ int main() {
 	int result = -2; 
 	struct gameState G, testG;
 
-	printf("----------------- CARD TEST 1: Testing %s FUNCTION ----------------\n", TESTFUNCTION);
+	printf("----------------- CARD TEST 1: Testing %s Function ----------------\n", TESTFUNCTION);
 
 	// ---------------------------------------- TEST CASE 1 -------------------------------------------
 	printf("TEST CASE 1: initialize game with a unique set of kingdom cards and 2 players \n");
