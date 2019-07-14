@@ -88,9 +88,9 @@ int main() {
 
 	//Empty current player's deck except for one card
 	for (i = 1; i < G.deckCount[currentPlayer]; i++) {
-		G.deck[currentPlayer][i] = 1;
+		G.deck[currentPlayer][i] = -1;
 	}
-	G.deckCount[currentPlayer] = 0;
+	G.deckCount[currentPlayer] = 1;
 
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
@@ -151,8 +151,8 @@ int main() {
 	int cards[5] = { -1, -1, -1, -1, -1 }; //Set all cards to empty
 	int newCardFound = 0; 
 	for (i = 0; i < 5; i++) {
-		if (G.deck[currentPlayer][i] >= 0 && G.deck[currentPlayer][i] <= 4) {
-			cards[G.deck[currentPlayer][i]] = i; //set card to position in deck where it was found
+		if (testG.deck[currentPlayer][i] >= 0 && testG.deck[currentPlayer][i] <= 4) {
+			cards[testG.deck[currentPlayer][i]] = i; //set card to position in deck where it was found
 		}
 		else newCardFound = 1; 
 	}
