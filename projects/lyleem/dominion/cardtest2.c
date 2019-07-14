@@ -54,7 +54,7 @@ int main() {
 			sea_hag, tribute, smithy, council_room};
 	initializeGame(numPlayers, k, seed, &G);
 
-	printf("----------------- CARD TEST 1: Testing %s Function ----------------\n", TESTFUNCTION);
+	printf("----------------- CARD TEST 2: Testing %s Function ----------------\n", TESTFUNCTION);
 
 	// ---------------------------------------- TEST CASE 1 -------------------------------------------
 	printf("TEST CASE 1: deck count = 0 \n");
@@ -90,6 +90,7 @@ int main() {
 	for (i = 1; i < G.deckCount[currentPlayer]; i++) {
 		G.deck[currentPlayer][i] = -1;
 	}
+	G.deck[currentPlayer][0] = copper; 
 	G.deckCount[currentPlayer] = 1;
 
 	// copy the game state (G) to a test case (testG)
@@ -151,6 +152,7 @@ int main() {
 	int cards[5] = { -1, -1, -1, -1, -1 }; //Set all cards to empty
 	int newCardFound = 0; 
 	for (i = 0; i < 5; i++) {
+		printf("\toriginal card = %d, new card = %d\n", G.deck[currentPlayer][i], testG.deck[currentPlayer][i]);
 		if (testG.deck[currentPlayer][i] >= 0 && testG.deck[currentPlayer][i] <= 4) {
 			cards[testG.deck[currentPlayer][i]] = i; //set card to position in deck where it was found
 		}
