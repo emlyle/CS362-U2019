@@ -43,6 +43,8 @@ int main() {
 
 	// call test function to initialize a game state and player cards
 	result = endTurn(&testG); 
+	//For me: 
+	printf("G turn = %d, testG turn = %d\n", G.whoseTurn, testG.whoseTurn); 
 
 	testPass = 1; 
 	testPass = verifyTestCriteriaToEndTurn(&G, &testG, currentPlayer, result, testPass);
@@ -62,6 +64,8 @@ int main() {
 
 	// call test function to initialize a game state and player cards
 	result = endTurn(&testG);
+	//For me: 
+	printf("G turn = %d, testG turn = %d\n", G.whoseTurn, testG.whoseTurn);
 
 	testPass = 1;
 	testPass = verifyTestCriteriaToEndTurn(&G, &testG, currentPlayer, result, testPass);
@@ -121,22 +125,22 @@ int verifyTestCriteriaToEndTurn(struct gameState *G, struct gameState *testG, in
 	//Verify state values have been reset
 	printf("\tVerify game state values have been reset:\n"); 
 
-	printf("\t\toutpostPlayed = %d, expected = 0 --> "); 
+	printf("\t\toutpostPlayed = %d, expected = 0 --> ", testG->outpostPlayed);
 	testPass = myAssert(testG->outpostPlayed, 0, testPass); 
 
-	printf("\t\tphase = %d, expected = 0 --> ");
+	printf("\t\tphase = %d, expected = 0 --> ", testG->phase);
 	testPass = myAssert(testG->phase, 0, testPass);
 
-	printf("\t\tnumActions = %d, expected = 1 --> ");
+	printf("\t\tnumActions = %d, expected = 1 --> ", testG->numActions);
 	testPass = myAssert(testG->numActions, 1, testPass);
 
-	printf("\t\tcoins = %d, expected = 0 --> ");
+	printf("\t\tcoins = %d, expected = 0 --> ", testG->coins);
 	testPass = myAssert(testG->coins, 0, testPass);
 
-	printf("\t\tnumBuys = %d, expected = 1 --> ");
+	printf("\t\tnumBuys = %d, expected = 1 --> ", testG->numBuys);
 	testPass = myAssert(testG->numBuys, 1, testPass);
 
-	printf("\t\tplayedCardCount = %d, expected = 0 --> ");
+	printf("\t\tplayedCardCount = %d, expected = 0 --> ", testG->playedCardCount);
 	testPass = myAssert(testG->playedCardCount, 0, testPass);
 
 
