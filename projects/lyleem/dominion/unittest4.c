@@ -29,7 +29,6 @@ int myAssert(int arg1, int arg2, int testPass);
 
 int main() {
 	int i;
-	int handPos = 0, choice1 = 0, choice2 = 0;
 	int seed = 1000;
 	int numPlayers = 2;
 	int currentPlayer = 0;

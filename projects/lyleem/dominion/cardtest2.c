@@ -1,5 +1,5 @@
 /*
- * cardtest2.c - This tests the initializeGame function
+ * cardtest2.c - This tests the shuffle function
  *
  */
 
@@ -19,21 +19,6 @@
 #include <stdlib.h>
 
 #define TESTFUNCTION "shuffle"
-
-
-/*
-cardtest2 - shuffle:
-TC: state->deckCount == 0 --> return -1
-TC: state->deckCount == 5
-return 0
-verify cards are in a different order
-verify deck count is the same
-TC: state->deckCound == 1
-return 0
-verify card is the same
-verify deck count == 1
-
-*/
 
 
 void concludeTestCase(int testPass, int testCaseNumber);
@@ -118,7 +103,7 @@ int main() {
 
 
 	// ------------------------------------------------ TEST CASE 3 ---------------------------------------------------------
-	printf("TEST CASE 3: deck count = 5 \n");
+	printf("TEST CASE 3: deck count = 10 \n");
 
 	currentPlayer = 0;
 	int card = 0; 
@@ -145,7 +130,7 @@ int main() {
 	printf("\treturn value = %d, expected 0 --> ", result);
 	testPass = myAssert(result, 0, testPass);
 
-	//Verify deck still contains 5 cards 
+	//Verify deck still contains 10 cards 
 	printf("\tdeck count = %d, expected = 10 --> ", testG.deckCount[currentPlayer]);
 	testPass = myAssert(testG.deckCount[currentPlayer], 10, testPass);
 
