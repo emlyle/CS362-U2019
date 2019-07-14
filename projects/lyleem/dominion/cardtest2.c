@@ -44,6 +44,7 @@ int myAssert(int arg1, int arg2, int testPass);
 
 
 int main() {
+	int i; 
 	int seed = 1000;
 	int numPlayers = 2;
 	int currentPlayer = 0; 
@@ -105,7 +106,7 @@ int main() {
 	testPass = myAssert(result, 0, testPass);
 
 	//Verify deck still contains one card 
-	printf("\tdeck count = %d, expected = 1 --> ", testG.deckCount[currentPlayer], 1); 
+	printf("\tdeck count = %d, expected = 1 --> ", testG.deckCount[currentPlayer]); 
 	testPass = myAssert(testG.deckCount[currentPlayer], 1, testPass); 
 
 	//Verify deck contains the same card 
@@ -123,10 +124,10 @@ int main() {
 	int card = 0; 
 
 	//Set any remaining cards in deck to empty
-	for (i = 5; i < G.deckCount[currentPlayer]; i++) {
+	for (i = 10; i < G.deckCount[currentPlayer]; i++) {
 		G.deck[currentPlayer][i] = -1;
 	}
-	G.deckCount[currentPlayer] = 5;
+	G.deckCount[currentPlayer] = 10;
 
 	//Make all cards in current player's deck unique (to make verification easier)
 	for (i = 0; i < G.deckCount[currentPlayer]; i++) {
@@ -145,15 +146,15 @@ int main() {
 	testPass = myAssert(result, 0, testPass);
 
 	//Verify deck still contains 5 cards 
-	printf("\tdeck count = %d, expected = 5 --> ", testG.deckCount[currentPlayer], 1);
-	testPass = myAssert(testG.deckCount[currentPlayer], 5, testPass);
+	printf("\tdeck count = %d, expected = 10 --> ", testG.deckCount[currentPlayer]);
+	testPass = myAssert(testG.deckCount[currentPlayer], 10, testPass);
 
 	//Verify deck contains the same cards  
-	int cards[5] = { -1, -1, -1, -1, -1 }; //Set all cards to empty
+	int cards[10] = { -1, -1, -1, -1, -1, -1, -1, -1. -1. -1 }; //Set all cards to empty
 	int newCardFound = 0; 
-	for (i = 0; i < 5; i++) {
-		printf("\toriginal card = %d, new card = %d\n", G.deck[currentPlayer][i], testG.deck[currentPlayer][i]);
-		if (testG.deck[currentPlayer][i] >= 0 && testG.deck[currentPlayer][i] <= 4) {
+	for (i = 0; i < 10; i++) {
+		//printf("\toriginal card = %d, new card = %d\n", G.deck[currentPlayer][i], testG.deck[currentPlayer][i]);
+		if (testG.deck[currentPlayer][i] >= 0 && testG.deck[currentPlayer][i] <= 9) {
 			cards[testG.deck[currentPlayer][i]] = i; //set card to position in deck where it was found
 		}
 		else newCardFound = 1; 
@@ -167,12 +168,12 @@ int main() {
 	//Verify that cards are in a new order 
 	int inOrder = 0; 
 	if (cards[0] == 0) inOrder++; 
-	for (i = 1; i < 5; i++) {
+	for (i = 1; i < 10; i++) {
 		if (cards[i] == cards[i - 1] + 1) {
 			inOrder++; 
 		}
 	}
-	if (inOrder == 5) {
+	if (inOrder == 10) {
 		printf("\tcards are in the same order --> "); 
 		testPass = myAssert(1, 0, testPass); 
 	} 
