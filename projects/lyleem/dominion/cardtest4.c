@@ -29,7 +29,7 @@
 #define TESTFUNCTION "getWinners"
 
 
-int verifyWinner(int returnValue, int* playersPtr, int* playersControlPtr, int numPlayers, int winnerPos, int winnerPos2);
+int verifyWinner(int returnValue, int* playersPtr, int* playersControlPtr, int numPlayers, int winnerPos, int winnerPos2, int testPass);
 void concludeTestCase(int testPass, int testCaseNumber);
 int printFail(); 
 void printPass(); 
@@ -40,15 +40,15 @@ int main() {
 	int i, j; 
 	int seed = 1000;
 	int numPlayers, winnerPos, currentPlayer, cardCount;
-	int winnerPos = -1; 
-	int currentPlayer = 0; 
+	int winnerPos2 = -1; 
 	int testPass = 1; 
 	int result = -2; 
 
 	struct gameState G, testG;
 	int k[10] = {minion, embargo, village, baron, mine, cutpurse,
 			sea_hag, tribute, smithy, council_room};
-	initializeGame(numPlayers, k, seed, &G);
+
+
 
 	printf("----------------- CARD TEST 4: Testing %s Function ----------------\n", TESTFUNCTION);
 
@@ -59,6 +59,9 @@ int main() {
 	winnerPos = 1; 
 	numPlayers = 3; 
 	cardCount = 4; 
+
+	initializeGame(numPlayers, k, seed, &G); 
+
 	//Set players' cards to estates and duchies
 	for (i = 0; i < numPlayers; i++) {
 		G.deckCount[i] = cardCount; 
@@ -78,14 +81,14 @@ int main() {
 	}
 
 	int players[MAX_PLAYERS] = { -1, -1, -1, -1 };
-	int playersControl[numPlayers] = { 0, 1, 0, 0 }; //specify winner
+	int playersControl[MAX_PLAYERS] = { 0, 1, 0, 0 }; //specify winner
 	
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
 	result = getWinners(players, &testG);
 
 	testPass = 1;
-	testPass = verifyWinner(result, players, playersControl, numPlayers, winnerPos, winnerPos2);
+	testPass = verifyWinner(result, players, playersControl, numPlayers, winnerPos, winnerPos2, testPass);
 
 	concludeTestCase(testPass, 1);
 
@@ -99,6 +102,10 @@ int main() {
 	winnerPos = 0;
 	numPlayers = 2;
 	cardCount = 4;
+	
+	initializeGame(numPlayers, k, seed, &G); 
+	G.whoseTurn = 1; 
+	
 	//Set players' cards to match
 	for (i = 0; i < numPlayers; i++) {
 		G.deckCount[i] = cardCount;
@@ -113,15 +120,15 @@ int main() {
 	//Add a curse card for second player which makes first player the winner
 	G.hand[1][4] = curse;
 
-	int players[MAX_PLAYERS] = { -1, -1, -1, -1 };
-	int playersControl[numPlayers] = { 1, 0, 0, 0 }; //specify winner
+	int players2[MAX_PLAYERS] = { -1, -1, -1, -1 };
+	int playersControl2[MAX_PLAYERS] = { 1, 0, 0, 0 }; //specify winner
 
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
-	result = getWinners(players, &testG);
+	result = getWinners(players2, &testG);
 
 	testPass = 1;
-	testPass = verifyWinner(result, players, playersControl, numPlayers, winnerPos, winnerPos2);
+	testPass = verifyWinner(result, players2, playersControl2, numPlayers, winnerPos, winnerPos2, testPass);
 
 
 	concludeTestCase(testPass, 2);
@@ -131,13 +138,15 @@ int main() {
 	// ------------------------------------------------ TEST CASE 3 ---------------------------------------------------------
 	printf("TEST CASE 3: 3 players, current player is third player, first two players have same cards --> first two players should tie\n");
 
-	//	2 players - currentPlayer = zero(has same cards as player 1 so player 1 should win with extra point)
-
 	currentPlayer = 2;
 	winnerPos = 0;
 	winnerPos2 = 1; 
-	numPlayers = 2;
+	numPlayers = 3;
 	cardCount = 4;
+
+	initializeGame(numPlayers, k, seed, &G); 
+	G.whoseTurn = 2; 
+
 	//Set players' cards to match
 	for (i = 0; i < numPlayers; i++) {
 		G.deckCount[i] = cardCount;
@@ -153,15 +162,15 @@ int main() {
 	G.hand[0][4] = province;
 	G.hand[1][4] = province;
 
-	int players[MAX_PLAYERS] = { -1, -1, -1, -1 };
-	int playersControl[numPlayers] = { 1, 1, 0, 0 }; //specify winner
+	int players3[MAX_PLAYERS] = { -1, -1, -1, -1 };
+	int playersControl3[MAX_PLAYERS] = { 1, 1, 0, 0 }; //specify winner
 
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
-	result = getWinners(players, &testG);
+	result = getWinners(players3, &testG);
 
 	testPass = 1;
-	testPass = verifyWinner(result, players, playersControl, numPlayers, winnerPos, winnerPos2);
+	testPass = verifyWinner(result, players3, playersControl3, numPlayers, winnerPos, winnerPos2, testPass);
 
 	concludeTestCase(testPass, 3);
 
@@ -176,6 +185,9 @@ int main() {
 	winnerPos2 = -1;
 	numPlayers = 2;
 	cardCount = 4;
+	
+	initializeGame(numPlayers, k, seed, &G); 
+
 	//Set players' cards to match
 	for (i = 0; i < numPlayers; i++) {
 		G.deckCount[i] = cardCount;
@@ -188,15 +200,15 @@ int main() {
 		}
 	}
 
-	int players[MAX_PLAYERS] = { -1, -1, -1, -1 };
-	int playersControl[numPlayers] = { 1, 0, 0, 0 }; //specify winner
+	int players4[MAX_PLAYERS] = { -1, -1, -1, -1 };
+	int playersControl4[MAX_PLAYERS] = { 0, 1, 0, 0 }; //specify winner
 
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
-	result = getWinners(players, &testG);
+	result = getWinners(players4, &testG);
 
 	testPass = 1;
-	testPass = verifyWinner(result, players, playersControl, numPlayers, winnerPos, winnerPos2);
+	testPass = verifyWinner(result, players4, playersControl4, numPlayers, winnerPos, winnerPos2, testPass);
 
 	concludeTestCase(testPass, 4);
 
@@ -209,7 +221,7 @@ int main() {
 }
 
 
-int verifyWinner(int returnValue, int* playersPtr, int* playersControlPtr, int numPlayers, int winnerPos, int winnerPos2) {
+int verifyWinner(int returnValue, int* playersPtr, int* playersControlPtr, int numPlayers, int winnerPos, int winnerPos2, int testPass) {
 	int i;
 	int* winnerPtr; 
 
@@ -218,13 +230,13 @@ int verifyWinner(int returnValue, int* playersPtr, int* playersControlPtr, int n
 	testPass = myAssert(returnValue, 0, testPass);
 
 	//verify players[winnerPos] is 1 
-	winnerPtr = players + winnerPos;
+	winnerPtr = playersPtr + winnerPos;
 	printf("\tplayer %d = %d, expected = 1 --> ", winnerPos + 1, *winnerPtr);
 	testPass = myAssert(*winnerPtr, 1, testPass);
 
 	//If there's a tie, verify players[winnerPos2] is also 1
 	if (winnerPos2 != -1) {
-		winnerPtr = players + winnerPos2;
+		winnerPtr = playersPtr + winnerPos2;
 		printf("\tplayer %d = %d, expected = 1 --> ", winnerPos2 + 1, *winnerPtr);
 		testPass = myAssert(*winnerPtr, 1, testPass);
 	}
