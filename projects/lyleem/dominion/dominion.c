@@ -489,7 +489,7 @@ int getWinners(int players[MAX_PLAYERS], struct gameState *state) {
   currentPlayer = whoseTurn(state);
   for (i = 0; i < MAX_PLAYERS; i++)
     {
-      if ( players[i] == highScore && i > currentPlayer )
+      if ( players[i] == highScore && i > currentPlayer ) //This seems like a BUG - should just give all players who haven't gone yet +1
 	{
 	  players[i]++;
 	}

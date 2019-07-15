@@ -157,7 +157,6 @@ int validInputCriteria(struct gameState *testG, int numPlayers, int returnValue,
 	int estatesInARow = 0; 
 
 	//Verify return value of zero
-	//Verify return value of 0
 	printf("\treturn value = %d, expected 0 --> ", returnValue);
 	testPass = myAssert(returnValue, 0, testPass);
 

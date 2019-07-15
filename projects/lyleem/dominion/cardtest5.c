@@ -1,5 +1,5 @@
 /*
- * cardtest5.c - This tests the shuffle function
+ * cardtest5.c - This tests the drawCard function
  *
  */
 
@@ -25,11 +25,6 @@ void concludeTestCase(int testPass, int testCaseNumber);
 int printFail(); 
 void printPass(); 
 int myAssert(int arg1, int arg2, int testPass); 
-
-/*
-int drawCard(int player, struct gameState *state)
-
-*/
 
 int main() {
 	int i; 
