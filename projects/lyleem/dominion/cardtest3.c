@@ -76,7 +76,7 @@ int main() {
 
 
 
-	printf(">>>>> CARD TEST 1 (%s function) COMPLETE <<<<<\n\n", TESTFUNCTION);
+	printf(">>>>> CARD TEST 3 (%s function) COMPLETE <<<<<\n\n", TESTFUNCTION);
 
 	return 0;
 
