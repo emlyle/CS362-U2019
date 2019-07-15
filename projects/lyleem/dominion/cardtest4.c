@@ -53,7 +53,7 @@ int main() {
 	printf("----------------- CARD TEST 4: Testing %s Function ----------------\n", TESTFUNCTION);
 
 	// ---------------------------------------- TEST CASE 1 -------------------------------------------
-	printf("TEST CASE 1: 3 players, current player is first player --> second player should win\n");
+	printf("TEST CASE 1: 3 players, current player is first player\n");
 
 	currentPlayer = 0; 
 	winnerPos = 1; 
@@ -96,7 +96,7 @@ int main() {
 
 
 	// ------------------------------------------------ TEST CASE 2 ---------------------------------------------------------
-	printf("TEST CASE 2: 2 players, same cards except second player has additional curse card --> first player should win\n");
+	printf("TEST CASE 2: 2 players, same cards, second player has additional curse card\n");
 
 	currentPlayer = 1;
 	winnerPos = 0;
@@ -136,7 +136,7 @@ int main() {
 
 
 	// ------------------------------------------------ TEST CASE 3 ---------------------------------------------------------
-	printf("TEST CASE 3: 3 players, current player is third player, first two players have same cards --> first two players should tie\n");
+	printf("TEST CASE 3: 3 players, current player is third player, first two players have same cards\n");
 
 	currentPlayer = 2;
 	winnerPos = 0;
@@ -178,7 +178,7 @@ int main() {
 
 
 	// ------------------------------------------------ TEST CASE 4 ---------------------------------------------------------
-	printf("TEST CASE 4: 2 players, same cards, current player = 0 --> second player should win by bonus point for less turns\n");
+	printf("TEST CASE 4: 2 players, same cards, current player = 0 \n");
 
 	currentPlayer = 0;
 	winnerPos = 1;
