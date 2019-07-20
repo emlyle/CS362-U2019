@@ -19,6 +19,13 @@ randomtest2: randomtest2.c dominion.o rngs.o
 randomtest3: randomtest3.c dominion.o rngs.o
 	gcc -o randomtest3 -g  randomtest3.c dominion.o rngs.o $(CFLAGS)
 
+randomtestresults: randomtest1 randomtest2 randomtest3 
+	./randomtest1 &> randomtestresults.out
+	./randomtest2 >> randomtestresults.out
+	./randomtest3 >> randomtestresults.out
+	gcov -b -f dominion.c >> randomtestresults.out
+	cat dominion.c.gcov >> randomtestresults.out	
+	
 testDrawCard: testDrawCard.c dominion.o rngs.o
 	gcc  -o testDrawCard -g  testDrawCard.c dominion.o rngs.o $(CFLAGS)
 
@@ -33,13 +40,6 @@ testAll: dominion.o testSuite.c
 
 interface.o: interface.h interface.c
 	gcc -c interface.c -g  $(CFLAGS)
-
-randomtestresults: randomtest1 randomtest2 randomtest3 
-	./randomtest1 &> randomtestresults.out
-	./randomtest2 >> randomtestresults.out
-	./randomtest3 >> randomtestresults.out
-	gcov -b -f dominion.c >> randomtestresults.out
-	cat dominion.c.gcov >> randomtestresults.out	
 
 runtests: testDrawCard 
 	./testDrawCard &> unittestresult.out
