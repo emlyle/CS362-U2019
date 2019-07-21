@@ -19,9 +19,6 @@
 #include "rngs.h"
 #include <stdlib.h>
 
-#define TESTCARD "baron"
-
-
 void testBaronCard(struct gameState* preStatePtr, int choice1, int currentPlayer); 
 int testForEveryBaronCard(struct gameState *testG, struct gameState *G, int returnValue, int testPass);
 int testDiscardEstateCard(struct gameState *testG, struct gameState *G, int currentPlayer, int estateCardPosition, int testPass);
