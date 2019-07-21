@@ -275,6 +275,66 @@ int main() {
 
 }
 
+void testMinionCard(struct gameState* preStatePtr, int choice1, int currentPlayer) {
+	int i;
+	int result = -1;
+	int testPass = 1;
+	int estateCardPosition = -1;
+
+	//Copy the pre-game state (preState) to a post-test game state (postState)
+	struct gameState postState;
+	memcpy(&postState, preStatePtr, sizeof(struct gameState));
+
+	//Execute the function: 	
+	//Note: the third arg (handPos) is never actually used by executeBaronCard, so just pass in 0
+	result = executeBaronCard(choice1, &postState, 0, currentPlayer);
+
+	//Testing (for me): 
+	//printf("Hand count of preState = %d, hand count of postState = %d\n", preStatePtr->handCount[currentPlayer], postState.handCount[currentPlayer]); 
+
+
+
+	//Verify the results: 
+	testPass = testForEveryBaronCard(&postState, preStatePtr, result, testPass);
+
+	if (choice1 == 1) {
+		for (i = 0; i < 5; i++) {
+			if (preStatePtr->hand[currentPlayer][i] == estate) {
+				estateCardPosition = i;
+				break;
+			}
+		}
+	}
+
+	if (choice1 == 1 && estateCardPosition > -1) {
+		//Call if player will discard an estate card - find first estate card pos in hand
+		testPass = testDiscardEstateCard(&postState, preStatePtr, currentPlayer, estateCardPosition, testPass);
+	}
+	else {
+		//Call if player will gain an estate card
+		testPass = testGainEstateCard(&postState, preStatePtr, currentPlayer, estateCardPosition, testPass);
+	}
+
+	concludeTestCase(testPass, 1);
+
+}
+
+
+void addToSupply(int card, int maxCount, struct gameState* gs, int* supplyTotalPtr, int* supplyArrayPtr) {
+	int i = 0;
+	gs->supplyCount[card] = floor(Random() * maxCount + 1); //add 1 to include zero in the range
+															//printf("supplyCount of %d = %d\n", card, gs->supplyCount[card]);  
+															//printf("Max supply count of %d = %d\n", card, maxCount); 	
+	supplyArrayPtr += *supplyTotalPtr; //Start at correct array position 
+	for (i = 0; i < maxCount; i++) {
+		*supplyArrayPtr = card;
+		supplyArrayPtr++; //Increment the array address to move to the next array position  
+		*supplyTotalPtr += 1; //Increment the supply total value
+	}
+	//printf("supplyTotalPtr = %d\n", *supplyTotalPtr); 
+}
+
+
 /*
 int main() {
 	int i;
