@@ -222,12 +222,12 @@ int main() {
 		}
 
 		//Testing: 
-		//printf("supply card array:\n"); 
-		//int t = 0; 
-		//for (t = 0; t < supplyTotal; t++) {
-		//	printf("Card %d: %d\n", t + 1, supplyCards[t]); 
-		//}
-		//printf("Total supply for current test game = %d\n", supplyTotal); 
+		printf("supply card array:\n"); 
+		int t = 0; 
+		for (t = 0; t < supplyTotal; t++) {
+			printf("Card %d: %d\n", t + 1, supplyCards[t]); 
+		}
+		printf("Total supply for current test game = %d\n", supplyTotal); 
 
 
 
@@ -363,7 +363,6 @@ void testBaronCard(struct gameState* preStatePtr, int choice1, int currentPlayer
 
 	concludeTestCase(testPass, 1);
 
-
 }
 
 
@@ -373,12 +372,12 @@ void addToSupply(int card, int maxCount, struct gameState* gs, int* supplyTotalP
 	//printf("supplyCount of %d = %d\n", card, gs->supplyCount[card]);  
 	
 	supplyArrayPtr += *supplyTotalPtr; //Start at correct array position 
-	for (i = 0; i < gs->supplyCount[card]; i++) {
+	for (i = 0; i < maxCount; i++) {
 		*supplyArrayPtr = card;
 		supplyArrayPtr++; //Increment the array address to move to the next array position  
 		*supplyTotalPtr += 1; //Increment the supply total value
 	}
-	//printf("supplyTotalPtr = %d\n", *supplyTotalPtr); 
+	printf("supplyTotalPtr = %d\n", *supplyTotalPtr); 
 }
 
 
