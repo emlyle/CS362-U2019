@@ -222,12 +222,12 @@ int main() {
 		}
 
 		//Testing: 
-		printf("supply card array:\n"); 
-		int t = 0; 
-		for (t = 0; t < supplyTotal; t++) {
-			printf("Card %d: %d\n", t + 1, supplyCards[t]); 
-		}
-		printf("Total supply for current test game = %d\n", supplyTotal); 
+		//printf("supply card array:\n"); 
+		//int t = 0; 
+		//for (t = 0; t < supplyTotal; t++) {
+		//	printf("Card %d: %d\n", t + 1, supplyCards[t]); 
+		//}
+		//printf("Total supply for current test game = %d\n", supplyTotal); 
 
 
 
@@ -237,7 +237,7 @@ int main() {
 		//printf("\n\n******Start Random Test %d\n", i + 1); 
 		for (j = 0; j < 5; j++) {
 			int cardAlreadySelected = 0; 
-			int infLoop = 0; 
+			//int infLoop = 0; 
 			//printf("RandomCardPos selections:\n"); 
 			do {
 				//printf("In the loop...\n"); 
@@ -255,9 +255,9 @@ int main() {
 						cardAlreadySelected = 0;  
 					}
 				}
-				infLoop++; 
-				if (infLoop >= 20) printf("Random Test %d: Infinite loop...exiting loop\n", i + 1); 
-			} while (cardAlreadySelected != 0 && infLoop < 20);
+				//infLoop++; 
+				//if (infLoop >= 20) printf("Random Test %d: Infinite loop...exiting loop\n", i + 1); 
+			} while (cardAlreadySelected != 0/* && infLoop < 20*/);
 			//printf("LOOP EXITED!\n");  
 			//printf("\n"); 
 			randomCard = supplyCards[randomCardPos]; 
@@ -274,9 +274,9 @@ int main() {
 				estates++; 
 			}
 		}
-		if (choice1 == 1 && (estates > 1 || estates == 0)) {
-			printf("\tThis test should fail\n"); 
-		} else printf("\tThis test should pass\n"); 	
+		//if (choice1 == 1 && (estates > 1 || estates == 0)) {
+		//	printf("\tThis test should fail\n"); 
+		//} else printf("\tThis test should pass\n"); 	
 		
 		//Set numBuys 
 		preState.numBuys = 1; 		
@@ -370,14 +370,14 @@ void addToSupply(int card, int maxCount, struct gameState* gs, int* supplyTotalP
 	int i = 0; 
 	gs->supplyCount[card] = floor(Random() * maxCount + 1); //add 1 to include zero in the range
 	//printf("supplyCount of %d = %d\n", card, gs->supplyCount[card]);  
-	
+	//printf("Max supply count of %d = %d\n", card, maxCount); 	
 	supplyArrayPtr += *supplyTotalPtr; //Start at correct array position 
 	for (i = 0; i < maxCount; i++) {
 		*supplyArrayPtr = card;
 		supplyArrayPtr++; //Increment the array address to move to the next array position  
 		*supplyTotalPtr += 1; //Increment the supply total value
 	}
-	printf("supplyTotalPtr = %d\n", *supplyTotalPtr); 
+	//printf("supplyTotalPtr = %d\n", *supplyTotalPtr); 
 }
 
 
