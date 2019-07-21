@@ -707,6 +707,9 @@ void discardEstateCard(struct gameState *state, int currentPlayer, int p) {
 	state->coins += 4;//Add 4 coins to the amount of coins
 	state->discard[currentPlayer][state->discardCount[currentPlayer]] = state->hand[currentPlayer][p];
 	state->discardCount[currentPlayer]++;
+	//printf("card to discard is %d\n", state->hand[currentPlayer][p]); 
+	//printf("In dominion.c: discardCount = %d\n", state->discardCount[currentPlayer]); 
+	//printf("\ttop of discard is %d\n", state->discard[currentPlayer][state->discardCount[currentPlayer] - 1]); 
 	for (; p < state->handCount[currentPlayer]; p++) {
 		state->hand[currentPlayer][p] = state->hand[currentPlayer][p + 1];
 	}
@@ -726,8 +729,11 @@ void discardEstateCard(struct gameState *state, int currentPlayer, int p) {
 */
 void gainEstateCard(struct gameState *state, int currentPlayer) {
 	if (supplyCount(estate, state) > 0) {
-		gainCard(estate, state, 0, currentPlayer); //Add an estate card to the current player's hand
-		state->supplyCount[estate]--;//Decrement estates from supply
+		//***BUG FOUND - this should pass 2 as the flag to add it to the player's hand but it passes 0 which adds an estate card to their discard pile 
+		gainCard(estate, state, 2, currentPlayer); //Add an estate card to the current player's hand
+		//printf("current player's hand count after gainCard() = %d\n", state->handCount[currentPlayer]); 
+
+		//state->supplyCount[estate]--;//Decrement estates from supply //***BUG FOUND - this is already decremented in gainCard(), so this is doing it an extra time
 	}
 	if (supplyCount(estate, state) == 0) { //Check if supply is out of estate cards and if the game is over
 		isGameOver(state);
