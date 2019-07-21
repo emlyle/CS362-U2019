@@ -35,7 +35,7 @@ void addToSupply(int card, int maxCount, struct gameState* gs, int* supplyTotalP
 
 int main() {
 
-	int i, j, m, choice1, currentPlayer, numPlayers, randomCardPos, randomCard, kingdomCardsLen;
+	int i, j, m, choice1, choice2, player, currentPlayer, numPlayers, randomCardPos, randomCard, kingdomCardsLen;
 	int supplyCards[296]; //296 is the max possible supply count  
 	int supplyTotal = 0;
 	struct gameState preState;
