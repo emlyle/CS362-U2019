@@ -20,7 +20,7 @@
 
 
 void addToSupply(int card, int maxCount, struct gameState* gs, int* supplyTotalPtr, int* supplyArray);
-void testMinionCard(struct gameState* preStatePtr, int choice1, int currentPlayer);
+void testMinionCard(struct gameState* preStatePtr, int choice1, int choice2, int currentPlayer);
 
 int testCriteriaForAllMinionCards(int result, struct gameState *testG, struct gameState *G, int testPass);
 int testCriteriaForNotChoice2(struct gameState* testG, struct gameState* G, int currentPlayer, int testPass);
@@ -46,7 +46,7 @@ int main() {
 	SelectStream(2);
 	PutSeed(8);
 
-	printf(">>>>>>>>>>>>>>Random Test 2 for Minion Card<<<<<<<<<<<<<<\n");
+	printf("\n\n>>>>>>>>>>>>>>Random Test 2 for Minion Card<<<<<<<<<<<<<<\n");
 
 	for (i = 0; i < totalTests; i++) {
 		printf("\nRandom Test %d\n", i + 1);
@@ -266,8 +266,7 @@ int main() {
 
 
 		//Call function under test and verify results 
-		//testBaronCard(&preState, choice1, currentPlayer);
-
+		testMinionCard(&preState, choice1, choice2, currentPlayer);
 
 	}
 
@@ -277,44 +276,66 @@ int main() {
 
 }
 
-void testMinionCard(struct gameState* preStatePtr, int choice1, int currentPlayer) {
-	int i;
+void testMinionCard(struct gameState* preStatePtr, int choice1, int choice2, int currentPlayer) {
+	int i, diffFound;
 	int result = -1;
 	int testPass = 1;
 	int estateCardPosition = -1;
+	int nextPlayer = currentPlayer + 1; 
+	if (nextPlayer == preStatePtr->numPlayers) nextPlayer = 0; 
 
 	//Copy the pre-game state (preState) to a post-test game state (postState)
 	struct gameState postState;
 	memcpy(&postState, preStatePtr, sizeof(struct gameState));
 
 	//Execute the function: 	
-	//Note: the third arg (handPos) is never actually used by executeBaronCard, so just pass in 0
-	result = executeBaronCard(choice1, &postState, 0, currentPlayer);
+	result = executeMinionCard(choice1, choice2, &postState, 0, currentPlayer);
 
 	//Testing (for me): 
 	//printf("Hand count of preState = %d, hand count of postState = %d\n", preStatePtr->handCount[currentPlayer], postState.handCount[currentPlayer]); 
 
-
-
+	
 	//Verify the results: 
-	//testPass = testForEveryBaronCard(&postState, preStatePtr, result, testPass);
+	testPass = testCriteriaForAllMinionCards(result, &postState, preStatePtr, testPass);
 
+	//Determine which tests to run: 
 	if (choice1 == 1) {
-		for (i = 0; i < 5; i++) {
-			if (preStatePtr->hand[currentPlayer][i] == estate) {
-				estateCardPosition = i;
-				break;
+		testPass = testCriteriaForNotChoice2(&postState, preStatePtr, currentPlayer, testPass); 
+		//Verify 2 coins were gained
+		printf("\tcoins = %d, expected = %d --> ", postState.coins, preStatePtr->coins + 2);
+		testPass = myAssert(postState.coins, preStatePtr->coins + 2, testPass);
+	}
+	else if (choice2 == 1) { 
+		testPass = testCriteriaForChoice2(&postState, preStatePtr, currentPlayer, testPass); 
+		if (preStatePtr->handCount[nextPlayer] < 5) {
+			testPass = verifyNoChangeToNextPlayer(&postState, preStatePtr, currentPlayer, testPass); 
+		}
+		else { //next player had at least 5 cards in their hand 
+			   //Verify hand count of next player is now 4
+			printf("\tnext player's handCount = %d, expected = %d --> ", postState.handCount[nextPlayer], 4);
+			testPass = myAssert(postState.handCount[nextPlayer], 4, testPass);
+
+			//Verify next player's hand has changed
+			diffFound = 0;
+			printf("\tnext player's hand: \n");
+			for (i = 0; i < postState.handCount[nextPlayer]; i++) {
+				printf("\t\tcard %d = %d, was %d\n", i + 1, postState.hand[nextPlayer][i], preStatePtr->hand[nextPlayer][i]);
+				if (postState.hand[nextPlayer][i] != preStatePtr->hand[nextPlayer][i]) {
+					diffFound = 1;
+				}
 			}
+			if (!diffFound) {
+				printf("\t\tNo differences found in hand --> FAIL\n");
+				testPass = 0;
+			}
+			else printf("\t\tHand changed --> PASS\n");
 		}
 	}
-
-	if (choice1 == 1 && estateCardPosition > -1) {
-		//Call if player will discard an estate card - find first estate card pos in hand
-		//testPass = testDiscardEstateCard(&postState, preStatePtr, currentPlayer, estateCardPosition, testPass);
-	}
-	else {
-		//Call if player will gain an estate card
-		//testPass = testGainEstateCard(&postState, preStatePtr, currentPlayer, estateCardPosition, testPass);
+	else { //both choice1 and choice2 equal zero
+		//Verify no coins gained
+		printf("\tcoins = %d, expected = %d --> ", postState.coins, preStatePtr->coins);
+		testPass = myAssert(postState.coins, preStatePtr->coins, testPass);
+		testPass = testCriteriaForNotChoice2(&postState, preStatePtr, currentPlayer, testPass); 
 	}
 
 	concludeTestCase(testPass, 1);
@@ -497,6 +518,8 @@ int main() {
 	return 0;
 
 }
+*/
+
 
 
 
@@ -580,7 +603,6 @@ int testCriteriaForChoice2(struct gameState* testG, struct gameState* G, int cur
 	return testPass; 
 }
 
-*/
 
 
 void concludeTestCase(int testPass, int testCaseNumber) {
