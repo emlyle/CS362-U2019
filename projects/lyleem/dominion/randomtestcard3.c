@@ -28,12 +28,13 @@ int myAssert(int arg1, int arg2, int testPass);
 
 int main() {
 
-	int i, j, m, player, currentPlayer, numPlayers, randomCardPos, randomCard, kingdomCardsLen;
+	int i, j, m, s, player, currentPlayer, numPlayers, randomCardPos, randomCard, kingdomCardsLen;
 	int supplyCards[296]; //296 is the max possible supply count  
+	int startingSupply[296]; 
 	int supplyTotal = 0;
 	struct gameState preState;
 	int selectedKingdomCards[10];
-	int totalTests = 30;
+	int totalTests = 10;
 
 	//Set up random number generator
 	SelectStream(2);
@@ -77,64 +78,129 @@ int main() {
 
 		//Set random but valid supply counts for each card type and add each supply card to an array of all supply cards
 		supplyTotal = 0; //reset for current test
+		s = 0; 
 		if (numPlayers == 2) {
 
 			addToSupply(estate, 8, &preState, &supplyTotal, supplyCards);
+			for (j = 0; j < 8; j++) {
+				startingSupply[s] = estate; 
+				s++; 
+			} 
 			//printf("supply count of estate = %d, supplyTotal = %d\n", preState.supplyCount[estate], supplyTotal); 
 
 			addToSupply(duchy, 8, &preState, &supplyTotal, supplyCards);
+			for (j = 0; j < 8; j++) {
+				startingSupply[s] = duchy; 
+				s++; 
+			} 
 			//printf("supply count of duchy = %d, supplyTotal = %d\n", preState.supplyCount[duchy], supplyTotal); 
 
 			addToSupply(province, 8, &preState, &supplyTotal, supplyCards);
 			//printf("supply count of province = %d, supplyTotal = %d\n", preState.supplyCount[province], supplyTotal); 
+			for (j = 0; j < 8; j++) {
+				startingSupply[s] = province; 
+				s++; 
+			} 
 
 			addToSupply(copper, 46, &preState, &supplyTotal, supplyCards);
 			//printf("supply count of copper = %d, supplyTotal = %d\n", preState.supplyCount[copper], supplyTotal); 
+			for (j = 0; j < 46; j++) {
+				startingSupply[s] = copper; 
+				s++; 
+			} 
 
 			addToSupply(curse, 10, &preState, &supplyTotal, supplyCards);
 			//printf("supply count of curse = %d, supplyTotal = %d\n", preState.supplyCount[curse], supplyTotal); 
+			for (j = 0; j < 10; j++) {
+				startingSupply[s] = curse; 
+				s++; 
+			} 
 
 		}
 		else {
 			addToSupply(estate, 12, &preState, &supplyTotal, supplyCards);
+			for (j = 0; j < 12; j++) {
+				startingSupply[s] = estate; 
+				s++; 
+			} 
 			//printf("supply count of estate = %d, supplyTotal = %d\n", preState.supplyCount[estate], supplyTotal); 
 
 			addToSupply(duchy, 12, &preState, &supplyTotal, supplyCards);
+			for (j = 0; j < 12; j++) {
+				startingSupply[s] = duchy; 
+				s++; 
+			} 
 			//printf("supply count of duchy = %d, supplyTotal = %d\n", preState.supplyCount[duchy], supplyTotal); 
 
 			addToSupply(province, 12, &preState, &supplyTotal, supplyCards);
+			for (j = 0; j < 12; j++) {
+				startingSupply[s] = province; 
+				s++; 
+			} 
 			//printf("supply count of province = %d, supplyTotal = %d\n", preState.supplyCount[province], supplyTotal); 
 
 			if (numPlayers == 3) {
 				addToSupply(copper, 39, &preState, &supplyTotal, supplyCards);
+				for (j = 0; j < 39; j++) {
+					startingSupply[s] = copper; 
+					s++; 
+				} 
 				//printf("supply count of copper = %d, supplyTotal = %d\n", preState.supplyCount[copper], supplyTotal); 
 
 				addToSupply(curse, 20, &preState, &supplyTotal, supplyCards);
+				for (j = 0; j < 20; j++) {
+					startingSupply[s] = curse; 
+					s++; 
+				} 
 				//printf("supply count of curse = %d, supplyTotal = %d\n", preState.supplyCount[curse], supplyTotal); 
 			}
 			else { //numPlayers == 4 
 				addToSupply(copper, 32, &preState, &supplyTotal, supplyCards);
+				for (j = 0; j < 32; j++) {
+					startingSupply[s] = copper; 
+					s++; 
+				} 
 				//printf("supply count of copper = %d, supplyTotal = %d\n", preState.supplyCount[copper], supplyTotal); 
 
 				addToSupply(curse, 30, &preState, &supplyTotal, supplyCards);
+				for (j = 0; j < 30; j++) {
+					startingSupply[s] = curse; 
+					s++; 
+				} 
 				//printf("supply count of curse = %d, supplyTotal = %d\n", preState.supplyCount[curse], supplyTotal); 
 			}
 
 		}
 		addToSupply(silver, 40, &preState, &supplyTotal, supplyCards);
+		for (j = 0; j < 40; j++) {
+			startingSupply[s] = silver; 
+			s++; 
+		} 
 		//printf("supply count of silver = %d, supplyTotal = %d\n", preState.supplyCount[silver], supplyTotal); 
 
 		addToSupply(gold, 30, &preState, &supplyTotal, supplyCards);
+		for (j = 0; j < 30; j++) {
+			startingSupply[s] = gold; 
+			s++; 
+		} 
 		//printf("supply count of gold = %d, supplyTotal = %d\n", preState.supplyCount[gold], supplyTotal); 
 
 		//Set random but valid supply counts for the selected kingdom cards
 		for (j = 0; j < 10; j++) {
 			if (selectedKingdomCards[j] == gardens || selectedKingdomCards[j] == great_hall) {
 				addToSupply(selectedKingdomCards[j], 12, &preState, &supplyTotal, supplyCards);
+				for (j = 0; j < 12; j++) {
+					startingSupply[s] = selectedKingdomCards[j]; 
+					s++; 
+				} 
 				//printf("supply count of kingdomCard %d = %d, supplyTotal = %d\n", selectedKingdomCards[j], preState.supplyCount[selectedKingdomCards[j]], supplyTotal); 
 			}
 			else {
 				addToSupply(selectedKingdomCards[j], 10, &preState, &supplyTotal, supplyCards);
+				for (j = 0; j < 10; j++) {
+					startingSupply[s] = selectedKingdomCards[j]; 
+					s++; 
+				} 
 				//printf("supply count of kingdomCard %d = %d, supplyTotal = %d\n", selectedKingdomCards[j], preState.supplyCount[selectedKingdomCards[j]], supplyTotal); 
 			}
 		}
@@ -149,7 +215,7 @@ int main() {
 		//for (t = 0; t < supplyTotal; t++) {
 		//	printf("Card %d: %d\n", t + 1, supplyCards[t]); 
 		//}
-		//printf("Total supply for current test game = %d\n", supplyTotal); 
+		printf("Total supply for current test game = %d\n", supplyTotal); 
 
 		//Initialize all possible players hand counts, deck counts, discard pile counts, and the cards in each 
 		for (j = 0; j < 4; j++) {
@@ -177,14 +243,16 @@ int main() {
 			totalCardsRemaining -= totalGameCards; 
 			
 			if (totalCardsRemaining < 0) totalCardsRemaining = 0; 
-			preState.deckCount[j] = floor(Random() * totalCardsRemaining); //shrink total count of cards based on what possible values remain 
+			preState.deckCount[j] = floor(Random() * 20); //shrink total count of cards based on what possible values remain 
 			totalGameCards += preState.deckCount[j]; 
 			totalCardsRemaining -= totalGameCards;
 			
 			if (totalCardsRemaining < 0) totalCardsRemaining = 0;
-			preState.discardCount[j] = floor(Random() * totalCardsRemaining); //shrink total count of cards based on what possible values remain
+			preState.discardCount[j] = floor(Random() * 20); //shrink total count of cards based on what possible values remain
 			totalGameCards += preState.discardCount[j]; 
 			totalCardsRemaining -= totalGameCards;
+
+			printf("Player %d: handCount = %d, deckCount = %d, discardCount = %d\n", j + 1, preState.handCount[j], preState.deckCount[j], preState.discardCount[j]); 
 		}
 
 
@@ -204,10 +272,10 @@ int main() {
 				//printf("RandomCardPos selections:\n"); 
 				do {
 					//printf("In the loop...\n"); 
-					randomCardPos = floor(Random() * supplyTotal);
+					randomCardPos = floor(Random() * s);
 					//printf("Random Selection: %d\n", randomCardPos); 
 					for (m = 0; m < currSupplyPos; m++) {
-						//printf("\tDoes %d = selectedSupplyPos[%d] of %d?", randomCardPos, m, selectedSupplyPos[m]); 
+						//printf("\tDoes %d = selectedSupplyPos[%d] of %d? ", randomCardPos, m, selectedSupplyPos[m]); 
 						if (randomCardPos == selectedSupplyPos[m]) {
 							//printf("YES! "); 
 							cardAlreadySelected = 1;
@@ -220,13 +288,14 @@ int main() {
 						}
 					}
 					infLoop++;
-					if (infLoop >= 20) printf("Random Test %d: Infinite loop...exiting loop\n", i + 1);
-				} while (cardAlreadySelected != 0 && infLoop < 20);
+					if (infLoop >= 40) printf("Infinite loop...exiting hand loop\n");
+				} while (cardAlreadySelected != 0 && infLoop < 40);
 				//printf("LOOP EXITED!\n");  
 				//printf("\n"); 
-				randomCard = supplyCards[randomCardPos];
+				randomCard = startingSupply[randomCardPos];
 				preState.hand[player][j] = randomCard;
-				selectedSupplyPos[currSupplyPos++] = randomCardPos;
+				selectedSupplyPos[currSupplyPos] = randomCardPos;
+				currSupplyPos++; 
 
 			}
 
@@ -237,10 +306,10 @@ int main() {
 				//printf("RandomCardPos selections:\n"); 
 				do {
 					//printf("In the loop...\n"); 
-					randomCardPos = floor(Random() * supplyTotal);
+					randomCardPos = floor(Random() * s);
 					//printf("Random Selection: %d\n", randomCardPos); 
 					for (m = 0; m < currSupplyPos; m++) {
-						//printf("\tDoes %d = selectedSupplyPos[%d] of %d?", randomCardPos, m, selectedSupplyPos[m]); 
+						//printf("\tDoes %d = selectedSupplyPos[%d] of %d? ", randomCardPos, m, selectedSupplyPos[m]); 
 						if (randomCardPos == selectedSupplyPos[m]) {
 							//printf("YES! "); 
 							cardAlreadySelected = 1;
@@ -253,13 +322,14 @@ int main() {
 						}
 					}
 					infLoop++;
-					if (infLoop >= 20) printf("Random Test %d: Infinite loop...exiting loop\n", i + 1);
-				} while (cardAlreadySelected != 0 && infLoop < 20);
+					if (infLoop >= 40) printf("Infinite loop...exiting deck loop\n");
+				} while (cardAlreadySelected != 0 && infLoop < 40);
 				//printf("LOOP EXITED!\n");  
 				//printf("\n"); 
-				randomCard = supplyCards[randomCardPos];
+				randomCard = startingSupply[randomCardPos];
 				preState.deck[player][j] = randomCard;
-				selectedSupplyPos[currSupplyPos++] = randomCardPos;
+				selectedSupplyPos[currSupplyPos] = randomCardPos;
+				currSupplyPos++; 
 			}
 
 			for (j = 0; j < preState.discardCount[player]; j++) {
@@ -268,10 +338,10 @@ int main() {
 				//printf("RandomCardPos selections:\n"); 
 				do {
 					//printf("In the loop...\n"); 
-					randomCardPos = floor(Random() * supplyTotal);
+					randomCardPos = floor(Random() * s);
 					//printf("Random Selection: %d\n", randomCardPos); 
 					for (m = 0; m < currSupplyPos; m++) {
-						//printf("\tDoes %d = selectedSupplyPos[%d] of %d?", randomCardPos, m, selectedSupplyPos[m]); 
+						//printf("\tDoes %d = selectedSupplyPos[%d] of %d? ", randomCardPos, m, selectedSupplyPos[m]); 
 						if (randomCardPos == selectedSupplyPos[m]) {
 							//printf("YES! "); 
 							cardAlreadySelected = 1;
@@ -284,13 +354,14 @@ int main() {
 						}
 					}
 					infLoop++;
-					if (infLoop >= 20) printf("Random Test %d: Infinite loop...exiting loop\n", i + 1);
-				} while (cardAlreadySelected != 0 && infLoop < 20);
+					if (infLoop >= 40) printf("Infinite loop...exiting discard loop\n");
+				} while (cardAlreadySelected != 0 && infLoop < 40);
 				//printf("LOOP EXITED!\n");  
 				//printf("\n"); 
-				randomCard = supplyCards[randomCardPos];
+				randomCard = startingSupply[randomCardPos];
 				preState.discard[player][j] = randomCard;
-				selectedSupplyPos[currSupplyPos++] = randomCardPos;
+				selectedSupplyPos[currSupplyPos] = randomCardPos;
+				currSupplyPos++; 
 			}
 		}
 
@@ -342,7 +413,7 @@ int main() {
 
 	}
 
-	printf("\n>>>>>>>>>Random Test 3 for Tribute Card Completed<<<<<<<<<\n");
+	printf("\n>>>>>>>>>Random Test 3 for Tribute Card Completed<<<<<<<<<\n\n\n");
 
 	return 0;
 
