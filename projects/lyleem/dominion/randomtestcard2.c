@@ -14,6 +14,7 @@
 #include "dominion_helpers.h"
 #include <string.h>
 #include <stdio.h>
+#include <math.h>
 #include <assert.h>
 #include "rngs.h"
 #include <stdlib.h>
@@ -58,16 +59,17 @@ int main() {
 
 		//Initialize variables to valid random values 
 		choice1 = floor(Random() * 2); //[0,1]
-		printf("choice1 = %d\t", choice1); 
+		//printf("choice1 = %d\t", choice1); 
 		
 		choice2 = floor(Random() * 2); //[0,1]
-		printf("choice2 = %d\t", choice2); 
+		//printf("choice2 = %d\t", choice2); 
 
 		numPlayers = floor(Random() * 3) + 2; //[2,4]
-		printf("numPlayers = %d\t", numPlayers); 
+		preState.numPlayers = numPlayers; 
+		//printf("numPlayers = %d\t", numPlayers); 
 
 		currentPlayer = floor(Random() * numPlayers); //[0,1] or [0,2] or [0,3]
-		printf("currentPlayer = %d\n\n", currentPlayer); 
+		//printf("currentPlayer = %d\n\n", currentPlayer); 
 
 		//Randomly select 10 distinct kingdom cards 
 		int kingdomCards[20] = { 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26 };
@@ -163,12 +165,20 @@ int main() {
 		//}
 		//printf("Total supply for current test game = %d\n", supplyTotal); 
 
+		//Initialize all possible players hand counts and hands
+		for (j = 0; j < 4; j++) {
+			preState.handCount[j] = 0; 
+			for (m = 0; m < 5; m++) {
+				preState.hand[j][m] = -1; 
+			}
+		}
+
 
 		int totalHandCards = 0; 
 		for (j = 0; j < numPlayers; j++) {
 			preState.handCount[j] = floor(Random() * 6); //[0,5] cards in a player's hand
 			totalHandCards += preState.handCount[j]; 
-			printf("Hand count for player %d: %d\n", j + 1, preState.handCount[j]); 
+			//printf("Hand count for player %d: %d\n", j + 1, preState.handCount[j]); 
 		}
 				
 		int selectedSupplyPos[20] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }; //20 is max possible hand cards (if 4 players each with 5 cards)
@@ -209,22 +219,22 @@ int main() {
 		}
 		//Testing: 
 		for (j = 0; j < numPlayers; j++) {
-			printf("Player %d:\n", j + 1); 
+			//printf("Player %d:\n", j + 1); 
 
 			//Set current player's discard count and pile 
 			preState.discardCount[j] = floor(Random() * MAX_DECK);
 			//Set the next position in the discard pile to -1 since this is where an estate card may be added
 			preState.discard[j][preState.discardCount[j]] = -1;
 			
-			printf("\tDiscardCount = %d\n", preState.discardCount[j]); 
-			printf("\tEnd of discard pile = %d\n", preState.discard[j][preState.discardCount[j]]);
+			//printf("\tDiscardCount = %d\n", preState.discardCount[j]); 
+			//printf("\tEnd of discard pile = %d\n", preState.discard[j][preState.discardCount[j]]);
 
 			//Testing: 
-			printf("\tHand: ");
-			for (m = 0; m < preState.handCount[j]; m++) {
-				printf("%d\t", preState.hand[j][m]); 
-			}
-			printf("\n");
+			//printf("\tHand: ");
+			//for (m = 0; m < preState.handCount[j]; m++) {
+			//	printf("%d\t", preState.hand[j][m]); 
+			//}
+			//printf("\n");
 		}
 
 
@@ -249,7 +259,7 @@ int main() {
 				preState.coins += 3;
 			}
 		}
-		printf("Coins = %d\n", preState.coins); 
+		//printf("Coins = %d\n", preState.coins); 
 
 		//Set current player's discard count and pile 
 		preState.discardCount[currentPlayer] = floor(Random() * MAX_DECK);
@@ -280,9 +290,9 @@ void testMinionCard(struct gameState* preStatePtr, int choice1, int choice2, int
 	int i, diffFound;
 	int result = -1;
 	int testPass = 1;
-	int estateCardPosition = -1;
 	int nextPlayer = currentPlayer + 1; 
 	if (nextPlayer == preStatePtr->numPlayers) nextPlayer = 0; 
+	//printf("Next player: %d\n", nextPlayer); 
 
 	//Copy the pre-game state (preState) to a post-test game state (postState)
 	struct gameState postState;
@@ -300,6 +310,7 @@ void testMinionCard(struct gameState* preStatePtr, int choice1, int choice2, int
 
 	//Determine which tests to run: 
 	if (choice1 == 1) {
+		//printf("Choice1 == 1\n"); 
 		testPass = testCriteriaForNotChoice2(&postState, preStatePtr, currentPlayer, testPass); 
 		//Verify 2 coins were gained
 		printf("\tcoins = %d, expected = %d --> ", postState.coins, preStatePtr->coins + 2);
@@ -308,9 +319,11 @@ void testMinionCard(struct gameState* preStatePtr, int choice1, int choice2, int
 	else if (choice2 == 1) { 
 		testPass = testCriteriaForChoice2(&postState, preStatePtr, currentPlayer, testPass); 
 		if (preStatePtr->handCount[nextPlayer] < 5) {
+			//printf("choice2 == 1 but next player has less than 5 cards\n"); 
 			testPass = verifyNoChangeToNextPlayer(&postState, preStatePtr, currentPlayer, testPass); 
 		}
-		else { //next player had at least 5 cards in their hand 
+		else { //next player had at least 5 cards in their hand
+			//printf("choice2 == 1 and next player has at least 5 cards\n");  
 			   //Verify hand count of next player is now 4
 			printf("\tnext player's handCount = %d, expected = %d --> ", postState.handCount[nextPlayer], 4);
 			testPass = myAssert(postState.handCount[nextPlayer], 4, testPass);
@@ -332,6 +345,7 @@ void testMinionCard(struct gameState* preStatePtr, int choice1, int choice2, int
 		}
 	}
 	else { //both choice1 and choice2 equal zero
+		//printf("Both choice1 and choice2 == 0\n"); 
 		//Verify no coins gained
 		printf("\tcoins = %d, expected = %d --> ", postState.coins, preStatePtr->coins);
 		testPass = myAssert(postState.coins, preStatePtr->coins, testPass);
@@ -541,11 +555,11 @@ int testCriteriaForNotChoice2(struct gameState* testG, struct gameState* G, int 
 	int i; 
 
 	//Verify hand count decreased by 1 for discarded card
-	printf("\thandCount = %d, expected = %d --> ", testG->handCount[currentPlayer], G->handCount[currentPlayer] - 1);
+	printf("\tcurrent player's handCount = %d, expected = %d --> ", testG->handCount[currentPlayer], G->handCount[currentPlayer] - 1);
 	testPass = myAssert(testG->handCount[currentPlayer], G->handCount[currentPlayer] - 1, testPass); 
 
 	//Verify hand was unchanged except for 1 card discarded
-	printf("\thand: \n");
+	printf("\tcurrent player's hand: \n");
 	for (i = 0; i < G->handCount[currentPlayer] - 1; i++) {
 		printf("\t\tcard %d = %d, expected = %d --> ", i + 1, testG->hand[currentPlayer][i], G->hand[currentPlayer][i]);
 		testPass = myAssert(testG->hand[currentPlayer][i], G->hand[currentPlayer][i], testPass); 
@@ -583,11 +597,11 @@ int testCriteriaForChoice2(struct gameState* testG, struct gameState* G, int cur
 	testPass = myAssert(testG->coins, G->coins, testPass);
 
 	//Verify hand count is now 4
-	printf("\thandCount = %d, expected = 4 --> ", testG->handCount[currentPlayer]);
+	printf("\tcurrent player's handCount = %d, expected = 4 --> ", testG->handCount[currentPlayer]);
 	testPass = myAssert(testG->handCount[currentPlayer], 4, testPass); 
 
 	//Verify hand has changed
-	printf("\thand: \n");
+	printf("\tcurrent player's hand: \n");
 	for (i = 0; i < testG->handCount[currentPlayer]; i++) {
 		printf("\t\tcard %d = %d, was %d\n", i + 1, testG->hand[currentPlayer][i], G->hand[currentPlayer][i]);
 		if (testG->hand[currentPlayer][i] != G->hand[currentPlayer][i]) {
@@ -607,12 +621,11 @@ int testCriteriaForChoice2(struct gameState* testG, struct gameState* G, int cur
 
 void concludeTestCase(int testPass, int testCaseNumber) {
 	if (testPass) {
-		printf("TEST CASE %d PASSED!\n", testCaseNumber);
+		printf("Random test PASSED!\n");
 	}
 	else {
-		printf("TEST CASE %d FAILED. See failure criteria listed above.\n", testCaseNumber);
+		printf("Random test FAILED. See failure criteria listed above.\n");
 	}
-	printf("END TEST CASE %d\n\n", testCaseNumber);
 }
 
 
