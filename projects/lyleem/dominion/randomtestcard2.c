@@ -168,6 +168,7 @@ int main() {
 		for (j = 0; j < numPlayers; j++) {
 			preState.handCount[j] = floor(Random() * 6); //[0,5] cards in a player's hand
 			totalHandCards += preState.handCount[j]; 
+			printf("Hand count for player %d: %d\n", j + 1, preState.handCount[j]); 
 		}
 				
 		int selectedSupplyPos[20] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }; //20 is max possible hand cards (if 4 players each with 5 cards)
@@ -177,13 +178,13 @@ int main() {
 		for (player = 0; player < numPlayers; player++) {
 			for (j = 0; j < preState.handCount[player]; j++) {
 				int cardAlreadySelected = 0;
-				//int infLoop = 0; 
+				int infLoop = 0; 
 				//printf("RandomCardPos selections:\n"); 
 				do {
 					//printf("In the loop...\n"); 
 					randomCardPos = floor(Random() * supplyTotal);
 					//printf("Random Selection: %d\n", randomCardPos); 
-					for (m = 0; m < selectedSupplyPos; m++) {
+					for (m = 0; m < currSupplyPos; m++) {
 						//printf("\tDoes %d = selectedSupplyPos[%d] of %d?", randomCardPos, m, selectedSupplyPos[m]); 
 						if (randomCardPos == selectedSupplyPos[m]) {
 							//printf("YES! "); 
@@ -196,9 +197,9 @@ int main() {
 							cardAlreadySelected = 0;
 						}
 					}
-					//infLoop++; 
-					//if (infLoop >= 20) printf("Random Test %d: Infinite loop...exiting loop\n", i + 1); 
-				} while (cardAlreadySelected != 0/* && infLoop < 20*/);
+					infLoop++; 
+					if (infLoop >= 20) printf("Random Test %d: Infinite loop...exiting loop\n", i + 1); 
+				} while (cardAlreadySelected != 0 && infLoop < 20);
 				//printf("LOOP EXITED!\n");  
 				//printf("\n"); 
 				randomCard = supplyCards[randomCardPos];
@@ -208,18 +209,18 @@ int main() {
 		}
 		//Testing: 
 		for (j = 0; j < numPlayers; j++) {
-			printf("Player %d:\n"); 
+			printf("Player %d:\n", j + 1); 
 
 			//Set current player's discard count and pile 
 			preState.discardCount[j] = floor(Random() * MAX_DECK);
 			//Set the next position in the discard pile to -1 since this is where an estate card may be added
 			preState.discard[j][preState.discardCount[j]] = -1;
 			
-			printf("\tDiscardCount = %d\n", preState.discardCount[currentPlayer]); 
-			printf("\tEnd of discard pile = %d\n", preState.discard[currentPlayer][preState.discardCount[currentPlayer]]);
+			printf("\tDiscardCount = %d\n", preState.discardCount[j]); 
+			printf("\tEnd of discard pile = %d\n", preState.discard[j][preState.discardCount[j]]);
 
 			//Testing: 
-			printf("\tHand: ", j + 1);
+			printf("\tHand: ");
 			for (m = 0; m < preState.handCount[j]; m++) {
 				printf("%d\t", preState.hand[j][m]); 
 			}
@@ -234,6 +235,7 @@ int main() {
 		//Set numBuys 
 		preState.numBuys = 1;
 
+		preState.coins = 0; //reset coins 
 		//Set current player's coins
 		for (j = 0; j < 5; j++) {
 			int currCard = preState.hand[currentPlayer][j];
@@ -295,7 +297,7 @@ void testMinionCard(struct gameState* preStatePtr, int choice1, int currentPlaye
 
 
 	//Verify the results: 
-	testPass = testForEveryBaronCard(&postState, preStatePtr, result, testPass);
+	//testPass = testForEveryBaronCard(&postState, preStatePtr, result, testPass);
 
 	if (choice1 == 1) {
 		for (i = 0; i < 5; i++) {
@@ -308,11 +310,11 @@ void testMinionCard(struct gameState* preStatePtr, int choice1, int currentPlaye
 
 	if (choice1 == 1 && estateCardPosition > -1) {
 		//Call if player will discard an estate card - find first estate card pos in hand
-		testPass = testDiscardEstateCard(&postState, preStatePtr, currentPlayer, estateCardPosition, testPass);
+		//testPass = testDiscardEstateCard(&postState, preStatePtr, currentPlayer, estateCardPosition, testPass);
 	}
 	else {
 		//Call if player will gain an estate card
-		testPass = testGainEstateCard(&postState, preStatePtr, currentPlayer, estateCardPosition, testPass);
+		//testPass = testGainEstateCard(&postState, preStatePtr, currentPlayer, estateCardPosition, testPass);
 	}
 
 	concludeTestCase(testPass, 1);
