@@ -59,8 +59,8 @@ void testme()
        && state == 9)
     {
       printf("error ");
-      break; 
-      //exit(200);
+      //break; 
+      exit(200);
     }
 
   }
