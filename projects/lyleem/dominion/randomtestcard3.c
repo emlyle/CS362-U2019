@@ -421,7 +421,7 @@ int main() {
 
 
 void testTributeCard(struct gameState* preStatePtr, int currentPlayer) {
-	int i, j;
+	int i, j, numCards;
 	int result = -1;
 	int testPass = 1;
 	int nextPlayer = currentPlayer + 1;
@@ -478,8 +478,8 @@ void testTributeCard(struct gameState* preStatePtr, int currentPlayer) {
 		for (i = 0; i < postState.deckCount[nextPlayer]; i++) {
 			foundCards = 0; //Each card from postState should be found in preState (if it can't be found, that means it was added during the executeTributeCard function, which should not happen)
 			for (j = 0; j < preState->discardCount[nextPlayer]; j++) {
-				if (postState.deck[nextPlayer][i] == preState->discard[nextPlayer][j]) {
-					preState->discard[nextPlayer][j] = -1; //NOTE: We are done with any verification of the preState discard pile after this so that's why I'm changing values to -1
+				if (postState.deck[nextPlayer][i] == preStatePtr->discard[nextPlayer][j]) {
+					preStatePtr->discard[nextPlayer][j] = -1; //NOTE: We are done with any verification of the preState discard pile after this so that's why I'm changing values to -1
 					foundCards = 1; 
 					break; 
 				}
@@ -491,9 +491,9 @@ void testTributeCard(struct gameState* preStatePtr, int currentPlayer) {
 		//Check that the missing cards match the expected tribute cards 
 		foundCards = 0; 
 		for (i = 0; i < preState->discardCount[nextPlayer]; i++) {
-			if (preState->discard[nextPlayer][i] != -1) {
-				if (preState->discard[nextPlayer][i] == expectedTributeCards[0] 
-					|| preState->discard[nextPlayer][i] == expectedTributeCards[1]) {
+			if (preStatePtr->discard[nextPlayer][i] != -1) {
+				if (preStatePtr->discard[nextPlayer][i] == expectedTributeCards[0]
+					|| preStatePtr->discard[nextPlayer][i] == expectedTributeCards[1]) {
 					foundCards++; 
 				}
 			}
@@ -508,15 +508,15 @@ void testTributeCard(struct gameState* preStatePtr, int currentPlayer) {
 		for (i = 0; i < postState.deckCount[nextPlayer]; i++) {
 			foundCards = 0; //Each card from postState should be found in preState (if it can't be found, that means it was added during the executeTributeCard function, which should not happen)
 			//Check the preState deck first 
-			if (postState.deck[nextPlayer][i] == preState->deck[nextPlayer][0]) {
-				preState->deck[nextPlayer][0] = -1; //NOTE: We are done with any verification of the preState discard pile after this so that's why I'm changing values to -1
+			if (postState.deck[nextPlayer][i] == preStatePtr->deck[nextPlayer][0]) {
+				preStatePtr->deck[nextPlayer][0] = -1; //NOTE: We are done with any verification of the preState discard pile after this so that's why I'm changing values to -1
 				foundCards = 1;
 			}
 			else {
 				//Then check the preState discard pile
-				for (j = 0; j < preState->discardCount[nextPlayer]; j++) {
-					if (postState.deck[nextPlayer][i] == preState->discard[nextPlayer][j]) {
-						preState->discard[nextPlayer][j] = -1; //NOTE: We are done with any verification of the preState discard pile after this so that's why I'm changing values to -1
+				for (j = 0; j < preStatePtr->discardCount[nextPlayer]; j++) {
+					if (postState.deck[nextPlayer][i] == preStatePtr->discard[nextPlayer][j]) {
+						preStatePtr->discard[nextPlayer][j] = -1; //NOTE: We are done with any verification of the preState discard pile after this so that's why I'm changing values to -1
 						foundCards = 1;
 						break;
 					}
@@ -528,10 +528,10 @@ void testTributeCard(struct gameState* preStatePtr, int currentPlayer) {
 		}
 		//Check that the missing cards match the expected tribute cards 
 		foundCards = 0;
-		for (i = 0; i < preState->discardCount[nextPlayer]; i++) {
-			if (preState->discard[nextPlayer][i] != -1) {
-				if (preState->discard[nextPlayer][i] == expectedTributeCards[0]
-					|| preState->discard[nextPlayer][i] == expectedTributeCards[1]) {
+		for (i = 0; i < preStatePtr->discardCount[nextPlayer]; i++) {
+			if (preStatePtr->discard[nextPlayer][i] != -1) {
+				if (preStatePtr->discard[nextPlayer][i] == expectedTributeCards[0]
+					|| preStatePtr->discard[nextPlayer][i] == expectedTributeCards[1]) {
 					foundCards++;
 				}
 			}
@@ -618,11 +618,11 @@ void testTributeCard(struct gameState* preStatePtr, int currentPlayer) {
 		|| expectedTributeCards[1] == estate || expectedTributeCards[1] == duchy || expectedTributeCards[1] == province
 		|| expectedTributeCards[1] == gardens || expectedTributeCards[1] == great_hall) {
 		//Verify two cards added to current player's hand
-		expectedHandCount = preState->handCount[currentPlayer] + 2; 
+		expectedHandCount = preStatePtr->handCount[currentPlayer] + 2;
 	}
 	else {
 		//Verify no cards added to current player's hand
-		expectedHandCount = preState->handCount[currentPlayer];
+		expectedHandCount = preStatePtr->handCount[currentPlayer];
 	}
 	printf("\tcurrent player's hand count = %d, expected = %d --> ", postState.handCount[currentPlayer], expectedHandCount);
 	testPass = myAssert(postState.handCount[currentPlayer], expectedHandCount, testPass);
