@@ -34,7 +34,7 @@ int main() {
 	int supplyTotal = 0;
 	struct gameState preState;
 	int selectedKingdomCards[10];
-	int totalTests = 10;
+	int totalTests = 1000;
 
 	//Set up random number generator
 	SelectStream(2);
@@ -56,7 +56,9 @@ int main() {
 		//printf("numPlayers = %d\t", numPlayers); 
 
 		currentPlayer = floor(Random() * numPlayers); //[0,1] or [0,2] or [0,3]
+		preState.whoseTurn = currentPlayer; 
 		//printf("currentPlayer = %d\n\n", currentPlayer); 
+		
 
 		//Randomly select 10 distinct kingdom cards 
 		int kingdomCards[20] = { 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26 };
@@ -215,7 +217,7 @@ int main() {
 		//for (t = 0; t < supplyTotal; t++) {
 		//	printf("Card %d: %d\n", t + 1, supplyCards[t]); 
 		//}
-		printf("Total supply for current test game = %d\n", supplyTotal); 
+		//printf("Total supply for current test game = %d\n", supplyTotal); 
 
 		//Initialize all possible players hand counts, deck counts, discard pile counts, and the cards in each 
 		for (j = 0; j < 4; j++) {
@@ -252,7 +254,7 @@ int main() {
 			totalGameCards += preState.discardCount[j]; 
 			totalCardsRemaining -= totalGameCards;
 
-			printf("Player %d: handCount = %d, deckCount = %d, discardCount = %d\n", j + 1, preState.handCount[j], preState.deckCount[j], preState.discardCount[j]); 
+			//printf("Player %d: handCount = %d, deckCount = %d, discardCount = %d\n", j + 1, preState.handCount[j], preState.deckCount[j], preState.discardCount[j]); 
 		}
 
 
@@ -421,7 +423,7 @@ int main() {
 
 
 void testTributeCard(struct gameState* preStatePtr, int currentPlayer) {
-	int i, j, numCards;
+	int i, j, foundCards;
 	int result = -1;
 	int testPass = 1;
 	int nextPlayer = currentPlayer + 1;
@@ -477,7 +479,7 @@ void testTributeCard(struct gameState* preStatePtr, int currentPlayer) {
 		//If 2 cards are not missing from postState, then the test fails 
 		for (i = 0; i < postState.deckCount[nextPlayer]; i++) {
 			foundCards = 0; //Each card from postState should be found in preState (if it can't be found, that means it was added during the executeTributeCard function, which should not happen)
-			for (j = 0; j < preState->discardCount[nextPlayer]; j++) {
+			for (j = 0; j < preStatePtr->discardCount[nextPlayer]; j++) {
 				if (postState.deck[nextPlayer][i] == preStatePtr->discard[nextPlayer][j]) {
 					preStatePtr->discard[nextPlayer][j] = -1; //NOTE: We are done with any verification of the preState discard pile after this so that's why I'm changing values to -1
 					foundCards = 1; 
@@ -490,7 +492,7 @@ void testTributeCard(struct gameState* preStatePtr, int currentPlayer) {
 		}
 		//Check that the missing cards match the expected tribute cards 
 		foundCards = 0; 
-		for (i = 0; i < preState->discardCount[nextPlayer]; i++) {
+		for (i = 0; i < preStatePtr->discardCount[nextPlayer]; i++) {
 			if (preStatePtr->discard[nextPlayer][i] != -1) {
 				if (preStatePtr->discard[nextPlayer][i] == expectedTributeCards[0]
 					|| preStatePtr->discard[nextPlayer][i] == expectedTributeCards[1]) {
@@ -567,11 +569,11 @@ void testTributeCard(struct gameState* preStatePtr, int currentPlayer) {
 	if (expectedTributeCards[0] == copper || expectedTributeCards[0] == silver || expectedTributeCards[0] == gold
 		|| expectedTributeCards[1] == copper || expectedTributeCards[1] == silver || expectedTributeCards[1] == gold) {	//+2 coins for a treasure card
 		//Verify two coins added - for the treasure card
-		expectedCoins = preState->coins + 2; 
+		expectedCoins = preStatePtr->coins + 2; 
 	}
 	else {
 		//Neither tribute card was a treasure card, so verify no coins added
-		expectedCoins = preState->coins; 
+		expectedCoins = preStatePtr->coins; 
 	}
 	printf("\tcoins = %d, expected = %d --> ", postState.coins, expectedCoins);
 	testPass = myAssert(postState.coins, expectedCoins, testPass);
@@ -602,11 +604,11 @@ void testTributeCard(struct gameState* preStatePtr, int currentPlayer) {
 	if ((expectedTributeCards[0] >= 7 && expectedTributeCards[0] <= 9) || (expectedTributeCards[0] >= 11 && expectedTributeCards[0] <= 15) || (expectedTributeCards[0] >= 17 && expectedTributeCards[0] <= 26)
 		|| (expectedTributeCards[1] >= 7 && expectedTributeCards[1] <= 9) || (expectedTributeCards[1] >= 11 && expectedTributeCards[1] <= 15) || (expectedTributeCards[1] >= 17 && expectedTributeCards[1] <= 26)) {
 		//Verify two actions added 
-		expectedActions = preState->numActions + 2;
+		expectedActions = preStatePtr->numActions + 2;
 	} 
 	else {
 		//Verify no actions added
-		expectedActions = preState->numActions; 
+		expectedActions = preStatePtr->numActions; 
 	}
 	printf("\tactions = %d, expected = %d --> ", postState.numActions, expectedActions);
 	testPass = myAssert(postState.numActions, expectedActions, testPass);
