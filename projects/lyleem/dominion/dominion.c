@@ -877,7 +877,7 @@ void addTributeCardFromDeck(int *tributeCard, struct gameState *state, int nextP
 */
 int executeTributeCard(struct gameState *state, int currentPlayer)
 {
-	int nextPlayer = currentPlayer + 1; 
+	int nextPlayer = currentPlayer + 1; //***Found BUG: this will go out of bounds if currentPlayer is at the end of the array 
 	int tributeRevealedCards[2] = { -1, -1 };
 	int i;
 	if ((state->discardCount[nextPlayer] + state->deckCount[nextPlayer]) <= 1) { //next player has 0-1 cards total between their discard pile and deck
@@ -899,7 +899,7 @@ int executeTributeCard(struct gameState *state, int currentPlayer)
 	}
 	//***NEW BUG ADDED - else { if () { ... }  ... } turned into else if () { ... ... } - ORIGINAL CODE IS COMMENTED OUT BELOW: 
 	//else {  //Next player has at least 2 cards
-	else if (state->deckCount[nextPlayer] == 0) {
+	else if (state->deckCount[nextPlayer] == 0) { //***Found existing BUG - if the next player had 1 card in their deck and at least 1 card in their discard, this case is not accounted for!
 		//***ORIGINAL INNER IF STATEMENT: 
 		//	if (state->deckCount[nextPlayer] == 0) { //Next player has no cards in their deck
 		for (i = 0; i < state->discardCount[nextPlayer]; i++) { //Move all discard cards to their deck

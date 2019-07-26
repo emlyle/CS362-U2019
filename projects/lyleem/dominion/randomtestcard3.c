@@ -389,7 +389,7 @@ int main() {
 		preState.numActions = 1; 
 
 		preState.coins = 0; //reset coins 
-							//Set current player's coins
+		//Set current player's coins
 		for (j = 0; j < 5; j++) {
 			int currCard = preState.hand[currentPlayer][j];
 			if (currCard == copper) {
@@ -419,8 +419,9 @@ int main() {
 
 }
 
+
 void testTributeCard(struct gameState* preStatePtr, int currentPlayer) {
-	int i, diffFound;
+	int i, j;
 	int result = -1;
 	int testPass = 1;
 	int nextPlayer = currentPlayer + 1;
@@ -434,58 +435,199 @@ void testTributeCard(struct gameState* preStatePtr, int currentPlayer) {
 	//Execute the function: 	
 	result = executeTributeCard(&postState, currentPlayer);
 
-	//Testing (for me): 
-	//printf("Hand count of preState = %d, hand count of postState = %d\n", preStatePtr->handCount[currentPlayer], postState.handCount[currentPlayer]); 
+	//Verify return value = 0
+	printf("\treturn value = %d, expected = 0 -->", result);
+	testPass = myAssert(result, 0, testPass);
 
 
-	//Verify the results: 
-	//testPass = testCriteriaForAllMinionCards(result, &postState, preStatePtr, testPass);
+	//Step 1: find out which 1 or 2 cards should have been used for tribute cards 
+	int expectedTributeCards[2] = { -1, -1 }; 
+	int expectedNumTributeCards = 0; 
+	int startingDeckCount = preStatePtr->deckCount[nextPlayer];
+	int startingDiscardCount = preStatePtr->discardCount[nextPlayer];
+	int startingDeckAndDiscardCount = startingDeckCount + startingDiscardCount;
+	int endingDeckAndDiscardCount = postState.deckCount[nextPlayer] + postState.discardCount[nextPlayer]; 
 
-	//Determine which tests to run: 
-	/*
-	if (choice1 == 1) {
-		//printf("Choice1 == 1\n"); 
-		testPass = testCriteriaForNotChoice2(&postState, preStatePtr, currentPlayer, testPass);
-		//Verify 2 coins were gained
-		printf("\tcoins = %d, expected = %d --> ", postState.coins, preStatePtr->coins + 2);
-		testPass = myAssert(postState.coins, preStatePtr->coins + 2, testPass);
+	//If the next player's deck had at least 2 cards - get last two in array for tribute cards
+	if (startingDeckCount >= 2) {
+		expectedTributeCards[0] = preStatePtr->deck[nextPlayer][startingDeckCount - 1];
+		expectedTributeCards[1] = preStatePtr->deck[nextPlayer][startingDeckCount - 2];
 	}
-	else if (choice2 == 1) {
-		testPass = testCriteriaForChoice2(&postState, preStatePtr, currentPlayer, testPass);
-		if (preStatePtr->handCount[nextPlayer] < 5) {
-			//printf("choice2 == 1 but next player has less than 5 cards\n"); 
-			testPass = verifyNoChangeToNextPlayer(&postState, preStatePtr, currentPlayer, testPass);
-		}
-		else { //next player had at least 5 cards in their hand
-			   //printf("choice2 == 1 and next player has at least 5 cards\n");  
-			   //Verify hand count of next player is now 4
-			printf("\tnext player's handCount = %d, expected = %d --> ", postState.handCount[nextPlayer], 4);
-			testPass = myAssert(postState.handCount[nextPlayer], 4, testPass);
-
-			//Verify next player's hand has changed
-			diffFound = 0;
-			printf("\tnext player's hand: \n");
-			for (i = 0; i < postState.handCount[nextPlayer]; i++) {
-				printf("\t\tcard %d = %d, was %d\n", i + 1, postState.hand[nextPlayer][i], preStatePtr->hand[nextPlayer][i]);
-				if (postState.hand[nextPlayer][i] != preStatePtr->hand[nextPlayer][i]) {
-					diffFound = 1;
+	//If the next player's deck had only 1 card and discard had 0 cards - get this card for tribute card
+	else if (startingDeckCount == 1 && startingDiscardCount == 1) {
+		expectedTributeCards[0] = preStatePtr->deck[nextPlayer][0];
+	}
+	//If the next player's deck had 0 cards and discard had 1 card - get this card for tribute card 
+	else if (startingDeckCount == 0 && startingDiscardCount == 1) {
+		expectedTributeCards[0] = preStatePtr->discard[nextPlayer][0];
+	}
+	//If the next player's deck had 0 cards and discard had exactly 2 cards - get these two cards for tribute cards
+	else if (startingDeckCount == 0 && startingDiscardCount == 2) {
+		expectedTributeCards[0] = preStatePtr->discard[nextPlayer][1];
+		expectedTributeCards[1] = preStatePtr->discard[nextPlayer][0];
+	}
+	//If the next player's deck had 1 card and discard had 1 card - get these two cards for tribute cards 
+	else if (startingDeckCount == 1 && startingDiscardCount == 1) {
+		expectedTributeCards[0] = preStatePtr->deck[nextPlayer][0];
+		expectedTributeCards[1] = preStatePtr->discard[nextPlayer][0];
+	}
+	//If the next player's deck had 0 cards and discard had more than 2 cards - find out which two cards are missing and these are the tribute cards 
+	else if (startingDeckCount == 0 && startingDiscardCount > 2) {
+		//Compare discard cards before with deck cards after to see which 2 are missing
+		//If 2 cards are not missing from postState, then the test fails 
+		for (i = 0; i < postState.deckCount[nextPlayer]; i++) {
+			foundCards = 0; //Each card from postState should be found in preState (if it can't be found, that means it was added during the executeTributeCard function, which should not happen)
+			for (j = 0; j < preState->discardCount[nextPlayer]; j++) {
+				if (postState.deck[nextPlayer][i] == preState->discard[nextPlayer][j]) {
+					preState->discard[nextPlayer][j] = -1; //NOTE: We are done with any verification of the preState discard pile after this so that's why I'm changing values to -1
+					foundCards = 1; 
+					break; 
 				}
 			}
-			if (!diffFound) {
-				printf("\t\tNo differences found in hand --> FAIL\n");
-				testPass = 0;
+			if (foundCards == 0) {
+				printf("\tA new card was found in next player's deck --> FAIL\n"); 
 			}
-			else printf("\t\tHand changed --> PASS\n");
 		}
+		//Check that the missing cards match the expected tribute cards 
+		foundCards = 0; 
+		for (i = 0; i < preState->discardCount[nextPlayer]; i++) {
+			if (preState->discard[nextPlayer][i] != -1) {
+				if (preState->discard[nextPlayer][i] == expectedTributeCards[0] 
+					|| preState->discard[nextPlayer][i] == expectedTributeCards[1]) {
+					foundCards++; 
+				}
+			}
+		}
+		printf("\tDiscarded tribute cards = %d, expected = %d --> ", foundCards, 2);
+		testPass = myAssert(foundCards, 2, testPass);
 	}
-	else { //both choice1 and choice2 equal zero
-		   //printf("Both choice1 and choice2 == 0\n"); 
-		   //Verify no coins gained
-		printf("\tcoins = %d, expected = %d --> ", postState.coins, preStatePtr->coins);
-		testPass = myAssert(postState.coins, preStatePtr->coins, testPass);
-		testPass = testCriteriaForNotChoice2(&postState, preStatePtr, currentPlayer, testPass);
+	//If the next player's deck had 1 card and discard had more than one card - find out which two cards are misisng and these are the tribute cards 
+	else if (startingDeckCount == 1 && startingDiscardCount >= 2) {
+		//Compare deck card + discard cards with deck cards after to see which 2 are missing 
+		//If 2 cards are not missing from postState, then the test fails 
+		for (i = 0; i < postState.deckCount[nextPlayer]; i++) {
+			foundCards = 0; //Each card from postState should be found in preState (if it can't be found, that means it was added during the executeTributeCard function, which should not happen)
+			//Check the preState deck first 
+			if (postState.deck[nextPlayer][i] == preState->deck[nextPlayer][0]) {
+				preState->deck[nextPlayer][0] = -1; //NOTE: We are done with any verification of the preState discard pile after this so that's why I'm changing values to -1
+				foundCards = 1;
+			}
+			else {
+				//Then check the preState discard pile
+				for (j = 0; j < preState->discardCount[nextPlayer]; j++) {
+					if (postState.deck[nextPlayer][i] == preState->discard[nextPlayer][j]) {
+						preState->discard[nextPlayer][j] = -1; //NOTE: We are done with any verification of the preState discard pile after this so that's why I'm changing values to -1
+						foundCards = 1;
+						break;
+					}
+				}
+			}
+			if (foundCards == 0) {
+				printf("\tA new card was found in next player's deck --> FAIL\n");
+			}
+		}
+		//Check that the missing cards match the expected tribute cards 
+		foundCards = 0;
+		for (i = 0; i < preState->discardCount[nextPlayer]; i++) {
+			if (preState->discard[nextPlayer][i] != -1) {
+				if (preState->discard[nextPlayer][i] == expectedTributeCards[0]
+					|| preState->discard[nextPlayer][i] == expectedTributeCards[1]) {
+					foundCards++;
+				}
+			}
+		}
+		printf("\tDiscarded tribute cards = %d, expected = %d --> ", foundCards, 2);
+		testPass = myAssert(foundCards, 2, testPass);
 	}
+	//Else the next player had 0 cards total, so tribute cards stay -1 since empty 
+
+
+
+
+	//Step 2: Verify that the deck and discard are the expected length after removing the tribute cards 
+	if (expectedTributeCards[0] != -1 && expectedTributeCards[1] != -1) expectedNumTributeCards = 2; 
+	else if (expectedTributeCards[0] != -1 && expectedTributeCards[1] == -1) expectedNumTributeCards = 1; 
+	else if (expectedTributeCards[0] == -1 && expectedTributeCards[1] != -1) expectedNumTributeCards = 1;
+	//else 0 tribute cards
+	//Has deck + discard count decreased by number of tribute cards found?
+	printf("\tDiscard and deck count = %d, expected = %d --> ", endingDeckAndDiscardCount, startingDeckAndDiscardCount - expectedNumTributeCards);
+	testPass = myAssert(endingDeckAndDiscardCount, startingDeckAndDiscardCount - expectedNumTributeCards, testPass);
+	
+
+
+
+	//Step 3: Verify (based on the two cards) if the current player has the gains expected
+	//If duplicate tribute cards, remove one since it should not have been played 
+	if (expectedTributeCards[0] == expectedTributeCards[1] && expectedTributeCards[0] != -1) {
+		expectedTributeCards[1] = -1; 
+	}
+
+	//Check for treasure card
+	int expectedCoins = 0; 
+	if (expectedTributeCards[0] == copper || expectedTributeCards[0] == silver || expectedTributeCards[0] == gold
+		|| expectedTributeCards[1] == copper || expectedTributeCards[1] == silver || expectedTributeCards[1] == gold) {	//+2 coins for a treasure card
+		//Verify two coins added - for the treasure card
+		expectedCoins = preState->coins + 2; 
+	}
+	else {
+		//Neither tribute card was a treasure card, so verify no coins added
+		expectedCoins = preState->coins; 
+	}
+	printf("\tcoins = %d, expected = %d --> ", postState.coins, expectedCoins);
+	testPass = myAssert(postState.coins, expectedCoins, testPass);
+
+	//Check for action card
+	int expectedActions = 0; 
+	//Action Cards: 
+	/*
+	   adventurer = 7,
+		council_room,
+		feast = 9
+		mine = 11
+		remodel, 
+		smithy,
+		village,
+		baron = 15
+		minion = 17
+		steward,
+		tribute,
+		ambassador, 
+		cutpurse,
+		embargo, 
+		outpost,
+		salvager, 
+		sea_hag,
+		treasure_map = 26
 	*/
+	if ((expectedTributeCards[0] >= 7 && expectedTributeCards[0] <= 9) || (expectedTributeCards[0] >= 11 && expectedTributeCards[0] <= 15) || (expectedTributeCards[0] >= 17 && expectedTributeCards[0] <= 26)
+		|| (expectedTributeCards[1] >= 7 && expectedTributeCards[1] <= 9) || (expectedTributeCards[1] >= 11 && expectedTributeCards[1] <= 15) || (expectedTributeCards[1] >= 17 && expectedTributeCards[1] <= 26)) {
+		//Verify two actions added 
+		expectedActions = preState->numActions + 2;
+	} 
+	else {
+		//Verify no actions added
+		expectedActions = preState->numActions; 
+	}
+	printf("\tactions = %d, expected = %d --> ", postState.numActions, expectedActions);
+	testPass = myAssert(postState.numActions, expectedActions, testPass);
+
+	//Check for victory cards
+	int expectedHandCount = 0; 
+	if (expectedTributeCards[0] == estate || expectedTributeCards[0] == duchy || expectedTributeCards[0] == province
+		|| expectedTributeCards[0] == gardens || expectedTributeCards[0] == great_hall
+		|| expectedTributeCards[1] == estate || expectedTributeCards[1] == duchy || expectedTributeCards[1] == province
+		|| expectedTributeCards[1] == gardens || expectedTributeCards[1] == great_hall) {
+		//Verify two cards added to current player's hand
+		expectedHandCount = preState->handCount[currentPlayer] + 2; 
+	}
+	else {
+		//Verify no cards added to current player's hand
+		expectedHandCount = preState->handCount[currentPlayer];
+	}
+	printf("\tcurrent player's hand count = %d, expected = %d --> ", postState.handCount[currentPlayer], expectedHandCount);
+	testPass = myAssert(postState.handCount[currentPlayer], expectedHandCount, testPass);
+
+
 	concludeTestCase(testPass, 1);
 
 }
