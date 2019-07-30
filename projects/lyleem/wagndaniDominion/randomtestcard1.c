@@ -1,5 +1,5 @@
 /*
- * randomtestcard1.c - This tests executeBaronCard function
+ * randomtestcard1.c - This tests baronCase function
  *
  */
 
@@ -227,7 +227,7 @@ int main() {
 		//printf("discardCount = %d\n", preState.discardCount[currentPlayer]); 
 		//printf("end of discard pile = %d\n", preState.discard[currentPlayer][preState.discardCount[currentPlayer]]); 
 
-		//No need to set current player's deck - it is never used by executeBaronCard or any methods called by this function 
+		//No need to set current player's deck - it is never used by baronCase or any methods called by this function 
 
 		/************************ Test Setup Complete ***********************/
 
@@ -259,8 +259,8 @@ void testBaronCard(struct gameState* preStatePtr, int choice1, int currentPlayer
 	memcpy(&postState, preStatePtr, sizeof(struct gameState));
 
 	//Execute the function: 	
-	//Note: the third arg (handPos) is never actually used by executeBaronCard, so just pass in 0
-	result = executeBaronCard(choice1, &postState, 0, currentPlayer);
+	//Note: the third arg (handPos) is never actually used by baronCase, so just pass in 0
+	result = baronCase(choice1, &postState, 0, currentPlayer);
 
 	//Testing (for me): 
 	//printf("Hand count of preState = %d, hand count of postState = %d\n", preStatePtr->handCount[currentPlayer], postState.handCount[currentPlayer]); 

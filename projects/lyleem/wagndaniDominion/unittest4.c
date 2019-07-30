@@ -1,5 +1,5 @@
 /*
-* unittest4.c - This tests executeTributeCard function
+* unittest4.c - This tests tributeCase function
 *
 */
 
@@ -32,6 +32,7 @@ int main() {
 	int seed = 1000;
 	int numPlayers = 2;
 	int currentPlayer = 0;
+	int nextPlayer = 1; 
 	int testPass = 1;
 	int result = -1;
 	struct gameState G, testG;
@@ -57,9 +58,15 @@ int main() {
 	G.deck[currentPlayer + 1][G.deckCount[currentPlayer + 1] - 1] = silver; //Treasure card
 	G.deck[currentPlayer + 1][G.deckCount[currentPlayer + 1] - 2] = smithy; //Action card
 	
+	//NEW: 
+	nextPlayer = currentPlayer + 1; 
+	if (nextPlayer == G.numPlayers) {
+		nextPlayer = 0; 
+	}
+
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
-	result = executeTributeCard(&testG, currentPlayer);
+	result = tributeCase(&testG, currentPlayer, nextPlayer);
 
 	testPass = 1;
 	//Verify return value = 0
@@ -85,7 +92,7 @@ int main() {
 
 	// ------------------------------------------------ TEST CASE 2 ---------------------------------------------------------
 	printf("TEST CASE 2: tribute cards = 2 treasure cards in discard pile, other player's deck is empty) \n");
-	//NOTE: This test will fail due to several bugs in the executeTributeCard function
+	//NOTE: This test will fail due to several bugs in the tributeCase function
 
 	//Empty out the other player's deck
 	for (i = 0; i < G.deckCount[currentPlayer + 1]; i++) {
@@ -98,10 +105,15 @@ int main() {
 		G.discard[currentPlayer + 1][i] = copper;
 	}
 
+	nextPlayer = currentPlayer + 1;
+	if (nextPlayer == G.numPlayers) {
+		nextPlayer = 0;
+	}
+
 	currentPlayer = 0;
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
-	result = executeTributeCard(&testG, currentPlayer);
+	result = tributeCase(&testG, currentPlayer, nextPlayer);
 
 	testPass = 1;
 	//Verify return value = 0
@@ -138,9 +150,14 @@ int main() {
 	G.deckCount[currentPlayer + 1] = 1;
 
 	currentPlayer = 0;
+	nextPlayer = currentPlayer + 1;
+	if (nextPlayer == G.numPlayers) {
+		nextPlayer = 0;
+	}
+
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
-	result = executeTributeCard(&testG, currentPlayer);
+	result = tributeCase(&testG, currentPlayer, nextPlayer);
 
 	testPass = 1;
 	//Verify return value = 0

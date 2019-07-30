@@ -1,5 +1,5 @@
 /*
- * randomtestcard2.c - This tests executeMinionCard function
+ * randomtestcard2.c - This tests minionCase function
  *
  */
 
@@ -285,7 +285,7 @@ void testMinionCard(struct gameState* preStatePtr, int choice1, int choice2, int
 	memcpy(&postState, preStatePtr, sizeof(struct gameState));
 
 	//Execute the function: 	
-	result = executeMinionCard(choice1, choice2, &postState, 0, currentPlayer);
+	result = minionCase(choice1, choice2, &postState, 0, currentPlayer);
 
 	//Testing (for me): 
 	//printf("Hand count of preState = %d, hand count of postState = %d\n", preStatePtr->handCount[currentPlayer], postState.handCount[currentPlayer]); 

@@ -1,5 +1,5 @@
 /*
- * unittest2.c - This tests executeMinionCard function
+ * unittest2.c - This tests minionCase function
  *
  */
 
@@ -57,7 +57,7 @@ int main() {
 	memcpy(&testG, &G, sizeof(struct gameState));
 	choice1 = 1; //gain 4 coins
 	choice2 = 0;  
-	result = executeMinionCard(choice1, choice2, &testG, handPos, currentPlayer);
+	result = minionCase(choice1, choice2, &testG, handPos, currentPlayer);
 
 	testPass = 1; 
 	testPass = testCriteriaForAllMinionCards(result, &testG, &G, testPass);
@@ -88,7 +88,7 @@ int main() {
 	memcpy(&testG, &G, sizeof(struct gameState));
 	choice1 = 0; 
 	choice2 = 1; //discard cards, gain 4 new cards
-	result = executeMinionCard(choice1, choice2, &testG, handPos, currentPlayer);
+	result = minionCase(choice1, choice2, &testG, handPos, currentPlayer);
 
 	testPass = 1;
 	testPass = testCriteriaForAllMinionCards(result, &testG, &G, testPass);
@@ -106,7 +106,7 @@ int main() {
 
 	// ------------------------------------------------ TEST CASE 3 ---------------------------------------------
 	printf("TEST CASE 3: choice1 = 0, choice 2 = 1 (Discard hand, draw new cards, next player has 5 cards)\n");
-	//NOTE: This test case will trigger my bugs in executeMinionCard, which will cause the changes to the hand to be incorrect
+	//NOTE: This test case will trigger my bugs in minionCase, which will cause the changes to the hand to be incorrect
 
 	currentPlayer = 0;
 
@@ -122,7 +122,7 @@ int main() {
 	memcpy(&testG, &G, sizeof(struct gameState));
 	choice1 = 0;
 	choice2 = 1; //discard cards, gain 4 new cards
-	result = executeMinionCard(choice1, choice2, &testG, handPos, currentPlayer);
+	result = minionCase(choice1, choice2, &testG, handPos, currentPlayer);
 
 	testPass = 1;
 	testPass = testCriteriaForAllMinionCards(result, &testG, &G, testPass);
@@ -166,7 +166,7 @@ int main() {
 	memcpy(&testG, &G, sizeof(struct gameState));
 	choice1 = 0;
 	choice2 = 0;
-	result = executeMinionCard(choice1, choice2, &testG, handPos, currentPlayer);
+	result = minionCase(choice1, choice2, &testG, handPos, currentPlayer);
 
 	testPass = 1;
 	testPass = testCriteriaForAllMinionCards(result, &testG, &G, testPass);

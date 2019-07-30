@@ -1,5 +1,5 @@
 /*
- * unittest3.c - This tests executeAmbassadorCard function
+ * unittest3.c - This tests ambassadorCase function
  *
  */
 
@@ -62,7 +62,7 @@ int main() {
 	
 	choice1 = G.hand[currentPlayer][1]; //card to discard 
 	choice2 = 1;  //number of choice1 card to discard
-	result = executeAmbassadorCard(choice1, choice2, &testG, handPos, currentPlayer);
+	result = ambassadorCase(choice1, choice2, &testG, handPos, currentPlayer);
 
 	testPass = 1; 
 	testPass = testCriteriaForValidAmbassadorInput(&testG, &G, handPos, currentPlayer, choice1, choice2, result, testPass); 
@@ -91,7 +91,7 @@ int main() {
 
 	choice1 = G.hand[currentPlayer][1]; //card to discard 
 	choice2 = 2;  //number of choice1 card to discard
-	result = executeAmbassadorCard(choice1, choice2, &testG, handPos, currentPlayer);
+	result = ambassadorCase(choice1, choice2, &testG, handPos, currentPlayer);
 
 	testPass = 1;
 	testPass = testCriteriaForValidAmbassadorInput(&testG, &G, handPos, currentPlayer, choice1, choice2, result, testPass);
@@ -119,7 +119,7 @@ int main() {
 
 	choice1 = copper; //card to discard 
 	choice2 = 1;  //number of choice1 card to discard
-	result = executeAmbassadorCard(choice1, choice2, &testG, handPos, currentPlayer);
+	result = ambassadorCase(choice1, choice2, &testG, handPos, currentPlayer);
 
 	testPass = 1;
 	testPass = testCriteriaForInvalidAmbassadorInput(&testG, &G, handPos, currentPlayer, choice1, choice2, result, testPass);
@@ -140,7 +140,7 @@ int main() {
 
 	choice1 = handPos; //card to discard 
 	choice2 = 1;  //number of choice1 card to discard
-	result = executeAmbassadorCard(choice1, choice2, &testG, handPos, currentPlayer);
+	result = ambassadorCase(choice1, choice2, &testG, handPos, currentPlayer);
 
 	testPass = 1;
 	testPass = testCriteriaForInvalidAmbassadorInput(&testG, &G, handPos, currentPlayer, choice1, choice2, result, testPass);
@@ -166,13 +166,13 @@ int testCriteriaForValidAmbassadorInput(struct gameState *testG, struct gameStat
 	testPass = myAssert(returnValue, 0, testPass); 
 
 	//Verify handCount has decreased by the number to discard specified in choice2 
-	//***This condition will fail due to a bug I added in executeAmbassadorCard for Assignment 2
+	//***This condition will fail due to a bug I added in ambassadorCase for Assignment 2
 	printf("\thandCount = %d, expected = %d --> ", testG->handCount[currentPlayer], G->handCount[currentPlayer] - choice2); 
 	testPass = myAssert(testG->handCount[currentPlayer], G->handCount[currentPlayer] - choice2, testPass); 
 
 
 	//Verify the number of choice1 cards in the hand has decreased by the number specified to discard in choice2 
-	//***This condition will fail due to a bug I added in executeAmbassadorCard for Assignment 2
+	//***This condition will fail due to a bug I added in ambassadorCase for Assignment 2
 	//Get count of choice1 cards in testG hand
 	int choice1CardsInTestG = 0; 
 	for (i = 0; i < testG->handCount[currentPlayer]; i++) {
@@ -192,7 +192,7 @@ int testCriteriaForValidAmbassadorInput(struct gameState *testG, struct gameStat
 
 
 	//Verify supply count has increased by the number specified in choice2
-	//***This condition will fail due to a bug I added in executeAmbassadorCard for Assignment 2
+	//***This condition will fail due to a bug I added in ambassadorCase for Assignment 2
 	printf("\tsupplyCount = %d, expected = %d --> ", testG->supplyCount[choice1], G->supplyCount[choice1] - choice2);
 	testPass = myAssert(testG->supplyCount[choice1], G->supplyCount[choice1] - choice2, testPass); 
 
@@ -233,13 +233,13 @@ int testCriteriaForInvalidAmbassadorInput(struct gameState *testG, struct gameSt
 
 
 	//Verify hand count is unchanged 
-	//***If player does not have enough choice1 cards, this condition will fail due to a bug I added for Assignment 2 in executeAmbassadorCard
+	//***If player does not have enough choice1 cards, this condition will fail due to a bug I added for Assignment 2 in ambassadorCase
 	printf("\thandCount = %d, expected %d --> ", testG->handCount[currentPlayer], G->handCount[currentPlayer]); 
 	testPass = myAssert(testG->handCount[currentPlayer], G->handCount[currentPlayer], testPass); 
 
 
 	//Verify hand is unchanged 
-	//***If player does not have enough choice1 cards, this condition will fail due to a bug I added for Assignment 2 in executeAmbassadorCard
+	//***If player does not have enough choice1 cards, this condition will fail due to a bug I added for Assignment 2 in ambassadorCase
 	printf("\thand: \n");
 	for (i = 0; i < G->handCount[currentPlayer]; i++) {
 		printf("\t\tcard %d = %d, expected = %d --> ", i + 1, testG->hand[currentPlayer][i], G->hand[currentPlayer][i]);
@@ -248,18 +248,18 @@ int testCriteriaForInvalidAmbassadorInput(struct gameState *testG, struct gameSt
 
 
 	//Verify supply count is unchanged 
-	//***If player does not have enough choice1 cards, this condition will fail due to a bug I added for Assignment 2 in executeAmbassadorCard
+	//***If player does not have enough choice1 cards, this condition will fail due to a bug I added for Assignment 2 in ambassadorCase
 	printf("\tsupplyCount = %d, expected = %d, --> ", testG->supplyCount[choice1], G->supplyCount[choice1]);
 	testPass = myAssert(testG->supplyCount[choice1], G->supplyCount[choice1], testPass); 
 
 
 	//Verify next player's hand count is unchanged 
-	//***If player does not have enough choice1 cards, this condition will fail due to a bug I added for Assignment 2 in executeAmbassadorCard
+	//***If player does not have enough choice1 cards, this condition will fail due to a bug I added for Assignment 2 in ambassadorCase
 	printf("\thandCount = %d, expected %d --> ", testG->handCount[currentPlayer + 1], G->handCount[currentPlayer + 1]);
 	testPass = myAssert(testG->handCount[currentPlayer + 1], G->handCount[currentPlayer + 1], testPass); 
 
 	//Verify next player's hand is unchanged 
-	//***If player does not have enough cards, this condition will fail due to a bug I added for Assignment 2 in executeAmbassadorCard
+	//***If player does not have enough cards, this condition will fail due to a bug I added for Assignment 2 in ambassadorCase
 	printf("\thand: \n");
 	for (i = 0; i < G->handCount[currentPlayer + 1]; i++) {
 		printf("\t\tcard %d = %d, expected = %d --> ", i + 1, testG->hand[currentPlayer + 1][i], G->hand[currentPlayer + 1][i]);

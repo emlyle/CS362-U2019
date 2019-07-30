@@ -1,5 +1,5 @@
 /*
- * unittest1.c - This tests executeBaronCard function
+ * unittest1.c - This tests baronCase function
  *
  */
 
@@ -68,7 +68,7 @@ int main() {
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
 	choice1 = 1; //discard estate card
-	result = executeBaronCard(choice1, &testG, handpos, currentPlayer); 
+	result = baronCase(choice1, &testG, handpos, currentPlayer); 
 
 	testPass = 1; 
 	testPass = testForEveryBaronCard(&testG, &G, result, testPass);
@@ -86,7 +86,7 @@ int main() {
 	// Copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
 	choice1 = 0; //gain estate card
-	result = executeBaronCard(choice1, &testG, handpos, currentPlayer);
+	result = baronCase(choice1, &testG, handpos, currentPlayer);
 
 	testPass = 1;
 	testPass = testForEveryBaronCard(&testG, &G, result, testPass);
@@ -123,7 +123,7 @@ int main() {
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
 	choice1 = 1; //discard estate card
-	result = executeBaronCard(choice1, &testG, handpos, currentPlayer);
+	result = baronCase(choice1, &testG, handpos, currentPlayer);
 
 	testPass = 1;
 	testPass = testForEveryBaronCard(&testG, &G, result, testPass);
@@ -150,7 +150,7 @@ int main() {
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
 	choice1 = 1; //discard estate card
-	result = executeBaronCard(choice1, &testG, handpos, currentPlayer);
+	result = baronCase(choice1, &testG, handpos, currentPlayer);
 
 	testPass = 1;
 	testPass = testForEveryBaronCard(&testG, &G, result, testPass);

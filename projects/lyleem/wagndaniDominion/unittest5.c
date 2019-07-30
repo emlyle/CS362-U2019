@@ -1,5 +1,5 @@
 /*
- * unittest5.c - This tests executeMineCard function
+ * unittest5.c - This tests mineCase function
  *
  */
 
@@ -62,7 +62,7 @@ int main() {
 
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
-	result = executeMineCard(choice1, choice2, &testG, handPos, currentPlayer);
+	result = mineCase(choice1, choice2, &testG, handPos, currentPlayer);
 
 	testPass = 1; 
 	testPass = validInputCriteria(&G, &testG, choice1, choice2, currentPlayer, result, testPass); 
@@ -89,7 +89,7 @@ int main() {
 
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
-	result = executeMineCard(choice1, choice2, &testG, handPos, currentPlayer);
+	result = mineCase(choice1, choice2, &testG, handPos, currentPlayer);
 
 	testPass = 1;
 	testPass = invalidInputCriteria(&G, &testG, choice1, choice2, currentPlayer, result, testPass);
@@ -116,7 +116,7 @@ int main() {
 
 	// copy the game state (G) to a test case (testG)
 	memcpy(&testG, &G, sizeof(struct gameState));
-	result = executeMineCard(choice1, choice2, &testG, handPos, currentPlayer);
+	result = mineCase(choice1, choice2, &testG, handPos, currentPlayer);
 
 	testPass = 1;
 	testPass = invalidInputCriteria(&G, &testG, choice1, choice2, currentPlayer, result, testPass);

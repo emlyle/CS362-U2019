@@ -1,5 +1,5 @@
 /*
-* randomtestcard3.c - This tests executeTributeCard function
+* randomtestcard3.c - This tests tributeCase function
 *
 */
 
@@ -434,7 +434,7 @@ void testTributeCard(struct gameState* preStatePtr, int currentPlayer) {
 	memcpy(&postState, preStatePtr, sizeof(struct gameState));
 
 	//Execute the function: 	
-	result = executeTributeCard(&postState, currentPlayer);
+	result = tributeCase(&postState, currentPlayer, nextPlayer);
 
 	//Verify return value = 0
 	printf("\treturn value = %d, expected = 0 -->", result);
@@ -477,7 +477,7 @@ void testTributeCard(struct gameState* preStatePtr, int currentPlayer) {
 		//Compare discard cards before with deck cards after to see which 2 are missing
 		//If 2 cards are not missing from postState, then the test fails 
 		for (i = 0; i < postState.deckCount[nextPlayer]; i++) {
-			foundCards = 0; //Each card from postState should be found in preState (if it can't be found, that means it was added during the executeTributeCard function, which should not happen)
+			foundCards = 0; //Each card from postState should be found in preState (if it can't be found, that means it was added during the tributeCase function, which should not happen)
 			for (j = 0; j < preStatePtr->discardCount[nextPlayer]; j++) {
 				if (postState.deck[nextPlayer][i] == preStatePtr->discard[nextPlayer][j]) {
 					preStatePtr->discard[nextPlayer][j] = -1; //NOTE: We are done with any verification of the preState discard pile after this so that's why I'm changing values to -1
@@ -507,7 +507,7 @@ void testTributeCard(struct gameState* preStatePtr, int currentPlayer) {
 		//Compare deck card + discard cards with deck cards after to see which 2 are missing 
 		//If 2 cards are not missing from postState, then the test fails 
 		for (i = 0; i < postState.deckCount[nextPlayer]; i++) {
-			foundCards = 0; //Each card from postState should be found in preState (if it can't be found, that means it was added during the executeTributeCard function, which should not happen)
+			foundCards = 0; //Each card from postState should be found in preState (if it can't be found, that means it was added during the tributeCase function, which should not happen)
 			//Check the preState deck first 
 			if (postState.deck[nextPlayer][i] == preStatePtr->deck[nextPlayer][0]) {
 				preStatePtr->deck[nextPlayer][0] = -1; //NOTE: We are done with any verification of the preState discard pile after this so that's why I'm changing values to -1
