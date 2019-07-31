@@ -36,12 +36,12 @@ randomtestcard3: randomtestcard3.c dominion.o rngs.o
 	gcc -o randomtestcard3 -g  randomtestcard3.c dominion.o rngs.o $(CFLAGS)
 
 testresults: unittest1 unittest2 unittest3 unittest4 unittest5 randomtestcard1 randomtestcard2 randomtestcard3 
-	./unittest1 &> unittestresults.out
-	./unittest2 >> unittestresults.out
-	./unittest3 >> unittestresults.out
-	./unittest4 >> unittestresults.out
-	./unittest5 >> unittestresults.out
-	./randomtestcard1 >> testresults.out
+	./unittest1 &> testresults.out
+	./unittest2 >> testresults.out
+	./unittest3 >> testresults.out
+	./unittest4 >> testresults.out
+	./unittest5 >> testresults.out
+	#./randomtestcard1 >> testresults.out
 	./randomtestcard2 >> testresults.out
 	./randomtestcard3 >> testresults.out
 	gcov -b -f dominion.c >> testresults.out
@@ -68,7 +68,7 @@ interface.o: interface.h interface.c
 #	cat dominion.c.gcov >> unittestresult.out
 
 #player: player.c interface.o
-	gcc -o player player.c -g  dominion.o rngs.o interface.o $(CFLAGS)
+#	gcc -o player player.c -g  dominion.o rngs.o interface.o $(CFLAGS)
 
 #all: playdom player randomtestcard1 unittest1 unittest2 unittest3 unittest4 unittest5 randomtestcard2 randomtestcard3 testresults 
 all: randomtestcard1 unittest1 unittest2 unittest3 unittest4 unittest5 randomtestcard2 randomtestcard3 testresults 
