@@ -283,7 +283,6 @@ void testMinionCard(struct gameState* preStatePtr, int choice1, int choice2, int
 	//Copy the pre-game state (preState) to a post-test game state (postState)
 	struct gameState postState;
 	memcpy(&postState, preStatePtr, sizeof(struct gameState));
-
 	//Execute the function: 	
 	result = minionCase(choice1, choice2, &postState, 0, currentPlayer);
 
