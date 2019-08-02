@@ -1139,28 +1139,15 @@ int minionCase(int choice1, int choice2, struct gameState *state, int handPos, i
             state->coins = state->coins + 2;
     }
 
-    else if (choice2){                                                          //discard hand, redraw 4, other players with 5+ cards discard hand and draw 4
-        
-		/* This is the code he got rid of 	
-		//discard hand
-		while (numHandCards(state) > 0)
-		{
-			discardCard(handPos, currentPlayer, state, 0);
-		}
-
-		//draw 4 cards
-		drawMultipleCards(4, currentPlayer, state); //***Refactor by separating out this duplicate functionality into a new function
-		*/
-
+    else if (choice2){         //discard hand, redraw 4, other players with 5+ cards discard hand and draw 4
 
         int i = 0;
         for (i = 0; i < state->numPlayers; i++){
             
-			//W's BUG: handCount should be > 4
             if ((state->handCount[i] > 5 && i != currentPlayer) || (i == currentPlayer)){
                     
                 while( state->handCount[i] > 0 ){
-                    discardCard(1, i, state, 0); //W's BUG - handPos is always set to 1?
+                    discardCard(1, i, state, 0); 
                 }
 
                 int j = 0;
@@ -1184,7 +1171,6 @@ int ambassadorCase(int choice1, int choice2, struct gameState *state, int handPo
     int i = 0;
     for (i = 0; i < state->handCount[currentPlayer]; i++){
         
-		//Possible W's BUG
         if (i != handPos && state->hand[currentPlayer][i] == state->hand[currentPlayer][choice1] && i != choice1){
             j++;
         }
@@ -1262,7 +1248,6 @@ int tributeCase(struct gameState *state, int currentPlayer, int nextPlayer){
         state->discard[nextPlayer][state->discardCount[nextPlayer]] = state->deck[nextPlayer][state->deckCount[nextPlayer] -1];
         state->discardCount[nextPlayer]++;
         
-		//Dan W's BUG: 
         // Purposely introduced bug below
         /*
         state->deck[nextPlayer][state->deckCount[nextPlayer] -1 ] = -1;
