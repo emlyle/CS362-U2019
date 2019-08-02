@@ -124,6 +124,28 @@ int main() {
 	concludeTestCase(testPass, 3);
 
 
+	// ---------------------------------------- TEST CASE 4 -------------------------------------------
+	printf("TEST CASE 4: trash a copper, gain a gold \n");
+
+	//Make it easy to tell if copper is trashed and silver is gained by not having any duplicates of these in the player's hand
+	//choice1 = hand position 0
+	G.hand[currentPlayer][choice1] = copper; //card to trash
+											 //Set all other cards to estate 
+	for (i = 1; i < G.handCount[currentPlayer]; i++) {
+		G.hand[currentPlayer][i] = estate;
+	}
+	choice2 = gold; //card to gain
+
+	// copy the game state (G) to a test case (testG)
+	memcpy(&testG, &G, sizeof(struct gameState));
+	result = mineCase(choice1, choice2, &testG, handPos, currentPlayer);
+
+	testPass = 1;
+	testPass = validInputCriteria(&G, &testG, choice1, choice2, currentPlayer, result, testPass);
+
+	concludeTestCase(testPass, 1);
+
+
 
 	printf(">>>>> UNIT TEST 5 (%s card) COMPLETE <<<<<\n\n", TESTCARD);
 
